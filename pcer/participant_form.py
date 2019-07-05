@@ -5,7 +5,7 @@ from PyQt5 import QtCore
 
 class ParticipantForm(QWidget):
 
-    to_system_form = QtCore.pyqtSignal()
+    submit_info = QtCore.pyqtSignal()
 
     def __init__(self):
         super(QWidget, self).__init__()
@@ -36,7 +36,7 @@ class ParticipantForm(QWidget):
 
     def onSubmitButtonClick(self):
         print("ParticipantForm.onSubmitButtonClick")
-        self.to_system_form.emit()
+        self.submit_info.emit()
 
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")

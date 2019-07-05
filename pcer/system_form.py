@@ -5,7 +5,7 @@ from PyQt5 import QtCore
 
 class SystemForm(QWidget):
 
-    to_participant_form = QtCore.pyqtSignal()
+    back = QtCore.pyqtSignal()
 
     def __init__(self):
         super(QWidget, self).__init__()
@@ -14,15 +14,15 @@ class SystemForm(QWidget):
     def initUI(self):
         self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
         submitButton = QPushButton("Continue")
-        exitButton = QPushButton("Back")
+        backButton = QPushButton("Back")
 
         submitButton.clicked.connect(self.onContinueButtonClick)
-        exitButton.clicked.connect(self.onBackButtonClick)
+        backButton.clicked.connect(self.onBackButtonClick)
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         
-        hbox.addWidget(exitButton)
+        hbox.addWidget(backButton)
         hbox.addWidget(submitButton)
 
         vbox = QVBoxLayout()
@@ -39,4 +39,4 @@ class SystemForm(QWidget):
 
     def onBackButtonClick(self):
         print("SystemForm.onBackButtonClick")
-        self.to_participant_form.emit()
+        self.back.emit()

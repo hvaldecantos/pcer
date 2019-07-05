@@ -6,6 +6,7 @@ from PyQt5 import QtCore
 class SystemForm(QWidget):
 
     back = QtCore.pyqtSignal()
+    show_task = QtCore.pyqtSignal()
 
     def __init__(self):
         super(QWidget, self).__init__()
@@ -13,17 +14,17 @@ class SystemForm(QWidget):
 
     def initUI(self):
         self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
-        submitButton = QPushButton("Continue")
+        showTaskButton = QPushButton("Show task")
         backButton = QPushButton("Back")
 
-        submitButton.clicked.connect(self.onContinueButtonClick)
+        showTaskButton.clicked.connect(self.onShowTaskButtonClick)
         backButton.clicked.connect(self.onBackButtonClick)
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         
         hbox.addWidget(backButton)
-        hbox.addWidget(submitButton)
+        hbox.addWidget(showTaskButton)
 
         vbox = QVBoxLayout()
         vbox.addStretch(1)
@@ -34,8 +35,9 @@ class SystemForm(QWidget):
         self.setGeometry(300, 300, 300, 150)
         self.setWindowTitle('System presentation')
 
-    def onContinueButtonClick(self):
-        print("SystemForm.onContinueButtonClick")
+    def onShowTaskButtonClick(self):
+        print("SystemForm.onShowTaskButtonClick")
+        self.show_task.emit()
 
     def onBackButtonClick(self):
         print("SystemForm.onBackButtonClick")

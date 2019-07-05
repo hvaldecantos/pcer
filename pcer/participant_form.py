@@ -32,7 +32,7 @@ class ParticipantForm(QWidget):
         self.setLayout(vbox)
         
         self.setGeometry(300, 300, 300, 150)
-        self.setWindowTitle('Buttons')
+        self.setWindowTitle('Participant information')
 
     def onSubmitButtonClick(self):
         print("ParticipantForm.onSubmitButtonClick")

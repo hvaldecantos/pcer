@@ -4,17 +4,19 @@ from system_form import SystemForm
 class ExperimentController:
 
     def __init__(self):
-        pass
+        self.window = None
 
     def show_participant_form(self):
-        self.participant_form = ParticipantForm()
-        self.participant_form.to_system_form.connect(self.show_system_form)
-        self.participant_form.show()
+    	if self.window is not None:
+    		self.window.close()
+        self.window = ParticipantForm()
+        self.window.to_system_form.connect(self.show_system_form)
+        self.window.show()
 
     def show_system_form(self):
-        self.system_form = SystemForm()
-        self.participant_form.close()
-        self.system_form.to_participant_form.connect(self.show_participant_form)
-        self.system_form.show()
+        self.window.close()
+        self.window = SystemForm()
+        self.window.to_participant_form.connect(self.show_participant_form)
+        self.window.show()
 
 

@@ -32,7 +32,7 @@ class SystemForm(QWidget):
         self.setLayout(vbox)
         
         self.setGeometry(300, 300, 300, 150)
-        self.setWindowTitle('Buttons')
+        self.setWindowTitle('System presentation')
 
     def onContinueButtonClick(self):
         print("SystemForm.onContinueButtonClick")

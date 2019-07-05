@@ -3,9 +3,9 @@ from PyQt5.QtWidgets import (QWidget, QPushButton,
     QHBoxLayout, QVBoxLayout, QApplication)
 from PyQt5 import QtCore
 
-class ParticipantForm(QWidget):
+class SystemForm(QWidget):
 
-    to_system_form = QtCore.pyqtSignal()
+    to_participant_form = QtCore.pyqtSignal()
 
     def __init__(self):
         super(QWidget, self).__init__()
@@ -13,11 +13,11 @@ class ParticipantForm(QWidget):
 
     def initUI(self):
         self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
-        submitButton = QPushButton("Submit info")
-        exitButton = QPushButton("Exit experiment")
+        submitButton = QPushButton("Continue")
+        exitButton = QPushButton("Back")
 
-        submitButton.clicked.connect(self.onSubmitButtonClick)
-        exitButton.clicked.connect(self.onExitButtonClick)
+        submitButton.clicked.connect(self.onContinueButtonClick)
+        exitButton.clicked.connect(self.onBackButtonClick)
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
@@ -34,10 +34,9 @@ class ParticipantForm(QWidget):
         self.setGeometry(300, 300, 300, 150)
         self.setWindowTitle('Buttons')
 
-    def onSubmitButtonClick(self):
-        print("ParticipantForm.onSubmitButtonClick")
-        self.to_system_form.emit()
+    def onContinueButtonClick(self):
+        print("SystemForm.onContinueButtonClick")
 
-    def onExitButtonClick(self):
-        print("ParticipantForm.onExitButtonClick")
-        QApplication.instance().quit()
+    def onBackButtonClick(self):
+        print("SystemForm.onBackButtonClick")
+        self.to_participant_form.emit()

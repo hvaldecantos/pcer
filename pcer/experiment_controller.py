@@ -1,6 +1,7 @@
 from participant_form import ParticipantForm
 from system_form import SystemForm
 from task_form import TaskForm
+from code_viewer import CodeViewer
 
 class ExperimentController:
 
@@ -39,4 +40,8 @@ class ExperimentController:
     		self.show_system_form()
 
     def show_src_navigator(self):
-    	print("show_src_navigator")
+        print("show_src_navigator")
+        self.window.close()
+        self.window = CodeViewer()
+        self.window.back.connect(self.show_task_form)
+        self.window.show()

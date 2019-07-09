@@ -15,15 +15,18 @@ class ParticipantForm(PcerWindow):
 
     def initUI(self):
         continueButton = QPushButton("Continue")
+        loadButton = QPushButton("Load")
         exitButton = QPushButton("Exit experiment")
 
         continueButton.clicked.connect(self.onContinueButtonClick)
+        loadButton.clicked.connect(self.onLoadButtonClick)
         exitButton.clicked.connect(self.onExitButtonClick)
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         
         hbox.addWidget(exitButton)
+        hbox.addWidget(loadButton)
         hbox.addWidget(continueButton)
 
         vbox = QVBoxLayout()
@@ -37,6 +40,9 @@ class ParticipantForm(PcerWindow):
     def onContinueButtonClick(self):
         print("ParticipantForm.onContinueButtonClick")
         self.continue_with_the_experiment.emit()
+
+    def onLoadButtonClick(self):
+        print("ParticipantForm.onLoadButtonClick")
 
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")

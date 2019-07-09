@@ -5,7 +5,7 @@ from PyQt5 import QtCore
 
 class ParticipantForm(QWidget):
 
-    submit_info = QtCore.pyqtSignal()
+    continue_with_the_experiment = QtCore.pyqtSignal()
 
     def __init__(self):
         super(QWidget, self).__init__()
@@ -13,17 +13,17 @@ class ParticipantForm(QWidget):
 
     def initUI(self):
         self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
-        submitButton = QPushButton("Submit info")
+        continueButton = QPushButton("Continue")
         exitButton = QPushButton("Exit experiment")
 
-        submitButton.clicked.connect(self.onSubmitButtonClick)
+        continueButton.clicked.connect(self.onContinueButtonClick)
         exitButton.clicked.connect(self.onExitButtonClick)
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         
         hbox.addWidget(exitButton)
-        hbox.addWidget(submitButton)
+        hbox.addWidget(continueButton)
 
         vbox = QVBoxLayout()
         vbox.addStretch(1)
@@ -34,9 +34,9 @@ class ParticipantForm(QWidget):
         self.setGeometry(300, 300, 300, 150)
         self.setWindowTitle('Participant information')
 
-    def onSubmitButtonClick(self):
-        print("ParticipantForm.onSubmitButtonClick")
-        self.submit_info.emit()
+    def onContinueButtonClick(self):
+        print("ParticipantForm.onContinueButtonClick")
+        self.continue_with_the_experiment.emit()
 
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")

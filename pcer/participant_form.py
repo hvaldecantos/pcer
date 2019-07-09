@@ -2,17 +2,18 @@ import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
     QHBoxLayout, QVBoxLayout, QApplication)
 from PyQt5 import QtCore
+from pcer_window import PcerWindow
 
-class ParticipantForm(QWidget):
+class ParticipantForm(PcerWindow):
 
     continue_with_the_experiment = QtCore.pyqtSignal()
 
     def __init__(self):
         super(QWidget, self).__init__()
+        self.initBaseUI()
         self.initUI()
 
     def initUI(self):
-        self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
         continueButton = QPushButton("Continue")
         exitButton = QPushButton("Exit experiment")
 
@@ -31,7 +32,6 @@ class ParticipantForm(QWidget):
         
         self.setLayout(vbox)
         
-        self.setGeometry(300, 300, 300, 150)
         self.setWindowTitle('Participant information')
 
     def onContinueButtonClick(self):

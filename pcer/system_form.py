@@ -2,18 +2,19 @@ import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
     QHBoxLayout, QVBoxLayout, QApplication)
 from PyQt5 import QtCore
+from pcer_window import PcerWindow
 
-class SystemForm(QWidget):
+class SystemForm(PcerWindow):
 
     back = QtCore.pyqtSignal()
     show_task = QtCore.pyqtSignal()
 
     def __init__(self):
         super(QWidget, self).__init__()
+        self.initBaseUI()
         self.initUI()
 
     def initUI(self):
-        self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
         showTaskButton = QPushButton("Show task")
         backButton = QPushButton("Back")
 
@@ -32,7 +33,6 @@ class SystemForm(QWidget):
         
         self.setLayout(vbox)
         
-        self.setGeometry(300, 300, 300, 150)
         self.setWindowTitle('System presentation')
 
     def onShowTaskButtonClick(self):

@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (QWidget, QPushButton,
 from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFile, QRegExp, Qt
+from pcer_window import PcerWindow
 
 class MyQTextEdit(QTextEdit):
     scrollbar_displacement = 0
@@ -16,22 +17,18 @@ class MyQTextEdit(QTextEdit):
         self.scrollbar_displacement+=dy
         print(self.scrollbar_displacement)
 
-class CodeViewer(QWidget):
+class CodeViewer(PcerWindow):
 
     back = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
         super(QWidget, self).__init__(parent)
-        self.width = 800
-        self.height = 300
+        self.initBaseUI()
         self.listWidth = self.width/4
         self.backButtonWidth = self.listWidth/2
         self.initUI()
 
     def initUI(self):
-        self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
-        self.centerOnScreen()
-        self.setFixedSize(self.width, self.height)
         self.setWindowTitle('Code Vierwer')
 
         self.setupFileList()

@@ -9,8 +9,8 @@ class SystemForm(PcerWindow):
     back = QtCore.pyqtSignal()
     show_task = QtCore.pyqtSignal()
 
-    def __init__(self):
-        super(SystemForm, self).__init__()
+    def __init__(self, experiment = None):
+        super(SystemForm, self).__init__(experiment)
         self.initBaseUI()
         self.initUI()
 

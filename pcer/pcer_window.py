@@ -4,8 +4,11 @@ from PyQt5 import QtCore
 
 class PcerWindow(QWidget):
 
-    def __init__(self):
+    experiment = None
+
+    def __init__(self, experiment = None):
         super(PcerWindow, self).__init__()
+        self.experiment = experiment
 
     def initBaseUI(self):
     	self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)

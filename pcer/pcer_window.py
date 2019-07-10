@@ -4,8 +4,8 @@ from PyQt5 import QtCore
 
 class PcerWindow(QWidget):
 
-    def __init__(self, parent=None):
-        super(QWidget, self).__init__(parent)
+    def __init__(self):
+        super(PcerWindow, self).__init__()
 
     def initBaseUI(self):
     	self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)

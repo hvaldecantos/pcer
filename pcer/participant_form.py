@@ -8,8 +8,8 @@ class ParticipantForm(PcerWindow):
 
     continue_with_the_experiment = QtCore.pyqtSignal()
 
-    def __init__(self):
-        super(ParticipantForm, self).__init__()
+    def __init__(self, experiment):
+        super(ParticipantForm, self).__init__(experiment)
         self.initBaseUI()
         self.initUI()
 
@@ -43,6 +43,7 @@ class ParticipantForm(PcerWindow):
 
     def onLoadButtonClick(self):
         print("ParticipantForm.onLoadButtonClick")
+        self.experiment.openParticipanSession(1234)
 
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")

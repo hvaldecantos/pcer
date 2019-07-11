@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication)
+    QHBoxLayout, QVBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 
@@ -22,14 +22,32 @@ class ParticipantForm(PcerWindow):
         loadButton.clicked.connect(self.onLoadButtonClick)
         exitButton.clicked.connect(self.onExitButtonClick)
 
+        idLabel = QLabel()
+        idLabel.setText('ID:')
+        idField = QLineEdit()
+        groupLabel = QLabel()
+        groupLabel.setText('Group:')
+        groupCombo = QComboBox()
+        groupCombo.addItem("DCI")
+        groupCombo.addItem("OO")
+        statusLabel = QLabel()
+        statusLabel.setText('Status:')
+        statusText = QPlainTextEdit()
+
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         
         hbox.addWidget(exitButton)
-        hbox.addWidget(loadButton)
+        hbox.addWidget(loadButton)        
         hbox.addWidget(continueButton)
 
         vbox = QVBoxLayout()
+        vbox.addWidget(idLabel)
+        vbox.addWidget(idField)
+        vbox.addWidget(groupLabel)
+        vbox.addWidget(groupCombo)
+        vbox.addWidget(statusLabel)
+        vbox.addWidget(statusText)
         vbox.addStretch(1)
         vbox.addLayout(hbox)
         

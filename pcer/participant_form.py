@@ -9,7 +9,7 @@ class ParticipantForm(PcerWindow):
     continue_with_the_experiment = QtCore.pyqtSignal()
 
     def __init__(self):
-        super(QWidget, self).__init__()
+        super(ParticipantForm, self).__init__()
         self.initBaseUI()
         self.initUI()
 

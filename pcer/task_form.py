@@ -10,7 +10,7 @@ class TaskForm(PcerWindow):
     read_code = QtCore.pyqtSignal()
 
     def __init__(self):
-        super(QWidget, self).__init__()
+        super(TaskForm, self).__init__()
         self.initBaseUI()
         self.initUI()
 

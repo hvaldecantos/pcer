@@ -59,6 +59,8 @@ class ParticipantForm(PcerWindow):
 
     def onContinueButtonClick(self):
         print("ParticipantForm.onContinueButtonClick")
+        print(self.idField.text(), self.groupCombo.currentText())
+        self.experiment.addParticipant(self.idField.text(), self.groupCombo.currentText())
         self.continue_with_the_experiment.emit()
 
     def onLoadButtonClick(self):

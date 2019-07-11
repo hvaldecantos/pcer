@@ -9,7 +9,7 @@ class TaskForm(PcerWindow):
     submit_answer = QtCore.pyqtSignal()
     read_code = QtCore.pyqtSignal()
 
-    def __init__(self, experiment = None):
+    def __init__(self, experiment):
         super(TaskForm, self).__init__(experiment)
         self.initBaseUI()
         self.initUI()

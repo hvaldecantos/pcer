@@ -6,7 +6,7 @@ class PcerWindow(QWidget):
 
     experiment = None
 
-    def __init__(self, experiment = None):
+    def __init__(self, experiment):
         super(PcerWindow, self).__init__()
         self.experiment = experiment
 

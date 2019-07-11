@@ -21,7 +21,7 @@ class CodeViewer(PcerWindow):
 
     back = QtCore.pyqtSignal()
 
-    def __init__(self, experiment = None):
+    def __init__(self, experiment):
         super(CodeViewer, self).__init__(experiment)
         self.initBaseUI()
         self.listWidth = self.width/4

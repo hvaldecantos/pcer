@@ -1,5 +1,5 @@
 # This file may be used to create an environment using:
-# $ conda create --name <env> --file <this file>
+# $ conda create --name pcer --file environment-linux-64.txt
 # platform: linux-64
 @EXPLICIT
 https://repo.anaconda.com/pkgs/main/linux-64/_libgcc_mutex-0.1-main.tar.bz2

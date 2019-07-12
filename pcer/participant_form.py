@@ -34,7 +34,7 @@ class ParticipantForm(PcerWindow):
         statusLabel.setText('Status:')
         self.statusText = QPlainTextEdit()
         self.statusText.setReadOnly(True)
-        self.statusText.insertPlainText('Here goes the status of patricipat\n')
+        self.loadCurrentParticipantStatus()
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
@@ -56,6 +56,15 @@ class ParticipantForm(PcerWindow):
         self.setLayout(vbox)
         
         self.setWindowTitle('Participant information')
+
+    def loadCurrentParticipantStatus(self):
+        print("ParticipantForm.loadCurrentParticipantStatus")
+        print(self.experiment.participant_id)
+        status = self.experiment.getParticipantStatus(self.experiment.participant_id)
+        self.statusText.insertPlainText(str(status))
+        self.idField.setText(self.experiment.participant_id)
+        index = self.groupCombo.findText(self.experiment.participant_group)
+        self.groupCombo.setCurrentIndex(index)
 
     def onContinueButtonClick(self):
         print("ParticipantForm.onContinueButtonClick")

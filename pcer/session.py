@@ -14,3 +14,6 @@ class Session():
 
     def addParticipant(self, id, group):
         self.db.insert({'id': id, 'group': group})
+
+    def getParticipantStatus(self, id):
+    	return self.db.search(self.participant.id == id)

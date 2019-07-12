@@ -3,23 +3,28 @@ from session import Session
 class Experiment():
     
     participant_id = None
-    experimental_system = None
-    experimental_task = None
+    participant_group = None
+    current_system = None
+    current_task = None
     session = None
 
     def __init__(self):
         self.session = Session('db.json', 'experiment')
         pass
 
-    def addParticipant(self, id, group):
+    def addParticipant(self, p_id, p_group):
         print("Experiment.openParticipanSession")
-        if not self.session.existParticipant(id):
-            self.session.addParticipant(id, group)
+        if not self.session.existParticipant(p_id):
+            self.session.addParticipant(p_id, p_group)
+            self.participant_id = p_id
+            self.participant_group = p_group
         else:
             print("Participant already exist")
-        
 
-    def openParticipanSession(self, id):
+    def getParticipantStatus(self, p_id):
+        return self.session.getParticipantStatus(p_id)
+
+    def openParticipanSession(self, p_id):
         print("Experiment.openParticipanSession")
         pass
 

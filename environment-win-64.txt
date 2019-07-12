@@ -14,9 +14,10 @@ https://repo.anaconda.com/pkgs/main/win-64/zlib-1.2.11-h3cc03e0_3.tar.bz2
 https://repo.anaconda.com/pkgs/main/win-64/libpng-1.6.37-h7a46e7a_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/win-64/python-2.7.16-hcb6e200_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/win-64/certifi-2019.6.16-py27_0.tar.bz2
-https://repo.anaconda.com/pkgs/main/win-64/pyyaml-5.1-py27h0c8e037_0.tar.bz2
+https://repo.anaconda.com/pkgs/main/win-64/pyyaml-5.1.1-py27h0c8e037_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/win-64/qt-5.6.2-vc9hc26998b_12.tar.bz2
 https://repo.anaconda.com/pkgs/main/win-64/sip-4.18.1-py27hc56fc5f_2.tar.bz2
+https://conda.anaconda.org/conda-forge/noarch/tinydb-3.13.0-py_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/win-64/wincertstore-0.2-py27hf04cefb_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/win-64/pyqt-5.6.0-py27h6e61f57_6.tar.bz2
 https://repo.anaconda.com/pkgs/main/win-64/setuptools-41.0.1-py27_0.tar.bz2

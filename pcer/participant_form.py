@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication)
+    QHBoxLayout, QVBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 
@@ -22,14 +22,34 @@ class ParticipantForm(PcerWindow):
         loadButton.clicked.connect(self.onLoadButtonClick)
         exitButton.clicked.connect(self.onExitButtonClick)
 
+        idLabel = QLabel()
+        idLabel.setText('ID:')
+        self.idField = QLineEdit()
+        groupLabel = QLabel()
+        groupLabel.setText('Group:')
+        self.groupCombo = QComboBox()
+        self.groupCombo.addItem("DCI")
+        self.groupCombo.addItem("OO")
+        statusLabel = QLabel()
+        statusLabel.setText('Status:')
+        self.statusText = QPlainTextEdit()
+        self.statusText.setReadOnly(True)
+        self.loadCurrentParticipantStatus()
+
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         
         hbox.addWidget(exitButton)
-        hbox.addWidget(loadButton)
+        hbox.addWidget(loadButton)        
         hbox.addWidget(continueButton)
 
         vbox = QVBoxLayout()
+        vbox.addWidget(idLabel)
+        vbox.addWidget(self.idField)
+        vbox.addWidget(groupLabel)
+        vbox.addWidget(self.groupCombo)
+        vbox.addWidget(statusLabel)
+        vbox.addWidget(self.statusText)
         vbox.addStretch(1)
         vbox.addLayout(hbox)
         
@@ -37,8 +57,19 @@ class ParticipantForm(PcerWindow):
         
         self.setWindowTitle('Participant information')
 
+    def loadCurrentParticipantStatus(self):
+        print("ParticipantForm.loadCurrentParticipantStatus")
+        print(self.experiment.participant_id)
+        status = self.experiment.getParticipantStatus(self.experiment.participant_id)
+        self.statusText.insertPlainText(str(status))
+        self.idField.setText(self.experiment.participant_id)
+        index = self.groupCombo.findText(self.experiment.participant_group)
+        self.groupCombo.setCurrentIndex(index)
+
     def onContinueButtonClick(self):
         print("ParticipantForm.onContinueButtonClick")
+        print(self.idField.text(), self.groupCombo.currentText())
+        self.experiment.addParticipant(self.idField.text(), self.groupCombo.currentText())
         self.continue_with_the_experiment.emit()
 
     def onLoadButtonClick(self):

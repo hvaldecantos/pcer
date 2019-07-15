@@ -1,5 +1,9 @@
 # ignore bytecode files
 *.pyc
+
+# ignore config files
+config.yml
+
 .idea/*
 pcer/.idea/*
 *.xml

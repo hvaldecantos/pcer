@@ -1,4 +1,6 @@
 # ignore bytecode files
 *.pyc
-/.idea/*
-/pcer/.idea/*
+.idea/*
+pcer/.idea/*
+*.xml
+*.iml

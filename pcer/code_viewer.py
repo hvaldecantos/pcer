@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (QWidget, QPushButton,
 from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFile, QRegExp, Qt
+from pcer_window import PcerWindow
 
 
 class MyQTextEdit(QTextEdit):
@@ -20,29 +21,15 @@ class MyQTextEdit(QTextEdit):
         print(self.scrollbar_displacement)
 
 
-class CodeViewer(QWidget):
+class CodeViewer(PcerWindow):
 
     back = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
-        super(QWidget, self).__init__(parent)
-        with open(os.getcwd()[:-4] + "config.yml", "r") as stream:
-            try:
-                self.config = yaml.safe_load(stream)
-            except yaml.YAMLError as exc:
-                print(exc)
-        self.width = self.config['window_size']['width']
-        self.height = self.config['window_size']['height']
-        self.listWidth = self.width/4
-        self.backButtonWidth = self.listWidth/2
-        self.initUI()
-        self.setFixedSize(self.width, self.height)
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-
-    def initUI(self):
-        self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
-        self.centerOnScreen()
-        self.setFixedSize(self.width, self.height)
+        super(PcerWindow, self).__init__(parent)
+        self.initBaseUI()
+        self.listWidth = self.width / 4
+        self.backButtonWidth = self.listWidth / 2
         self.setWindowTitle('Code Viewer')
 
         self.setupFileList()

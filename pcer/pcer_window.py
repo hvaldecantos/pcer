@@ -10,7 +10,7 @@ class PcerWindow(QWidget):
         super(QWidget, self).__init__(parent)
 
     def initBaseUI(self):
-        self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         with open(os.getcwd()[:-4] + "config.yml", "r") as stream:
             try:
                 self.config = yaml.safe_load(stream)

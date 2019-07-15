@@ -2,18 +2,19 @@ import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
     QHBoxLayout, QVBoxLayout, QApplication)
 from PyQt5 import QtCore
+from pcer_window import PcerWindow
 
-class TaskForm(QWidget):
+class TaskForm(PcerWindow):
 
     submit_answer = QtCore.pyqtSignal()
     read_code = QtCore.pyqtSignal()
 
     def __init__(self):
-        super(QWidget, self).__init__()
+        super(PcerWindow, self).__init__()
         self.initUI()
 
     def initUI(self):
-        self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
+        self.initBaseUI()
         submitButton = QPushButton("Submit answer")
         readButton = QPushButton("Read code")
 
@@ -31,8 +32,6 @@ class TaskForm(QWidget):
         vbox.addLayout(hbox)
         
         self.setLayout(vbox)
-        
-        self.setGeometry(300, 300, 300, 150)
         self.setWindowTitle('Task presentation')
 
     def onSubmitButtonClick(self):

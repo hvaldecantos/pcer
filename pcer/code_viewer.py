@@ -28,7 +28,8 @@ class CodeViewer(PcerWindow):
     def __init__(self, parent=None):
         super(PcerWindow, self).__init__(parent)
         self.initBaseUI()
-        self.listWidth = self.width / 4
+        self.listWidth = (self.width / 4) * 1
+        self.editorWidth = (self.width / 4) * 3
         self.backButtonWidth = self.listWidth / 2
         self.setWindowTitle('Code Viewer')
 
@@ -47,7 +48,7 @@ class CodeViewer(PcerWindow):
         backButton = QPushButton("Back", self)
         backButton.clicked.connect(self.onBackButtonClick)
         backButton.move(50, self.height - 50)
-        backButton.resize(100, 25)
+        backButton.resize(self.listWidth - 100, 25)
 
     def setupEditor(self):
         font = QFont()
@@ -57,8 +58,8 @@ class CodeViewer(PcerWindow):
 
         self.editor = MyQTextEdit(self)
         self.editor.setFont(font)
-        self.editor.move(199,0)
-        self.editor.resize(600,300)
+        self.editor.move(self.listWidth, 0)
+        self.editor.resize(self.editorWidth, self.height)
         self.highlighter = Highlighter(self.editor.document()) 
 
     def onListItemClick(self, l):

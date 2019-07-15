@@ -1,9 +1,12 @@
 import sys
+import os
+import yaml
 from PyQt5.QtWidgets import (QWidget, QPushButton,
      QApplication, QDesktopWidget, QListWidget, QTextEdit)
 from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFile, QRegExp, Qt
+
 
 class MyQTextEdit(QTextEdit):
     scrollbar_displacement = 0
@@ -13,8 +16,9 @@ class MyQTextEdit(QTextEdit):
 
     def scrollContentsBy(self, dx, dy):
         super(QTextEdit, self).scrollContentsBy(dx, dy)
-        self.scrollbar_displacement+=dy
+        self.scrollbar_displacement += dy
         print(self.scrollbar_displacement)
+
 
 class CodeViewer(QWidget):
 
@@ -22,22 +26,24 @@ class CodeViewer(QWidget):
 
     def __init__(self, parent=None):
         super(QWidget, self).__init__(parent)
-        self.width = 800
-        self.height = 300
+        with open(os.getcwd()[:-4] + "config.yml", "r") as stream:
+            try:
+                self.config = yaml.safe_load(stream)
+            except yaml.YAMLError as exc:
+                print(exc)
+        self.width = self.config['window_size']['width']
+        self.height = self.config['window_size']['height']
         self.listWidth = self.width/4
         self.backButtonWidth = self.listWidth/2
         self.initUI()
-        self.setFixedSize(800, 300)
+        self.setFixedSize(self.width, self.height)
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        config = open("config.txt", "a")
-        config.write(str(self.frameGeometry()) + "\n")
-        config.close()
 
     def initUI(self):
         self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
         self.centerOnScreen()
         self.setFixedSize(self.width, self.height)
-        self.setWindowTitle('Code Vierwer')
+        self.setWindowTitle('Code Viewer')
 
         self.setupFileList()
         self.setupBackButton()

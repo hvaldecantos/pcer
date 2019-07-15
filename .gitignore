@@ -4,7 +4,5 @@
 # ignore config files
 config.yml
 
-.idea/*
-pcer/.idea/*
-*.xml
-*.iml
+# ignore Pycharm IDE files
+**/.idea/

@@ -3,6 +3,7 @@
 
 # ignore config files
 config.yml
+config.txt
 
 # ignore Pycharm IDE files
 **/.idea/

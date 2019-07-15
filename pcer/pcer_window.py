@@ -11,7 +11,7 @@ class PcerWindow(QWidget):
         self.experiment = experiment
 
     def initBaseUI(self):
-    	self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
+    	self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
     	self.width = 800
     	self.height = 300
     	self.setFixedSize(self.width, self.height)

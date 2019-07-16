@@ -32,7 +32,6 @@ class SystemForm(PcerWindow):
         vbox.addLayout(hbox)
         
         self.setLayout(vbox)
-        
         self.setWindowTitle('System presentation')
 
     def onShowTaskButtonClick(self):

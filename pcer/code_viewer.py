@@ -1,10 +1,13 @@
 import sys
+import os
+import yaml
 from PyQt5.QtWidgets import (QWidget, QPushButton,
      QApplication, QDesktopWidget, QListWidget, QTextEdit)
 from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFile, QRegExp, Qt
 from pcer_window import PcerWindow
+
 
 class MyQTextEdit(QTextEdit):
     scrollbar_displacement = 0
@@ -14,8 +17,9 @@ class MyQTextEdit(QTextEdit):
 
     def scrollContentsBy(self, dx, dy):
         super(MyQTextEdit, self).scrollContentsBy(dx, dy)
-        self.scrollbar_displacement+=dy
+        self.scrollbar_displacement += dy
         print(self.scrollbar_displacement)
+
 
 class CodeViewer(PcerWindow):
 
@@ -24,13 +28,13 @@ class CodeViewer(PcerWindow):
     def __init__(self, experiment):
         super(CodeViewer, self).__init__(experiment)
         self.initBaseUI()
-        self.listWidth = self.width/4
-        self.backButtonWidth = self.listWidth/2
+        self.listWidth = (self.width / 4) * 1
+        self.editorWidth = (self.width / 4) * 3
+        self.backButtonWidth = self.listWidth / 2
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('Code Vierwer')
-
+        self.setWindowTitle('Code Viewer')
         self.setupFileList()
         self.setupBackButton()
         self.setupEditor()
@@ -46,7 +50,7 @@ class CodeViewer(PcerWindow):
         backButton = QPushButton("Back", self)
         backButton.clicked.connect(self.onBackButtonClick)
         backButton.move(50, self.height - 50)
-        backButton.resize(100, 25)
+        backButton.resize(self.listWidth - 100, 25)
 
     def setupEditor(self):
         font = QFont()
@@ -56,8 +60,8 @@ class CodeViewer(PcerWindow):
 
         self.editor = MyQTextEdit(self)
         self.editor.setFont(font)
-        self.editor.move(199,0)
-        self.editor.resize(600,300)
+        self.editor.move(self.listWidth, 0)
+        self.editor.resize(self.editorWidth, self.height)
         self.highlighter = Highlighter(self.editor.document()) 
 
     def onListItemClick(self, l):
@@ -103,15 +107,20 @@ class Highlighter(QSyntaxHighlighter):
         keywordFormat.setForeground(Qt.darkBlue)
         keywordFormat.setFontWeight(QFont.Bold)
 
-        keywordPatterns = ["\\bchar\\b", "\\bclass\\b", "\\bconst\\b",
-                "\\bdouble\\b", "\\benum\\b", "\\bexplicit\\b", "\\bfriend\\b",
-                "\\binline\\b", "\\bint\\b", "\\blong\\b", "\\bnamespace\\b",
-                "\\boperator\\b", "\\bprivate\\b", "\\bprotected\\b",
-                "\\bpublic\\b", "\\bshort\\b", "\\bsignals\\b", "\\bsigned\\b",
-                "\\bslots\\b", "\\bstatic\\b", "\\bstruct\\b",
-                "\\btemplate\\b", "\\btypedef\\b", "\\btypename\\b",
-                "\\bunion\\b", "\\bunsigned\\b", "\\bvirtual\\b", "\\bvoid\\b",
-                "\\bvolatile\\b"]
+        keywordPatterns = ["\\babstract\\b", "\\bcontinue\\b", "\\bfor\\b",
+                "\\bnew\\b", "\\bswitch\\b", "\\bassert\\b", "\\bdefault\\b",
+                "\\bgoto\\b", "\\bpackage\\b", "\\bsynchronized\\b", "\\bboolean\\b",
+                "\\bdo\\b", "\\bif\\b", "\\bprivate\\b", "\\bthis\\b",
+                "\\bbreak\\b", "\\bdouble\\b", "\\bimplements\\b", "\\bprotected\\b",
+                "\\bthrow\\b", "\\bbyte\\b", "\\belse\\b", "\\bimport\\b",
+                "\\bpublic\\b", "\\bthrows\\b", "\\bcase\\b", "\\benum\\b",
+                "\\bintanceof\\b", "\\breturn\\b", "\\btransient\\b", "\\bcatch\\b",
+                "\\bextends\\b", "\\bint\\b", "\\bshort\\b", "\\btry\\b",
+                "\\bchar\\b", "\\bfinal\\b", "\\binterface\\b", "\\bstatic\\b",
+                "\\bvoid\\b", "\\bclass\\b", "\\bfinally\\b", "\\blong\\b",
+                "\\bstrictfp\\b", "\\bvolatile\\b", "\\bconst\\b", "\\bfloat\\b",
+                "\\bnative\\b", "\\bsuper\\b", "\\bwhile\\b", "\\btrue\\b"
+                "\\bfalse\\b", "\\bnull\\b"]
 
         self.highlightingRules = [(QRegExp(pattern), keywordFormat)
                 for pattern in keywordPatterns]

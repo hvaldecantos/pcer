@@ -32,7 +32,6 @@ class TaskForm(PcerWindow):
         vbox.addLayout(hbox)
         
         self.setLayout(vbox)
-        
         self.setWindowTitle('Task presentation')
 
     def onSubmitButtonClick(self):
@@ -42,4 +41,3 @@ class TaskForm(PcerWindow):
     def onReadButtonClick(self):
         print("TaskForm.onReadButtonClick")
         self.read_code.emit()
-        

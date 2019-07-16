@@ -54,7 +54,6 @@ class ParticipantForm(PcerWindow):
         vbox.addLayout(hbox)
         
         self.setLayout(vbox)
-        
         self.setWindowTitle('Participant information')
 
     def loadCurrentParticipantStatus(self):

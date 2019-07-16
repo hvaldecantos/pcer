@@ -9,12 +9,12 @@ class SystemForm(PcerWindow):
     back = QtCore.pyqtSignal()
     show_task = QtCore.pyqtSignal()
 
-    def __init__(self):
-        super(PcerWindow, self).__init__()
+    def __init__(self, experiment):
+        super(SystemForm, self).__init__(experiment)
+        self.initBaseUI()
         self.initUI()
 
     def initUI(self):
-        self.initBaseUI()
         showTaskButton = QPushButton("Show task")
         backButton = QPushButton("Back")
 

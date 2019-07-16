@@ -1,13 +1,14 @@
-import sys
-import os
 import yaml
 from PyQt5.QtWidgets import QWidget, QDesktopWidget
 from PyQt5 import QtCore
 
 class PcerWindow(QWidget):
 
-    def __init__(self, parent=None):
-        super(QWidget, self).__init__(parent)
+    experiment = None
+
+    def __init__(self, experiment):
+        super(PcerWindow, self).__init__()
+        self.experiment = experiment
 
     def initBaseUI(self):
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)

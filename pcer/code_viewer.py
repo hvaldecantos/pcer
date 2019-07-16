@@ -13,10 +13,10 @@ class MyQTextEdit(QTextEdit):
     scrollbar_displacement = 0
 
     def __init__(self, parent=None):
-        super(QTextEdit, self).__init__(parent)
+        super(MyQTextEdit, self).__init__(parent)
 
     def scrollContentsBy(self, dx, dy):
-        super(QTextEdit, self).scrollContentsBy(dx, dy)
+        super(MyQTextEdit, self).scrollContentsBy(dx, dy)
         self.scrollbar_displacement += dy
         print(self.scrollbar_displacement)
 
@@ -25,14 +25,16 @@ class CodeViewer(PcerWindow):
 
     back = QtCore.pyqtSignal()
 
-    def __init__(self, parent=None):
-        super(PcerWindow, self).__init__(parent)
+    def __init__(self, experiment):
+        super(CodeViewer, self).__init__(experiment)
         self.initBaseUI()
         self.listWidth = (self.width / 4) * 1
         self.editorWidth = (self.width / 4) * 3
         self.backButtonWidth = self.listWidth / 2
-        self.setWindowTitle('Code Viewer')
+        self.initUI()
 
+    def initUI(self):
+        self.setWindowTitle('Code Viewer')
         self.setupFileList()
         self.setupBackButton()
         self.setupEditor()

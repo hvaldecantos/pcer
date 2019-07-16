@@ -9,12 +9,12 @@ class TaskForm(PcerWindow):
     submit_answer = QtCore.pyqtSignal()
     read_code = QtCore.pyqtSignal()
 
-    def __init__(self):
-        super(PcerWindow, self).__init__()
+    def __init__(self, experiment):
+        super(TaskForm, self).__init__(experiment)
+        self.initBaseUI()
         self.initUI()
 
     def initUI(self):
-        self.initBaseUI()
         submitButton = QPushButton("Submit answer")
         readButton = QPushButton("Read code")
 
@@ -41,4 +41,3 @@ class TaskForm(PcerWindow):
     def onReadButtonClick(self):
         print("TaskForm.onReadButtonClick")
         self.read_code.emit()
-        

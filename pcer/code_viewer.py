@@ -68,12 +68,6 @@ class CodeViewer(PcerWindow):
         print(l.text())
         # self.openFile("./pcer/example.cpp")
 
-    def centerOnScreen (self):
-        resolution = QDesktopWidget().screenGeometry()
-        self.move((resolution.width() / 2) - (self.frameSize().width() / 2),
-                  (resolution.height() / 2) - (self.frameSize().height() / 2)) 
-        print(resolution.height())
-
     def onBackButtonClick(self):
         print("TaskForm.onBackButtonClick")
         self.back.emit()

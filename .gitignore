@@ -10,3 +10,6 @@ config.txt
 
 # ignore JSON files
 *.json
+
+# ignore resource directory
+resource/

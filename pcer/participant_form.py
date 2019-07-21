@@ -36,12 +36,7 @@ class ParticipantForm(PcerWindow):
         self.statusText.setReadOnly(True)
         self.loadCurrentParticipantStatus()
 
-        hbox = QHBoxLayout()
-        hbox.addStretch(1)
-        
-        hbox.addWidget(exitButton)
-        hbox.addWidget(loadButton)        
-        hbox.addWidget(continueButton)
+        hbox = self.initBar([exitButton, loadButton, continueButton])
 
         vbox = QVBoxLayout()
         vbox.addWidget(idLabel)

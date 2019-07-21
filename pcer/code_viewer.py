@@ -2,7 +2,7 @@ import sys
 import os
 import yaml
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-     QApplication, QDesktopWidget, QListWidget, QTextEdit)
+     QApplication, QDesktopWidget, QListWidget, QTextEdit, QFileDialog)
 from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFile, QRegExp, Qt
@@ -38,6 +38,7 @@ class CodeViewer(PcerWindow):
         self.setupFileList()
         self.setupBackButton()
         self.setupEditor()
+        hbox = self.initBar([])
 
     def setupFileList(self):
         listWidget = QListWidget(self)

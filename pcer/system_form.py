@@ -23,9 +23,8 @@ class SystemForm(PcerWindow):
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
-        
-        hbox.addWidget(backButton)
-        hbox.addWidget(showTaskButton)
+
+        hbox = self.initBar([backButton, showTaskButton])
 
         vbox = QVBoxLayout()
         vbox.addStretch(1)

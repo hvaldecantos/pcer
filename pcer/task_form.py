@@ -23,9 +23,8 @@ class TaskForm(PcerWindow):
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
-        
-        hbox.addWidget(submitButton)
-        hbox.addWidget(readButton)
+
+        hbox = self.initBar([submitButton, readButton])
 
         vbox = QVBoxLayout()
         vbox.addStretch(1)

@@ -56,6 +56,9 @@ class ParticipantForm(PcerWindow):
         self.setLayout(vbox)
         self.setWindowTitle('Participant information')
 
+    def isValidInput(self):
+        return (self.idField.text() != '' and self.groupCombo.currentIndex() >= 0)
+
     def loadCurrentParticipantStatus(self):
         print("ParticipantForm.loadCurrentParticipantStatus")
         print(self.experiment.participant_id)
@@ -69,12 +72,15 @@ class ParticipantForm(PcerWindow):
     def onContinueButtonClick(self):
         print("ParticipantForm.onContinueButtonClick")
         print(self.idField.text(), self.groupCombo.currentText())
-        #new_participant is a flag which will indicate whether added participant is new or already exists
-        new_participant = self.experiment.addParticipant(self.idField.text(), self.groupCombo.currentText())
-        if new_participant or self.experiment.loaded_id == self.idField.text():
-            self.continue_with_the_experiment.emit()
+        if self.isValidInput():
+            #new_participant is a flag which will indicate whether added participant is new or already exists
+            new_participant = self.experiment.addParticipant(self.idField.text(), self.groupCombo.currentText())
+            if new_participant or self.experiment.loaded_id == self.idField.text():
+                self.continue_with_the_experiment.emit()
+            else:
+                self.popUpWarning('ID Exist. Please use Load Button.')
         else:
-            self.popUpWarning()
+            self.popUpWarning('ID and Group inputs can be empty.')
 
     def onLoadButtonClick(self):
         print("ParticipantForm.onLoadButtonClick")
@@ -91,10 +97,10 @@ class ParticipantForm(PcerWindow):
         QApplication.instance().quit()
 
     #Function Contains code for displaying Warning
-    def popUpWarning(self):
+    def popUpWarning(self, msg):
         warning = QMessageBox()
         warning.setIcon(QMessageBox.Warning)
-        warning.setText('ID Exist. Please use Load Button')
+        warning.setText(msg)
         warning.setWindowTitle('Warning')
         warning.setStandardButtons(QMessageBox.Ok)
         warning.exec_()

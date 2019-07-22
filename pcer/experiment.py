@@ -13,6 +13,9 @@ class Experiment():
         self.session = Session('db.json', 'experiment')
         pass
 
+    def hasActiveParticipant(self):
+        return self.participant_id != None and participant_group != None
+
     #Added new function setCurrent participant for modularity
     def setCurrentParticipant(self,p_id, p_group=None):
         self.participant_id = p_id

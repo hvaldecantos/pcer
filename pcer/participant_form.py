@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit)
+    QHBoxLayout, QVBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit, QMessageBox)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 
@@ -60,7 +60,8 @@ class ParticipantForm(PcerWindow):
         print("ParticipantForm.loadCurrentParticipantStatus")
         print(self.experiment.participant_id)
         status = self.experiment.getParticipantStatus(self.experiment.participant_id)
-        self.statusText.insertPlainText(str(status))
+        if len(status) is not 0:
+            self.statusText.insertPlainText(str(status))
         self.idField.setText(self.experiment.participant_id)
         index = self.groupCombo.findText(self.experiment.participant_group)
         self.groupCombo.setCurrentIndex(index)
@@ -68,13 +69,32 @@ class ParticipantForm(PcerWindow):
     def onContinueButtonClick(self):
         print("ParticipantForm.onContinueButtonClick")
         print(self.idField.text(), self.groupCombo.currentText())
-        self.experiment.addParticipant(self.idField.text(), self.groupCombo.currentText())
-        self.continue_with_the_experiment.emit()
+        #new_participant is a flag which will indicate whether added participant is new or already exists
+        new_participant = self.experiment.addParticipant(self.idField.text(), self.groupCombo.currentText())
+        if new_participant or self.experiment.loaded_id == self.idField.text():
+            self.continue_with_the_experiment.emit()
+        else:
+            self.popUpWarning()
 
     def onLoadButtonClick(self):
         print("ParticipantForm.onLoadButtonClick")
         self.experiment.openParticipanSession(1234)
+        self.experiment.setCurrentParticipant(self.idField.text(), self.groupCombo.currentText())
+        status = str(self.experiment.getParticipantStatus(self.experiment.participant_id))
+        print(status)
+        self.statusText.setPlainText(status)
+        #loaded_id contains the ID present inside the QPlainTextEdit Widget.
+        self.experiment.loaded_id = self.experiment.participant_id
 
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")
         QApplication.instance().quit()
+
+    #Function Contains code for displaying Warning
+    def popUpWarning(self):
+        warning = QMessageBox()
+        warning.setIcon(QMessageBox.Warning)
+        warning.setText('ID Exist. Please use Load Button')
+        warning.setWindowTitle('Warning')
+        warning.setStandardButtons(QMessageBox.Ok)
+        warning.exec_()

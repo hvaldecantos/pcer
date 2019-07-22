@@ -4,6 +4,7 @@ class Experiment():
     
     participant_id = None
     participant_group = None
+    loaded_id = None
     current_system = None
     current_task = None
     session = None
@@ -12,14 +13,20 @@ class Experiment():
         self.session = Session('db.json', 'experiment')
         pass
 
+    #Added new function setCurrent participant for modularity
+    def setCurrentParticipant(self,p_id, p_group=None):
+        self.participant_id = p_id
+        self.participant_group = p_group
+
     def addParticipant(self, p_id, p_group):
         print("Experiment.openParticipanSession")
+        self.setCurrentParticipant(p_id, p_group)
         if not self.session.existParticipant(p_id):
             self.session.addParticipant(p_id, p_group)
-            self.participant_id = p_id
-            self.participant_group = p_group
+            return True
         else:
             print("Participant already exist")
+            return False
 
     def getParticipantStatus(self, p_id):
         return self.session.getParticipantStatus(p_id)

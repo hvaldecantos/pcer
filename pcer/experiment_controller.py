@@ -14,7 +14,7 @@ class ExperimentController:
 
     def show_participant_form(self):
     	if self.window is not None:
-    		self.window.close()
+               self.window.close()
         self.window = ParticipantForm(self.experiment)
         self.window.continue_with_the_experiment.connect(self.show_system_form)
         self.window.show()

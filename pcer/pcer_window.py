@@ -16,6 +16,7 @@ class PcerWindow(QWidget):
         self.initBaseUI()
         self.initUI() # invokes method in subclass
         self.setStatusBar()
+        self.setLayout(self.vbox)
 
     def initBaseUI(self):
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
@@ -39,7 +40,6 @@ class PcerWindow(QWidget):
         timer.show()
         self.statusBar.resize(self.width, 10)
         self.vbox.addWidget(self.statusBar)
-        self.setLayout(self.vbox)
 
     def centerOnScreen (self):
         resolution = QDesktopWidget().screenGeometry()

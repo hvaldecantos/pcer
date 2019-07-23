@@ -2,15 +2,19 @@ import yaml
 from PyQt5.QtWidgets import QWidget, QDesktopWidget, QVBoxLayout, QStatusBar, QLabel
 from PyQt5 import QtCore
 from pcer_timer import PcerTimer
+import time
 
 class PcerWindow(QWidget):
 
     experiment = None
     vbox = None
     statusBar = None
+    start = None
 
     def __init__(self, experiment):
         super(PcerWindow, self).__init__()
+        if self.start is None:
+            self.start = time.time()
         self.experiment = experiment
         self.vbox = QVBoxLayout()
         self.initBaseUI()
@@ -35,7 +39,7 @@ class PcerWindow(QWidget):
         self.statusBar.setSizeGripEnabled(False)
         self.statusBar.insertWidget(1, QLabel("Message 1"))
         self.statusBar.insertWidget(2, QLabel("Message 2"))
-        timer = PcerTimer(15)
+        timer = PcerTimer(15 - ((self.start - time.time())/6000))
         self.statusBar.insertPermanentWidget(1, timer)
         timer.show()
         self.statusBar.resize(self.width, 10)

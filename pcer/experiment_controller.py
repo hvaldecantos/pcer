@@ -2,6 +2,7 @@ from participant_form import ParticipantForm
 from system_form import SystemForm
 from task_form import TaskForm
 from code_viewer import CodeViewer
+from pretest_form import PretestForm
 from experiment import Experiment
 from pcer_timer import PcerTimer
 
@@ -54,8 +55,16 @@ class ExperimentController:
         if self.task_counter < 3:
             self.show_task_form()
         else:
-            self.window.close()
-            self.show_system_form()
+            self.show_pretest_form()
+
+    def show_pretest_form(self):
+        self.timer.stop()
+        self.window.close()
+        self.window = PretestForm(self.experiment)
+        self.window.submit_answer.connect(self.show_system_form)
+        self.window.addTimer(self.timer)
+        self.timer.hide()
+        self.window.show()
 
     def show_src_navigator(self):
         print("show_src_navigator")

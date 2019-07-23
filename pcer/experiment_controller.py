@@ -54,7 +54,6 @@ class ExperimentController:
         if self.task_counter < 3:
             self.show_task_form()
         else:
-            self.window.close()
             self.show_system_form()
 
     def show_src_navigator(self):

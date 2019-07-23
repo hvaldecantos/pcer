@@ -37,13 +37,13 @@ class PcerWindow(QWidget):
     def setStatusBar(self):
         self.statusBar = QStatusBar()
         self.statusBar.setSizeGripEnabled(False)
-        self.statusBar.insertWidget(1, QLabel("Message 1"))
-        self.statusBar.insertWidget(2, QLabel("Message 2"))
-        timer = PcerTimer(15 - ((self.start - time.time())/6000))
-        self.statusBar.insertPermanentWidget(1, timer)
-        timer.show()
-        self.statusBar.resize(self.width, 10)
+        self.statusBar.insertWidget(0, QLabel("Message 1"))
+        self.statusBar.insertWidget(1, QLabel("Message 2"))
         self.vbox.addWidget(self.statusBar)
+
+    def addTimer(self, timer):
+        self.statusBar.insertPermanentWidget(2, timer)
+        timer.show()
 
     def centerOnScreen (self):
         resolution = QDesktopWidget().screenGeometry()

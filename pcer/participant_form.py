@@ -67,7 +67,7 @@ class ParticipantForm(PcerWindow):
         print(self.idField.text(), self.groupCombo.currentText())
         #new_participant is a flag which will indicate whether added participant is new or already exists
         new_participant = self.experiment.addParticipant(self.idField.text(), self.groupCombo.currentText())
-        if new_participant or self.experiment.loaded_id == self.idField.text():
+        if new_participant or self.experiment.participant_id == self.idField.text():
             self.continue_with_the_experiment.emit()
         else:
             self.popUpWarning()
@@ -79,8 +79,6 @@ class ParticipantForm(PcerWindow):
         status = str(self.experiment.getParticipantStatus(self.experiment.participant_id))
         print(status)
         self.statusText.setPlainText(status)
-        #loaded_id contains the ID present inside the QPlainTextEdit Widget.
-        self.experiment.loaded_id = self.experiment.participant_id
 
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")

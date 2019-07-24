@@ -4,7 +4,6 @@ class Experiment():
     
     participant_id = None
     participant_group = None
-    loaded_id = None
     current_system = None
     current_task = None
     session = None
@@ -20,7 +19,6 @@ class Experiment():
 
     def addParticipant(self, p_id, p_group):
         print("Experiment.openParticipanSession")
-        self.setCurrentParticipant(p_id, p_group)
         if not self.session.existParticipant(p_id):
             self.session.addParticipant(p_id, p_group)
             return True

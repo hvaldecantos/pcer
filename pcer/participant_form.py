@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import (QWidget, QPushButton,
     QHBoxLayout, QVBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit, QMessageBox)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
+import json
 
 class ParticipantForm(PcerWindow):
 
@@ -64,7 +65,7 @@ class ParticipantForm(PcerWindow):
         print("ParticipantForm.loadCurrentParticipantStatus")
         print(self.experiment.participant_id)
         status = self.experiment.getParticipantStatus(self.experiment.participant_id)
-        self.statusText.insertPlainText(str(status))
+        self.statusText.insertPlainText(json.dumps(status, indent=4, sort_keys=False))
         self.setIdGroupFieldInTheForm(self.experiment.participant_id, self.experiment.participant_group)
 
     def onContinueButtonClick(self):
@@ -86,7 +87,7 @@ class ParticipantForm(PcerWindow):
         
         if len(status) > 0: # the participant exists in the DB
             self.setIdGroupFieldInTheForm(status[0]['id'], status[0]['group'])
-            self.statusText.setPlainText(str(status))
+            self.statusText.setPlainText(json.dumps(status, indent=4, sort_keys=False))
             self.experiment.setCurrentParticipant(self.idField.text(), self.groupCombo.currentText())
         else:
             self.popUpWarning("Participant ID = %s does not exist." % (participant_id))

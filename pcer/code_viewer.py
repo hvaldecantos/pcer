@@ -20,20 +20,19 @@ class MyQTextEdit(QTextEdit):
         self.scrollbar_displacement += dy
         print(self.scrollbar_displacement)
 
-
 class CodeViewer(PcerWindow):
 
     back = QtCore.pyqtSignal()
 
     def __init__(self, experiment):
         super(CodeViewer, self).__init__(experiment)
-        self.initBaseUI()
+
+    def initUI(self):
+        self.vbox.addStretch(1) # => necessary to send the status bar at the bottom
+        self.heightWithStatusBar = self.height - 40
         self.listWidth = (self.width / 4) * 1
         self.editorWidth = (self.width / 4) * 3
         self.backButtonWidth = self.listWidth / 2
-        self.initUI()
-
-    def initUI(self):
         self.setWindowTitle('Code Viewer')
         self.setupFileList()
         self.setupBackButton()
@@ -42,14 +41,14 @@ class CodeViewer(PcerWindow):
     def setupFileList(self):
         listWidget = QListWidget(self)
         listWidget.move(0, 0)
-        listWidget.resize(self.listWidth, self.height)
+        listWidget.resize(self.listWidth, self.heightWithStatusBar)
         listWidget.addItems(['test0', 'test1', 'test2', 'test3', 'test4'])
         listWidget.itemClicked.connect(self.onListItemClick)
 
     def setupBackButton(self):
         backButton = QPushButton("Back", self)
         backButton.clicked.connect(self.onBackButtonClick)
-        backButton.move(50, self.height - 50)
+        backButton.move(50, self.heightWithStatusBar - 50)
         backButton.resize(self.listWidth - 100, 25)
 
     def setupEditor(self):
@@ -61,7 +60,7 @@ class CodeViewer(PcerWindow):
         self.editor = MyQTextEdit(self)
         self.editor.setFont(font)
         self.editor.move(self.listWidth, 0)
-        self.editor.resize(self.editorWidth, self.height)
+        self.editor.resize(self.editorWidth, self.heightWithStatusBar)
         self.highlighter = Highlighter(self.editor.document()) 
 
     def onListItemClick(self, l):

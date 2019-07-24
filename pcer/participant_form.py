@@ -10,8 +10,6 @@ class ParticipantForm(PcerWindow):
 
     def __init__(self, experiment):
         super(ParticipantForm, self).__init__(experiment)
-        self.initBaseUI()
-        self.initUI()
 
     def initUI(self):
         continueButton = QPushButton("Continue")
@@ -43,17 +41,15 @@ class ParticipantForm(PcerWindow):
         hbox.addWidget(loadButton)        
         hbox.addWidget(continueButton)
 
-        vbox = QVBoxLayout()
-        vbox.addWidget(idLabel)
-        vbox.addWidget(self.idField)
-        vbox.addWidget(groupLabel)
-        vbox.addWidget(self.groupCombo)
-        vbox.addWidget(statusLabel)
-        vbox.addWidget(self.statusText)
-        vbox.addStretch(1)
-        vbox.addLayout(hbox)
+        self.vbox.addWidget(idLabel)
+        self.vbox.addWidget(self.idField)
+        self.vbox.addWidget(groupLabel)
+        self.vbox.addWidget(self.groupCombo)
+        self.vbox.addWidget(statusLabel)
+        self.vbox.addWidget(self.statusText)
+        self.vbox.addStretch(1)
+        self.vbox.addLayout(hbox)
         
-        self.setLayout(vbox)
         self.setWindowTitle('Participant information')
 
     def loadCurrentParticipantStatus(self):

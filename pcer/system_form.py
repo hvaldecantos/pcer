@@ -11,8 +11,6 @@ class SystemForm(PcerWindow):
 
     def __init__(self, experiment):
         super(SystemForm, self).__init__(experiment)
-        self.initBaseUI()
-        self.initUI()
 
     def initUI(self):
         showTaskButton = QPushButton("Show task")
@@ -27,11 +25,9 @@ class SystemForm(PcerWindow):
         hbox.addWidget(backButton)
         hbox.addWidget(showTaskButton)
 
-        vbox = QVBoxLayout()
-        vbox.addStretch(1)
-        vbox.addLayout(hbox)
+        self.vbox.addStretch(1)
+        self.vbox.addLayout(hbox)
         
-        self.setLayout(vbox)
         self.setWindowTitle('System presentation')
 
     def onShowTaskButtonClick(self):

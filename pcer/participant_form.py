@@ -55,36 +55,44 @@ class ParticipantForm(PcerWindow):
     def isValidInput(self):
         return (self.idField.text() != '' and self.groupCombo.currentIndex() >= 0)
 
+    def setIdGroupFieldInTheForm(self, id, group):
+        self.idField.setText(id)
+        index = self.groupCombo.findText(group)
+        self.groupCombo.setCurrentIndex(index)
+
     def loadCurrentParticipantStatus(self):
         print("ParticipantForm.loadCurrentParticipantStatus")
         print(self.experiment.participant_id)
         status = self.experiment.getParticipantStatus(self.experiment.participant_id)
-        if len(status) is not 0:
-            self.statusText.insertPlainText(str(status))
-        self.idField.setText(self.experiment.participant_id)
-        index = self.groupCombo.findText(self.experiment.participant_group)
-        self.groupCombo.setCurrentIndex(index)
+        self.statusText.insertPlainText(str(status))
+        self.setIdGroupFieldInTheForm(self.experiment.participant_id, self.experiment.participant_group)
+        # self.idField.setText(self.experiment.participant_id)
+        # index = self.groupCombo.findText(self.experiment.participant_group)
+        # self.groupCombo.setCurrentIndex(index)
 
     def onContinueButtonClick(self):
         print("ParticipantForm.onContinueButtonClick")
         print(self.idField.text(), self.groupCombo.currentText())
         if self.isValidInput():
-            #new_participant is a flag which will indicate whether added participant is new or already exists
             new_participant = self.experiment.addParticipant(self.idField.text(), self.groupCombo.currentText())
-            if new_participant or self.experiment.loaded_id == self.idField.text():
+            if new_participant or self.experiment.participant_id == self.idField.text():
                 self.continue_with_the_experiment.emit()
             else:
                 self.popUpWarning('ID Exist. Please use Load Button.')
         else:
-            self.popUpWarning('ID and Group inputs can be empty.')
+            self.popUpWarning('ID and Group inputs cannot be empty.')
 
     def onLoadButtonClick(self):
         print("ParticipantForm.onLoadButtonClick")
-        self.experiment.openParticipanSession(1234)
-        self.experiment.setCurrentParticipant(self.idField.text(), self.groupCombo.currentText())
-        status = str(self.experiment.getParticipantStatus(self.experiment.participant_id))
-        print(status)
-        self.statusText.setPlainText(status)
+        participant_id = self.idField.text()
+        status = self.experiment.getParticipantStatus(participant_id)
+        
+        if len(status) > 0: # the participant exists in the DB
+            self.setIdGroupFieldInTheForm(status[0]['id'], status[0]['group'])
+            self.statusText.setPlainText(str(status))
+            self.experiment.setCurrentParticipant(self.idField.text(), self.groupCombo.currentText())
+        else:
+            self.popUpWarning("Participant ID = %s does not exist." % (participant_id))
 
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")

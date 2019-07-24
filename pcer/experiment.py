@@ -24,6 +24,7 @@ class Experiment():
         print("Experiment.openParticipanSession")
         if not self.session.existParticipant(p_id):
             self.session.addParticipant(p_id, p_group)
+            self.setCurrentParticipant(p_id, p_group)
             return True
         else:
             print("Participant already exist")

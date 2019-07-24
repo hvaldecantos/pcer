@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit)
+    QHBoxLayout, QVBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit, QMessageBox)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 
@@ -52,25 +52,57 @@ class ParticipantForm(PcerWindow):
         
         self.setWindowTitle('Participant information')
 
+    def isValidInput(self):
+        return (self.idField.text() != '' and self.groupCombo.currentIndex() >= 0)
+
+    def setIdGroupFieldInTheForm(self, id, group):
+        self.idField.setText(id)
+        index = self.groupCombo.findText(group)
+        self.groupCombo.setCurrentIndex(index)
+
     def loadCurrentParticipantStatus(self):
         print("ParticipantForm.loadCurrentParticipantStatus")
         print(self.experiment.participant_id)
         status = self.experiment.getParticipantStatus(self.experiment.participant_id)
         self.statusText.insertPlainText(str(status))
-        self.idField.setText(self.experiment.participant_id)
-        index = self.groupCombo.findText(self.experiment.participant_group)
-        self.groupCombo.setCurrentIndex(index)
+        self.setIdGroupFieldInTheForm(self.experiment.participant_id, self.experiment.participant_group)
+        # self.idField.setText(self.experiment.participant_id)
+        # index = self.groupCombo.findText(self.experiment.participant_group)
+        # self.groupCombo.setCurrentIndex(index)
 
     def onContinueButtonClick(self):
         print("ParticipantForm.onContinueButtonClick")
         print(self.idField.text(), self.groupCombo.currentText())
-        self.experiment.addParticipant(self.idField.text(), self.groupCombo.currentText())
-        self.continue_with_the_experiment.emit()
+        if self.isValidInput():
+            new_participant = self.experiment.addParticipant(self.idField.text(), self.groupCombo.currentText())
+            if new_participant or self.experiment.participant_id == self.idField.text():
+                self.continue_with_the_experiment.emit()
+            else:
+                self.popUpWarning('ID Exist. Please use Load Button.')
+        else:
+            self.popUpWarning('ID and Group inputs cannot be empty.')
 
     def onLoadButtonClick(self):
         print("ParticipantForm.onLoadButtonClick")
-        self.experiment.openParticipanSession(1234)
+        participant_id = self.idField.text()
+        status = self.experiment.getParticipantStatus(participant_id)
+        
+        if len(status) > 0: # the participant exists in the DB
+            self.setIdGroupFieldInTheForm(status[0]['id'], status[0]['group'])
+            self.statusText.setPlainText(str(status))
+            self.experiment.setCurrentParticipant(self.idField.text(), self.groupCombo.currentText())
+        else:
+            self.popUpWarning("Participant ID = %s does not exist." % (participant_id))
 
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")
         QApplication.instance().quit()
+
+    #Function Contains code for displaying Warning
+    def popUpWarning(self, msg):
+        warning = QMessageBox()
+        warning.setIcon(QMessageBox.Warning)
+        warning.setText(msg)
+        warning.setWindowTitle('Warning')
+        warning.setStandardButtons(QMessageBox.Ok)
+        warning.exec_()

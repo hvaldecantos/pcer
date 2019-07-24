@@ -66,9 +66,6 @@ class ParticipantForm(PcerWindow):
         status = self.experiment.getParticipantStatus(self.experiment.participant_id)
         self.statusText.insertPlainText(str(status))
         self.setIdGroupFieldInTheForm(self.experiment.participant_id, self.experiment.participant_group)
-        # self.idField.setText(self.experiment.participant_id)
-        # index = self.groupCombo.findText(self.experiment.participant_group)
-        # self.groupCombo.setCurrentIndex(index)
 
     def onContinueButtonClick(self):
         print("ParticipantForm.onContinueButtonClick")

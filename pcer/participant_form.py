@@ -24,15 +24,19 @@ class ParticipantForm(PcerWindow):
         idLabel = QLabel()
         idLabel.setText('ID:')
         self.idField = QLineEdit()
+        self.idField.textEdited.connect(self.clean_status)
+
         groupLabel = QLabel()
         groupLabel.setText('Group:')
         self.groupCombo = QComboBox()
         self.groupCombo.addItem("DCI")
         self.groupCombo.addItem("OO")
+
         statusLabel = QLabel()
         statusLabel.setText('Status:')
         self.statusText = QPlainTextEdit()
         self.statusText.setReadOnly(True)
+
         self.loadCurrentParticipantStatus()
 
         hbox = QHBoxLayout()
@@ -56,6 +60,10 @@ class ParticipantForm(PcerWindow):
     def isValidInput(self):
         return (self.idField.text() != '' and self.groupCombo.currentIndex() >= 0)
 
+    def clean_status(self):
+        self.statusText.clear()
+        self.groupCombo.setCurrentIndex(-1)
+
     def setIdGroupFieldInTheForm(self, id, group):
         self.idField.setText(id)
         index = self.groupCombo.findText(group)
@@ -65,7 +73,7 @@ class ParticipantForm(PcerWindow):
         print("ParticipantForm.loadCurrentParticipantStatus")
         print(self.experiment.participant_id)
         status = self.experiment.getParticipantStatus(self.experiment.participant_id)
-        self.statusText.insertPlainText(json.dumps(status, indent=4, sort_keys=False))
+        self.statusText.setPlainText(json.dumps(status, indent=4, sort_keys=False))
         self.setIdGroupFieldInTheForm(self.experiment.participant_id, self.experiment.participant_group)
 
     def onContinueButtonClick(self):
@@ -91,6 +99,7 @@ class ParticipantForm(PcerWindow):
             self.experiment.setCurrentParticipant(self.idField.text(), self.groupCombo.currentText())
         else:
             self.popUpWarning("Participant ID = %s does not exist." % (participant_id))
+            self.idField.setFocus()
 
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")

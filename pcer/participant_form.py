@@ -30,8 +30,9 @@ class ParticipantForm(PcerWindow):
         groupLabel = QLabel()
         groupLabel.setText('Group:')
         self.groupCombo = QComboBox()
-        self.groupCombo.addItem("DCI")
-        self.groupCombo.addItem("OO")
+
+        for group in self.experiment.getGroups():
+            self.groupCombo.addItem(group)
 
         statusLabel = QLabel()
         statusLabel.setText('Status:')

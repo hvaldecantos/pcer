@@ -1,4 +1,5 @@
 from session import Session
+from resource import Resource
 
 class Experiment():
     
@@ -7,9 +8,11 @@ class Experiment():
     current_system = None
     current_task = None
     session = None
+    resource = None
 
     def __init__(self):
         self.session = Session('db.json', 'experiment')
+        self.resource = Resource()
         pass
 
     def hasActiveParticipant(self):
@@ -42,5 +45,4 @@ class Experiment():
         pass
 
     def getGroups(self):
-        pass
-        # check the file structure
+        return self.resource.getGroups()

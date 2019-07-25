@@ -21,7 +21,6 @@ class Resource():
         pattern = "*.yml"
         for entry in listOfFiles:
             if fnmatch.fnmatch(entry, pattern):
-                print(os.path.join(self.path, entry))
                 y = yaml.load(open(os.path.join(self.path, entry)), Loader = yaml.SafeLoader)
                 self.system_db.insert(y)
         self.system_db.remove(self.system.enabled == False)
@@ -31,3 +30,6 @@ class Resource():
 
     def getExperimentalSystems(self):
         return self.system_db.search(self.system.warmup == False)
+
+    def getGroups(self):
+        return [file for file in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, file)) and not file[0] == '.' ]

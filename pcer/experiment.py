@@ -22,13 +22,8 @@ class Experiment():
 
     def addParticipant(self, p_id, p_group):
         print("Experiment.openParticipanSession")
-        if not self.session.existParticipant(p_id):
-            self.session.addParticipant(p_id, p_group)
-            self.setCurrentParticipant(p_id, p_group)
-            return True
-        else:
-            print("Participant already exist")
-            return False
+        self.session.addParticipant(p_id, p_group)
+        self.setCurrentParticipant(p_id, p_group)
 
     def getParticipantStatus(self, p_id):
         return self.session.getParticipantStatus(p_id)

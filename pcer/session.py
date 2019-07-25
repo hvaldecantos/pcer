@@ -1,4 +1,5 @@
 from tinydb import TinyDB, Query
+from participant_already_exist_error import ParticipantAlreadyExistError
 
 class Session():
     
@@ -13,6 +14,8 @@ class Session():
         return len(self.db.search(self.participant.id == id)) > 0
 
     def addParticipant(self, id, group):
+        if self.existParticipant(id):
+            raise ParticipantAlreadyExistError(id)
         self.db.insert({'id': id, 'group': group})
 
     def getParticipantStatus(self, id):

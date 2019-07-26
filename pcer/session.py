@@ -16,7 +16,16 @@ class Session():
     def addParticipant(self, id, group):
         if self.existParticipant(id):
             raise ParticipantAlreadyExistError(id)
-        self.db.insert({'id': id, 'group': group})
+        self.db.insert({'id': id, 'group': group, 'warmup_finished': False, 'experiment_finished': False, 'current_system_id': None})
 
     def getParticipantStatus(self, id):
     	return self.db.search(self.participant.id == id)
+
+    def isWarmupSystemFinished(self, participant_id):
+        return self.getParticipantStatus(participant_id)[0]['warmup_finished']
+
+    def getCurrentSystemId(self, participant_id):
+        return self.getParticipantStatus(participant_id)[0]['current_system_id']
+
+    def setCurrentSystemId(self, participant_id, system_id):
+        self.db.update({'current_system_id': system_id}, self.participant.id == participant_id)

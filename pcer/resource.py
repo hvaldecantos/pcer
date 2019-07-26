@@ -29,10 +29,16 @@ class Resource():
         return self.system_db.search(self.system.warmup == True)
 
     def getExperimentalSystems(self):
-        return self.system_db.search(self.system.warmup == False)
+        systems = self.system_db.search(self.system.warmup == False)
+        if len(systems) <= 0:
+            raise Exception("No experimental system defined in 'resource' folder.")
+        return systems
 
     def getGroups(self):
-        return [file for file in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, file)) and not file[0] == '.' ]
+        groups = [file for file in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, file)) and not file[0] == '.' ]
+        if len(groups) <= 0:
+            raise Exception("No group defined in 'resource' folder.")
+        return groups
 
     def getSystem(self, system_id):
         try:

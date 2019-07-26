@@ -46,5 +46,13 @@ class Resource():
         except IndexError:
             raise Exception("System with 'id': '%s' not found." % system_id)
 
-    def getTaks(self):
-        pass
+    def getTasks(self, group, system_id):
+        task_db = TinyDB(storage = MemoryStorage)
+        system = self.getSystem(system_id)
+        try:
+            tasks = system['tasks'][group]
+            if len(tasks) <= 0:
+                raise Exception("No tasks defined in 'resource' for system 'id': '%s'." % system_id)
+            return tasks
+        except KeyError:
+            raise Exception("Key 'tasks' not found in .yml file for system 'id': '%s'." % system_id)

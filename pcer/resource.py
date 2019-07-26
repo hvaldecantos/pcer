@@ -33,3 +33,12 @@ class Resource():
 
     def getGroups(self):
         return [file for file in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, file)) and not file[0] == '.' ]
+
+    def getSystem(self, system_id):
+        try:
+            return self.system_db.search(self.system.id == system_id)[0]
+        except IndexError:
+            raise Exception("System with 'id': '%s' not found." % system_id)
+
+    def getTaks(self):
+        pass

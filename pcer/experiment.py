@@ -1,5 +1,8 @@
 from session import Session
 from resource import Resource
+from PyQt5.QtWidgets import (QWidget, QPushButton,
+    QHBoxLayout, QVBoxLayout, QApplication)
+import random
 
 class Experiment():
     
@@ -46,3 +49,32 @@ class Experiment():
 
     def getGroups(self):
         return self.resource.getGroups()
+
+    def getExperimentalSystem(self):
+        # print("-----------")
+        # print(self.resource.getWarmupSystems()[0])
+        # print("-----------")
+        system = None
+
+        system_id = self.session.getCurrentSystemId(self.participant_id)
+        print(system_id)
+
+        if not system_id:
+            if not self.session.isWarmupSystemFinished(self.participant_id):
+                warmup_systems = self.resource.getWarmupSystems()
+                random.shuffle(warmup_systems)
+                system = warmup_systems[0] # there must be at least
+            # else:
+            #     system = self.session.getCurrentSystemId(participant_id)
+            #     if len(system) <= 0:
+            #         finished_systems = self.session.getFinishedExperimentalSystems(participant_id):
+            #         all_systems = self.resource.getExperimentalSystems()
+            #         remain_systems = all_systems - finished_systems
+            #         system = random.shuffle(remain_systems)[0]
+
+            self.session.setCurrentSystemId(self.participant_id, system['id'])
+        else:
+            system = self.resource.getSystem(system_id)
+        return system
+
+        # return QPushButton("Current System")

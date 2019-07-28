@@ -8,21 +8,18 @@ class FormBuilder:
     def __init__(self):
         pass
 
-    def build_pretest_form(self):
-        groupbox = QGroupBox('Pretest')
+    def build_pretest_form(self, experiment):
+        pretests = experiment.resource.getPretests(experiment.participant_group)
+        print('pretests')
+        name = pretests['name']
+        description = pretests['description']
+        questions = pretests['questions']
+        options = pretests['options']
+        groupbox = QGroupBox(name)
         inner_vbox = QVBoxLayout()
         inner_vbox.addStretch(1)
 
-        # < temporary code: this code should build from the
-        # questions in the pretest.yml file, and more ...
-        #groups_dir = os.listdir(self.experiment.resource.path)
-        #os.path.join(groups_dir)
-        #print('Path : ',self.experiment.resource.path+'\\'+participant_group+'\\'+)
-        questions = ['qwe','asd','zxc','try']
-        options = ['a','b','c','d']
-        question_widgets = []
-        answer_widgets = []
-        print('Here')
+        description_label = QLabel(description)
         for i in range(0,len(questions)):
             question_label = QLabel(questions[i])
             inner_vbox.addWidget(question_label)

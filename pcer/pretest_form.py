@@ -20,7 +20,7 @@ class PretestForm(PcerWindow):
         hbox.addWidget(submitButton)
 
         
-        group_box = self.experiment.form_builder.build_pretest_form()
+        group_box = self.experiment.form_builder.build_pretest_form(self.experiment)
         self.vbox.addWidget(group_box)
         self.vbox.addStretch(1)
         self.vbox.addLayout(hbox)

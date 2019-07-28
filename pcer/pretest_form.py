@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QLabel, QComboBox)
+    QHBoxLayout, QVBoxLayout, QApplication, QLabel, QComboBox, QGroupBox)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 
@@ -13,28 +13,17 @@ class PretestForm(PcerWindow):
 
     def initUI(self):
         submitButton = QPushButton("Submit answer")
-
         submitButton.clicked.connect(self.onSubmitButtonClick)
-
-        # < temporary code: this code should build from the
-        # questions in the pretest.yml file, and more ...
-        q1 = QLabel()
-        q1.setText('q1:')
-        a1 = QComboBox()
-        a1.addItem("DCI")
-        a1.addItem("OO")
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
-        
         hbox.addWidget(submitButton)
 
-        self.vbox.addWidget(q1)
-        self.vbox.addWidget(a1)
+        
+        group_box = self.experiment.form_builder.build_pretest_form()
+        self.vbox.addWidget(group_box)
         self.vbox.addStretch(1)
         self.vbox.addLayout(hbox)
-        # temporary code >
-        
         self.setWindowTitle('Pretest')
 
     def onSubmitButtonClick(self):

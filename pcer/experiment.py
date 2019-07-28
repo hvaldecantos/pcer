@@ -1,8 +1,6 @@
 from session import Session
 from resource import Resource
-from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication)
-import random
+from form_builder import FormBuilder
 
 class Experiment():
     
@@ -16,6 +14,7 @@ class Experiment():
     def __init__(self):
         self.session = Session('db.json', 'experiment')
         self.resource = Resource()
+        self.form_builder = FormBuilder()
         pass
 
     def hasActiveParticipant(self):

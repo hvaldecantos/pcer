@@ -97,7 +97,6 @@ class ParticipantForm(PcerWindow):
         print("ParticipantForm.onLoadButtonClick")
         participant_id = self.idField.text()
         status = self.experiment.getParticipantStatus(participant_id)
-        
         if len(status) > 0: # the participant exists in the DB
             self.setIdGroupFieldInTheForm(status[0]['id'], status[0]['group'])
             self.statusText.setPlainText(json.dumps(status, indent=4, sort_keys=False))

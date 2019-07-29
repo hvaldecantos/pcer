@@ -16,7 +16,7 @@ It needs the desired size for all the windows in the system:
 The path of the experimental resource to run the experiment:
 
     resource:
-      "resource/"
+      "resource"
 
 ### Resource directory
 
@@ -27,14 +27,9 @@ We adhere to the following structure:
     resource
     ├── paradigm1
     │   ├── system1
-    │   │   ├── code
-    │   │   │   ├── file1
-    │   │   │   ├── ...
-    │   │   │   └── fileN
-    │   │   └── tasks
-    │   │       ├── task1
-    │   │       ├── ...
-    │   │       └── taskN
+    │   │   ├── file1
+    │   │   ├── ...
+    │   │   ├── fileN
     │   ├── system2
     │   ├── ...
     │   └── systemN
@@ -45,3 +40,51 @@ We adhere to the following structure:
     ├── system1.yml
     ├── ...
     └── systemN.yml
+
+### System yaml file
+
+Each experimental system has its own `.yaml` file to set the following properties:
+
+    id:
+      "id"
+    name:
+      "System1"
+    enabled:
+      True
+    warmup:
+      False
+    description:
+      "Small description"
+    code:
+      dci:
+        resource/<paradigm1>/<system1>
+      oo:
+        resource/<paradigm2>/<system1>
+    tasks:
+      dci:
+        [
+          {
+            id: "task1",
+            name: "task1 name",
+            description: "task 1 description",
+            questions: ["question1", ..., "questionN"],
+            options: ['--', 'true', 'false', 'dk']
+          },
+          ... ,
+          {
+            id: "taskN",
+            ...
+          }
+        ]
+      oo:
+        [
+          {
+            id: "task1",
+            ...
+          },
+          ...,
+          {
+            id: "taskN",
+            ...
+          }
+        ]

@@ -56,25 +56,29 @@ class Experiment():
         # print("-----------")
         system = None
 
-        system_id = self.session.getCurrentSystemId(self.participant_id)
-        print(system_id)
+        current_system_id = self.session.getCurrentSystemId(self.participant_id)
+        print(current_system_id)
 
-        if not system_id:
+        if not current_system_id:
             if not self.session.isWarmupSystemFinished(self.participant_id):
                 warmup_systems = self.resource.getWarmupSystems()
                 random.shuffle(warmup_systems)
-                system = warmup_systems[0] # there must be at least
+                system = warmup_systems[0] # there must be at least one
+
             # else:
-            #     system = self.session.getCurrentSystemId(participant_id)
-            #     if len(system) <= 0:
-            #         finished_systems = self.session.getFinishedExperimentalSystems(participant_id):
-            #         all_systems = self.resource.getExperimentalSystems()
-            #         remain_systems = all_systems - finished_systems
-            #         system = random.shuffle(remain_systems)[0]
+            #     finished_systems = self.session.getFinishedExperimentalSystems(participant_id):
+            #     all_systems = self.resource.getExperimentalSystems()
+            #     remaining_systems = all_systems - finished_systems
+            #     system = random.shuffle(remaining_systems)[0]
 
             self.session.setCurrentSystemId(self.participant_id, system['id'])
         else:
-            system = self.resource.getSystem(system_id)
+            system = self.resource.getSystem(current_system_id)
         return system
 
-        # return QPushButton("Current System")
+    def getExperimentalTasks(self):
+        tasks = None
+        current_system_id = self.session.getCurrentSystemId(self.participant_id)
+        print(current_system_id)
+
+        # when reaching the task_form, there is a current_system_id in the session db

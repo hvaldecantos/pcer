@@ -18,17 +18,19 @@ class FormBuilder:
         groupbox = QGroupBox(name)
         inner_vbox = QVBoxLayout()
         inner_vbox.addStretch(1)
+        choice_combo_question_pair = []
 
         description_label = QLabel(description)
         for i in range(0,len(questions)):
             question_label = QLabel(questions[i])
             inner_vbox.addWidget(question_label)
-            question_widgets.append(question_label)
+            #question_widgets.append(question_label)
             choiceCombo = QComboBox()
             for option in options:
                 choiceCombo.addItem(option)
+            choice_combo_question_pair.append([questions[i], choiceCombo])
             inner_vbox.addWidget(choiceCombo)
-    
+
         groupbox.setLayout(inner_vbox)
-        return groupbox
+        return groupbox, choice_combo_question_pair
     

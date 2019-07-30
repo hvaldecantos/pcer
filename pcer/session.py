@@ -16,7 +16,8 @@ class Session():
     def addParticipant(self, id, group):
         if self.existParticipant(id):
             raise ParticipantAlreadyExistError(id)
-        self.db.insert({'id': id, 'group': group, 'warmup_finished': False, 'experiment_finished': False, 'current_system_id': None, 'current_task_id': None})
+        self.db.insert({'id': id, 'group': group, 'warmup_finished': False, 'experiment_finished': False, 'current_system_id': None,
+                        'current_task_id': None, 'pretest_data': None})
 
     def getParticipantStatus(self, id):
     	return self.db.search(self.participant.id == id)
@@ -35,3 +36,7 @@ class Session():
 
     def setCurrentTaskId(self, participant_id, task_id):
         self.db.update({'current_task_id': task_id}, self.participant.id == participant_id)
+
+    def setPretestData(self, pretest_data, participant_id):
+        self.db.update({'pretest_data': pretest_data}, self.participant.id == participant_id)
+

@@ -92,6 +92,7 @@ class Session():
         return current_task_id
 
     def setCurrentTaskId(self, participant_id, system_id, task_id):
+
         current_system_id = self.getCurrentSystemId(participant_id)
         if current_system_id != system_id: raise WrongCurrentSystemError(system_id)
 
@@ -101,13 +102,12 @@ class Session():
         trials = self.getTrials(participant_id)
 
         trial_index = None
+        tasks = None
         for i in range(len(trials)):
-             if trials[i]['finished'] == False:
+             if trials[i]['system_id'] == system_id:
                 tasks = trials[i]['tasks']
                 trial_index = i
                 break
-
-        tasks = trials[trial_index]['tasks']
 
         tasks.append(
             {

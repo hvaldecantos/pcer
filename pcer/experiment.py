@@ -1,4 +1,7 @@
 from session import Session
+from resource import Resource
+import random
+from form_builder import FormBuilder
 
 class Experiment():
     
@@ -7,9 +10,13 @@ class Experiment():
     current_system = None
     current_task = None
     session = None
+    resource = None
+    pretest_data = {}
 
     def __init__(self):
         self.session = Session('db.json', 'experiment')
+        self.resource = Resource()
+        self.form_builder = FormBuilder()
         pass
 
     def hasActiveParticipant(self):
@@ -42,5 +49,44 @@ class Experiment():
         pass
 
     def getGroups(self):
-        pass
-        # check the file structure
+        return self.resource.getGroups()
+
+    def setPretestData(self,question, choice):
+        if choice != '--':
+            self.pretest_data[question] = choice
+        else:
+            del self.pretest_data[question]
+        self.session.setPretestData(self.pretest_data, self.participant_id)
+
+    def getExperimentalSystem(self):
+        # print("-----------")
+        # print(self.resource.getWarmupSystems()[0])
+        # print("-----------")
+        system = None
+
+        current_system_id = self.session.getCurrentSystemId(self.participant_id)
+        print(current_system_id)
+
+        if not current_system_id:
+            if not self.session.isWarmupSystemFinished(self.participant_id):
+                warmup_systems = self.resource.getWarmupSystems()
+                random.shuffle(warmup_systems)
+                system = warmup_systems[0] # there must be at least one
+
+            # else:
+            #     finished_systems = self.session.getFinishedExperimentalSystems(participant_id):
+            #     all_systems = self.resource.getExperimentalSystems()
+            #     remaining_systems = all_systems - finished_systems
+            #     system = random.shuffle(remaining_systems)[0]
+
+            self.session.setCurrentSystemId(self.participant_id, system['id'], system['warmup'])
+        else:
+            system = self.resource.getSystem(current_system_id)
+        return system
+
+    def getExperimentalTasks(self):
+        tasks = None
+        current_system_id = self.session.getCurrentSystemId(self.participant_id)
+        print(current_system_id)
+
+        # when reaching the task_form, there is a current_system_id in the session db

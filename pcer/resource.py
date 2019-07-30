@@ -59,7 +59,7 @@ class Resource():
 
     def getPretests(self, group):
         group = str(group)
-        path = self.path+"\\"+group+"\\pretest.yml"
+        path = os.path.join(self.path, group, "pretest.yml")
         print(path)
         pretests = yaml.load(open(path), Loader = yaml.SafeLoader)
         return pretests

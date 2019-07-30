@@ -23,13 +23,15 @@ class Session():
     def addParticipant(self, id, group):
         if self.existParticipant(id): 
             raise ParticipantAlreadyExistError(id)
+
         self.db.insert(
             {
                 'id': id,
                 'group': group,
                 'warmup_finished': False,
                 'experiment_finished': False,
-                'trials': []
+                'trials': [],
+                'pretest_data': {}
             }
         )
 
@@ -120,3 +122,6 @@ class Session():
 
         trials[trial_index]['tasks'] = tasks
         self.db.update({'trials': trials}, self.participant.id == participant_id)
+
+    def setPretestData(self, pretest_data, participant_id):
+        self.db.update({'pretest_data': pretest_data}, self.participant.id == participant_id)

@@ -101,7 +101,6 @@ class ParticipantForm(PcerWindow):
     def onLoadButtonClick(self):
         print("ParticipantForm.onLoadButtonClick")
         participant_id = self.idField.text()
-
         try:
             status = self.experiment.getParticipantStatus(participant_id)
             self.setIdGroupFieldInTheForm(status['id'], status['group'])

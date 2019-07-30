@@ -1,6 +1,7 @@
 from session import Session
 from resource import Resource
 import random
+from form_builder import FormBuilder
 
 class Experiment():
     
@@ -10,10 +11,12 @@ class Experiment():
     current_task = None
     session = None
     resource = None
+    pretest_data = {}
 
     def __init__(self):
         self.session = Session('db.json', 'experiment')
         self.resource = Resource()
+        self.form_builder = FormBuilder()
         pass
 
     def hasActiveParticipant(self):
@@ -47,6 +50,13 @@ class Experiment():
 
     def getGroups(self):
         return self.resource.getGroups()
+
+    def setPretestData(self,question, choice):
+        if choice != '--':
+            self.pretest_data[question] = choice
+        else:
+            del self.pretest_data[question]
+        self.session.setPretestData(self.pretest_data, self.participant_id)
 
     def getExperimentalSystem(self):
         # print("-----------")

@@ -56,3 +56,10 @@ class Resource():
             return tasks
         except KeyError:
             raise Exception("Key 'tasks' not found in .yml file for system 'id': '%s'." % system_id)
+
+    def getPretests(self, group):
+        group = str(group)
+        path = os.path.join(self.path, group, "pretest.yml")
+        print(path)
+        pretests = yaml.load(open(path), Loader = yaml.SafeLoader)
+        return pretests

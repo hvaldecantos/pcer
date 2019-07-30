@@ -43,7 +43,8 @@ class TestSession(unittest.TestCase):
                           u'group': u'oo',
                           u'id': u'1001',
                           u'warmup_finished': False,
-                          u'experiment_finished': False}
+                          u'experiment_finished': False,
+                          u'pretest_data': {}}
 
         self.assertEqual(status, initial_status)
 

@@ -25,6 +25,8 @@ class CodeViewer(PcerWindow):
     back = QtCore.pyqtSignal()
 
     def __init__(self, experiment):
+        config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
+        self.font_size = config['code_viewer']['font_size']
         super(CodeViewer, self).__init__(experiment)
 
     def initUI(self):
@@ -56,7 +58,7 @@ class CodeViewer(PcerWindow):
         font = QFont()
         font.setFamily('Courier')
         font.setFixedPitch(True)
-        font.setPointSize(10)
+        font.setPointSize(self.font_size)
 
         self.editor = MyQTextEdit(self)
         self.editor.setFont(font)

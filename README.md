@@ -18,6 +18,11 @@ The path of the experimental resource to run the experiment:
     resource:
       "resource"
 
+The font size for the code viewer during the eye tracking:
+
+    code_viewer:
+      font_size: 14
+
 ### Resource directory
 
 In the resource directory there is all the experimental material related to the experimental units, that is, the code in the versions needed to execute the experiment, the comprehension tasks and the general descriptions of the systems that will be presented to the subjects.

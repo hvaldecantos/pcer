@@ -1,7 +1,5 @@
 from session import Session
 from resource import Resource
-from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication)
 import random
 
 class Experiment():

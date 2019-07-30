@@ -71,7 +71,7 @@ class Experiment():
             #     remaining_systems = all_systems - finished_systems
             #     system = random.shuffle(remaining_systems)[0]
 
-            self.session.setCurrentSystemId(self.participant_id, system['id'])
+            self.session.setCurrentSystemId(self.participant_id, system['id'], system['warmup'])
         else:
             system = self.resource.getSystem(current_system_id)
         return system

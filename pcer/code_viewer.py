@@ -3,7 +3,7 @@ import os
 import yaml
 from PyQt5.QtWidgets import (QWidget, QPushButton,
      QApplication, QDesktopWidget, QListWidget, QTextEdit)
-from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat
+from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFile, QRegExp, Qt
 from pcer_window import PcerWindow
@@ -37,12 +37,13 @@ class CodeViewer(PcerWindow):
         self.setupFileList()
         self.setupBackButton()
         self.setupEditor()
+        self.code_path = self.experiment.getSourceCodePath()
 
     def setupFileList(self):
         listWidget = QListWidget(self)
         listWidget.move(0, 0)
         listWidget.resize(self.listWidth, self.heightWithStatusBar)
-        listWidget.addItems(['test0', 'test1', 'test2', 'test3', 'test4'])
+        listWidget.addItems(self.experiment.getExperimentalSystemFilenames())
         listWidget.itemClicked.connect(self.onListItemClick)
 
     def setupBackButton(self):
@@ -64,8 +65,7 @@ class CodeViewer(PcerWindow):
         self.highlighter = Highlighter(self.editor.document()) 
 
     def onListItemClick(self, l):
-        print(l.text())
-        # self.openFile("./pcer/example.cpp")
+        self.openFile(os.path.join(self.code_path, l.text()))
 
     def onBackButtonClick(self):
         print("TaskForm.onBackButtonClick")

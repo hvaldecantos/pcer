@@ -90,3 +90,9 @@ class Experiment():
         print(current_system_id)
 
         # when reaching the task_form, there is a current_system_id in the session db
+
+    def getExperimentalSystemFilenames(self):
+        return self.resource.getExperimentalSystemFilenames(self.participant_group, self.session.getCurrentSystemId(self.participant_id))
+
+    def getSourceCodePath(self):
+         return self.getExperimentalSystem()['code'][self.participant_group]

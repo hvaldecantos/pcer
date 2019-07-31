@@ -18,10 +18,15 @@ The path of the experimental resource to run the experiment:
     resource:
       "resource"
 
-The font size for the code viewer during the eye tracking:
+For the code viewer during the eye tracking you can set the following document properties:
 
     code_viewer:
-      font_size: 14
+      status_bar_height: 40
+      document:
+        height_in_characters: 25
+        font_pixel_size: 20
+        margin_pixel_size: 0
+
 
 ### Resource directory
 

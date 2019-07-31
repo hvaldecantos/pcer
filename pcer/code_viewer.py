@@ -3,7 +3,7 @@ import os
 import yaml
 from PyQt5.QtWidgets import (QWidget, QPushButton,
      QApplication, QDesktopWidget, QListWidget, QTextEdit)
-from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics
+from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics, QFontInfo
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFile, QRegExp, Qt
 from pcer_window import PcerWindow
@@ -26,45 +26,79 @@ class CodeViewer(PcerWindow):
 
     def __init__(self, experiment):
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
-        self.font_size = config['code_viewer']['font_size']
+        self.height_in_characters = config['code_viewer']['document']['height_in_characters']
+        self.font_pixel_size = config['code_viewer']['document']['font_pixel_size']
+        self.margin_pixel_size = config['code_viewer']['document']['margin_pixel_size']
+        self.status_bar_height = config['code_viewer']['status_bar_height']
         super(CodeViewer, self).__init__(experiment)
 
     def initUI(self):
         self.vbox.addStretch(1) # => necessary to send the status bar at the bottom
-        self.heightWithStatusBar = self.height - 40
-        self.listWidth = (self.width / 4) * 1
-        self.editorWidth = (self.width / 4) * 3
-        self.backButtonWidth = self.listWidth / 2
+        self.listWidth = (self.width / 4) * 1       # 1/4 for the side bar
+        self.editorWidth = (self.width / 4) * 3     # 3/4 for the document
+        self.backButtonWidth = self.listWidth / 2   # back button in the middle of the side bar
+
+        self.setupEditor()
+
         self.setWindowTitle('Code Viewer')
         self.setupFileList()
         self.setupBackButton()
-        self.setupEditor()
+        self.setFixedSize(self.width, self.editorHeight + self.status_bar_height)
+        self.centerOnScreen()
+
         self.code_path = self.experiment.getSourceCodePath()
 
     def setupFileList(self):
         listWidget = QListWidget(self)
         listWidget.move(0, 0)
-        listWidget.resize(self.listWidth, self.heightWithStatusBar)
+        listWidget.resize(self.listWidth, self.editorHeight)
         listWidget.addItems(self.experiment.getExperimentalSystemFilenames())
         listWidget.itemClicked.connect(self.onListItemClick)
 
     def setupBackButton(self):
         backButton = QPushButton("Back", self)
         backButton.clicked.connect(self.onBackButtonClick)
-        backButton.move(50, self.heightWithStatusBar - 50)
+        backButton.move(50, self.editorHeight - 50)
         backButton.resize(self.listWidth - 100, 25)
 
     def setupEditor(self):
         font = QFont()
         font.setFamily('Courier')
         font.setFixedPitch(True)
-        font.setPointSize(self.font_size)
+
+        font.setPixelSize(self.font_pixel_size)
+
+        font_info = QFontInfo(font)
+        print("---------- QFont ----------")
+        print("family(): %s" % font.family())
+        print("overline(): %d" % font.overline())
+        print("pixelSize(): %d" % font.pixelSize())
+        print("pointSize(): %d" % font.pointSize())
+        print("pointSizeF(): %d" % font.pointSizeF())
+        print("-------- QFontInfo --------")
+        print("family(): %s" % font_info.family())
+        print("pixelSize(): %d" % font_info.pixelSize())
+        print("pointSize(): %d" % font_info.pointSize())
+        print("pointSizeF(): %d" % font_info.pointSizeF())
+
+        print("QFontMetrics.lineSpacing(): %d" % QFontMetrics(font).lineSpacing())
+        print("QFontMetrics.leading(): %d" % QFontMetrics(font).leading())
+        print("QFontMetrics.height(): %d" % QFontMetrics(font).height())
+        print("QFont.pixelSize(): %d" % font.pixelSize())
+        print("QFontInfo.pixelSize(): %d" % QFontInfo(font).pixelSize())
+
+        self.editorHeight = self.height_in_characters * QFontMetrics(font).lineSpacing()
 
         self.editor = MyQTextEdit(self)
         self.editor.setFont(font)
         self.editor.move(self.listWidth, 0)
-        self.editor.resize(self.editorWidth, self.heightWithStatusBar)
-        self.highlighter = Highlighter(self.editor.document()) 
+        self.editor.resize(self.editorWidth, self.editorHeight)
+        # self.editor.setStyleSheet("QTextEdit { padding-left:0; padding-top:0; padding-bottom:0; padding-right: 0}");
+        self.editor.document().setDocumentMargin(self.margin_pixel_size)
+        print("documentMargin(): %f pixels?" % self.editor.document().documentMargin())
+        self.editor.setReadOnly(True)
+
+        self.highlighter = Highlighter(self.editor.document())
 
     def onListItemClick(self, l):
         self.openFile(os.path.join(self.code_path, l.text()))

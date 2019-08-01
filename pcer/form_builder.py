@@ -15,6 +15,7 @@ class FormBuilder:
         description = pretests['description']
         questions = pretests['questions']
         options = pretests['options']
+
         groupbox = QGroupBox(name)
         inner_vbox = QVBoxLayout()
         inner_vbox.addStretch(1)
@@ -33,4 +34,14 @@ class FormBuilder:
 
         groupbox.setLayout(inner_vbox)
         return groupbox, choice_combo_question_pair
-    
+
+    def build_system_form(self, system):
+        name = system['name']
+        description = system['description']
+        system_id = system['id']
+        description_label = QLabel(description)
+        group_box = QGroupBox(name)
+        inner_vbox = QVBoxLayout()
+        inner_vbox.addWidget(description_label)
+        group_box.setLayout(inner_vbox)
+        return group_box

@@ -71,13 +71,13 @@ class Experiment():
                 warmup_systems = self.resource.getWarmupSystems()
                 random.shuffle(warmup_systems)
                 system = warmup_systems[0] # there must be at least
-            # else:
-            #     system = self.session.getCurrentSystemId(participant_id)
-            #     if len(system) <= 0:
-            #         finished_systems = self.session.getFinishedExperimentalSystems(participant_id):
-            #         all_systems = self.resource.getExperimentalSystems()
-            #         remain_systems = all_systems - finished_systems
-            #         system = random.shuffle(remain_systems)[0]
+            else:
+                system = self.session.getCurrentSystemId(participant_id)
+                if len(system) <= 0:
+                    finished_systems = self.session.getFinishedExperimentalSystems(participant_id)
+                    all_systems = self.resource.getExperimentalSystems()
+                    remain_systems = all_systems - finished_systems
+                    system = random.shuffle(remain_systems)[0]
 
             self.session.setCurrentSystemId(self.participant_id, system['id'])
         else:

@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (QWidget, QPushButton,
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 from participant_already_exist_error import ParticipantAlreadyExistError
+from participant_does_not_exist_error import ParticipantDoesNotExistError
 import json
 
 class ParticipantForm(PcerWindow):
@@ -74,7 +75,11 @@ class ParticipantForm(PcerWindow):
     def loadCurrentParticipantStatus(self):
         print("ParticipantForm.loadCurrentParticipantStatus")
         print(self.experiment.participant_id)
-        status = self.experiment.getParticipantStatus(self.experiment.participant_id)
+        try:
+            status = self.experiment.getParticipantStatus(self.experiment.participant_id)
+        except ParticipantDoesNotExistError as e:
+            status = {}
+        
         self.statusText.setPlainText(json.dumps(status, indent=4, sort_keys=False))
         self.setIdGroupFieldInTheForm(self.experiment.participant_id, self.experiment.participant_group)
 
@@ -96,15 +101,14 @@ class ParticipantForm(PcerWindow):
     def onLoadButtonClick(self):
         print("ParticipantForm.onLoadButtonClick")
         participant_id = self.idField.text()
-        status = self.experiment.getParticipantStatus(participant_id)
-        if len(status) > 0: # the participant exists in the DB
-            self.setIdGroupFieldInTheForm(status[0]['id'], status[0]['group'])
+        try:
+            status = self.experiment.getParticipantStatus(participant_id)
+            self.setIdGroupFieldInTheForm(status['id'], status['group'])
             self.statusText.setPlainText(json.dumps(status, indent=4, sort_keys=False))
             self.experiment.setCurrentParticipant(self.idField.text(), self.groupCombo.currentText())
-        else:
-            self.popUpWarning("Participant ID = %s does not exist." % (participant_id))
+        except ParticipantDoesNotExistError as e:
+            self.popUpWarning(e.msg)
             self.idField.setFocus()
-            # self.loadCurrentParticipantStatus()
 
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")

@@ -17,6 +17,7 @@ class TestSession(unittest.TestCase):
         self.session = Session("tinydb001.json", "experiment")
 
     def tearDown(self):
+        self.session.close()
         os.remove("tinydb001.json")
 
     def test_add_participant(self):

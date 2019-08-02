@@ -17,6 +17,9 @@ class Session():
         self.db = TinyDB(path, sort_keys=False, indent=4, default_table = name)
         self.participant = Query()
 
+    def close(self):
+        self.db.close()
+
     def existParticipant(self, id):
         return len(self.db.search(self.participant.id == id)) > 0
 

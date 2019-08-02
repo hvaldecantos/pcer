@@ -29,7 +29,13 @@ class CodeViewer(PcerWindow):
         self.height_in_characters = config['code_viewer']['document']['height_in_characters']
         self.font_pixel_size = config['code_viewer']['document']['font_pixel_size']
         self.margin_pixel_size = config['code_viewer']['document']['margin_pixel_size']
+        self.hide_scroll_bar = config['code_viewer']['document']['hide_scroll_bar']
         self.status_bar_height = config['code_viewer']['status_bar_height']
+        self.padding_left = config['code_viewer']['padding_left']
+        self.padding_top = config['code_viewer']['padding_top']
+        self.padding_bottom = config['code_viewer']['padding_bottom']
+        self.padding_right = config['code_viewer']['padding_right']
+
         super(CodeViewer, self).__init__(experiment)
 
     def initUI(self):
@@ -68,19 +74,18 @@ class CodeViewer(PcerWindow):
 
         font.setPixelSize(self.font_pixel_size)
 
-        
-
-
         self.editorHeight = self.height_in_characters * QFontMetrics(font).lineSpacing()
 
         self.editor = MyQTextEdit(self)
         self.editor.setFont(font)
         self.editor.move(self.listWidth, 0)
         self.editor.resize(self.editorWidth, self.editorHeight)
-        # self.editor.setStyleSheet("QTextEdit { padding-left:0; padding-top:0; padding-bottom:0; padding-right: 0}");
+        self.editor.setStyleSheet("QTextEdit {padding-left: %s; padding-top: %s; padding-bottom: %s; padding-right: %s}" %
+                                        (self.padding_left, self.padding_top, self.padding_bottom, self.padding_right));
         self.editor.document().setDocumentMargin(self.margin_pixel_size)
-        print("documentMargin(): %f pixels?" % self.editor.document().documentMargin())
         self.editor.setReadOnly(True)
+        if self.hide_scroll_bar:
+            self.editor.verticalScrollBar().setStyleSheet("QScrollBar: vertical {width: 0px;}")
 
         self.highlighter = Highlighter(self.editor.document())
 
@@ -90,25 +95,26 @@ class CodeViewer(PcerWindow):
         wposition = self.pos()
         font_info = QFontInfo(font)
         print("---------- Code Viewer Report ----------")
-        print("Size: width: %d, height: %d)" % (self.width, self.height))
+        print("Size: width: %d, height: %d" % (self.width, self.height))
         print("Top-Left position in screen: (%d, %d)" % (wposition.x(), wposition.y()))
         print("Top-Right position in screen: (%d, %d)" % (wposition.x() + self.width, wposition.y()))
         print("Bottom-Left position in screen: (%d, %d)" % (wposition.x(), wposition.y() + self.height))
         print("Bottom-Right position in screen: (%d, %d)" % (wposition.x() + self.width, wposition.y() + self.height))
         print("---------- Side Bar    Report ----------")
-        print("Size: width: %d, height: %d)" % (self.listWidth, self.editorHeight))
+        print("Size: width: %d, height: %d" % (self.listWidth, self.editorHeight))
         print("Top-Left position in screen: (%d, %d)" % (wposition.x(), wposition.y()))
         print("Top-Right position in screen: (%d, %d)" % (wposition.x() + self.listWidth, wposition.y()))
         print("Bottom-Left position in screen: (%d, %d)" % (wposition.x(), wposition.y() + self.editorHeight))
         print("Bottom-Right position in screen: (%d, %d)" % (wposition.x() + self.listWidth, wposition.y() + self.editorHeight))
         print("---------- Code Editor Report ----------")
-        print("Size: width: %d, height: %d)" % (self.editorWidth, self.editorHeight))
+        print("Size: width: %d, height: %d" % (self.editorWidth, self.editorHeight))
+        print("Margins: %f pixels?" % self.editor.document().documentMargin())
         print("Top-Left position in screen: (%d, %d)" % (wposition.x() + self.listWidth, wposition.y()))
         print("Top-Right position in screen: (%d, %d)" % (wposition.x() + self.listWidth + self.editorWidth, wposition.y()))
         print("Bottom-Left position in screen: (%d, %d)" % (wposition.x() + self.listWidth, wposition.y() + self.editorHeight))
         print("Bottom-Right position in screen: (%d, %d)" % (wposition.x() + self.listWidth + self.editorWidth, wposition.y() + self.editorHeight))
         print("---------- Status Bar  Report ----------")
-        print("Size: width: %d, height: %d)" % (self.width, self.status_bar_height))
+        print("Size: width: %d, height: %d" % (self.width, self.status_bar_height))
         print("Top-Left position in screen: (%d, %d)" % (wposition.x(), wposition.y() + self.editorHeight))
         print("Top-Right position in screen: (%d, %d)" % (wposition.x() + self.width, wposition.y() + self.editorHeight))
         print("Bottom-Left position in screen: (%d, %d)" % (wposition.x(), wposition.y() + self.editorHeight + self.status_bar_height))

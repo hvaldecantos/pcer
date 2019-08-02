@@ -45,7 +45,8 @@ class TestSession(unittest.TestCase):
                           u'id': u'1001',
                           u'warmup_finished': False,
                           u'experiment_finished': False,
-                          u'pretest_data': {}}
+                          u'pretest_data': {},
+                          u'scroll_displacements': {}}
 
         self.assertEqual(status, initial_status)
 
@@ -141,6 +142,15 @@ class TestSession(unittest.TestCase):
 
         with self.assertRaises(CurrentTaskAlreadyExistError):
             self.session.setCurrentTaskId('1001', 'library', 'execflow')
+
+    def test_scroll_displacement_data(self):
+        self.session.addParticipant('1001', 'oo')
+        self.assertEqual(self.session.getScrollDisplacements('1001'), {})
+
+        self.session.setScrollDisplacements('1001', {'filename1.java': 126})
+        displacements = self.session.getScrollDisplacements('1001')
+        self.assertEqual(displacements['filename1.java'], 126)
+
 
 if __name__ == '__main__':
     unittest.main()

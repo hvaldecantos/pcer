@@ -34,7 +34,8 @@ class Session():
                 'warmup_finished': False,
                 'experiment_finished': False,
                 'trials': [],
-                'pretest_data': {}
+                'pretest_data': {},
+                'scroll_displacements': {}
             }
         )
 
@@ -128,3 +129,10 @@ class Session():
 
     def setPretestData(self, pretest_data, participant_id):
         self.db.update({'pretest_data': pretest_data}, self.participant.id == participant_id)
+
+    def getScrollDisplacements(self, participant_id):
+        status = self.getParticipantStatus(participant_id)
+        return status['scroll_displacements']
+
+    def setScrollDisplacements(self, participant_id, displacement_dict):
+        self.db.update({'scroll_displacements': displacement_dict}, self.participant.id == participant_id)

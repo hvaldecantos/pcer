@@ -31,6 +31,7 @@ For the code viewer during the eye tracking you can set the following document p
         padding_top: 0
         padding_bottom: 0
         padding_right: 0
+      side_bar_percentage_width: 0.2
 
 ### Resource directory
 

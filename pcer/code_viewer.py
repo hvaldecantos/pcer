@@ -35,17 +35,18 @@ class CodeViewer(PcerWindow):
         self.padding_top = config['code_viewer']['document']['padding_top']
         self.padding_bottom = config['code_viewer']['document']['padding_bottom']
         self.padding_right = config['code_viewer']['document']['padding_right']
+        self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
 
         super(CodeViewer, self).__init__(experiment)
 
     def initUI(self):
         self.vbox.addStretch(1) # => necessary to send the status bar at the bottom
-        self.listWidth = (self.width / 4) * 1       # 1/4 for the side bar
-        self.editorWidth = (self.width / 4) * 3     # 3/4 for the document
-        self.backButtonWidth = self.listWidth / 2   # back button in the middle of the side bar
+
+        self.listWidth = self.width * self.side_bar_percentage_width
+        self.editorWidth = self.width * (1 - self.side_bar_percentage_width)
+        self.backButtonWidth = self.listWidth / 2
 
         self.setupEditor()
-
         self.setWindowTitle('Code Viewer')
         self.setupFileList()
         self.setupBackButton()

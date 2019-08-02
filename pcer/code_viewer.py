@@ -31,10 +31,10 @@ class CodeViewer(PcerWindow):
         self.margin_pixel_size = config['code_viewer']['document']['margin_pixel_size']
         self.hide_scroll_bar = config['code_viewer']['document']['hide_scroll_bar']
         self.status_bar_height = config['code_viewer']['status_bar_height']
-        self.padding_left = config['code_viewer']['padding_left']
-        self.padding_top = config['code_viewer']['padding_top']
-        self.padding_bottom = config['code_viewer']['padding_bottom']
-        self.padding_right = config['code_viewer']['padding_right']
+        self.padding_left = config['code_viewer']['document']['padding_left']
+        self.padding_top = config['code_viewer']['document']['padding_top']
+        self.padding_bottom = config['code_viewer']['document']['padding_bottom']
+        self.padding_right = config['code_viewer']['document']['padding_right']
 
         super(CodeViewer, self).__init__(experiment)
 

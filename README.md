@@ -26,7 +26,11 @@ For the code viewer during the eye tracking you can set the following document p
         height_in_characters: 25
         font_pixel_size: 20
         margin_pixel_size: 0
-
+        hide_scroll_bar: true
+        padding_left: 0
+        padding_top: 0
+        padding_bottom: 0
+        padding_right: 0
 
 ### Resource directory
 

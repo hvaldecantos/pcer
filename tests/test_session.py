@@ -46,6 +46,7 @@ class TestSession(unittest.TestCase):
                           u'warmup_finished': False,
                           u'experiment_finished': False,
                           u'pretest_data': {},
+                          u'current_opened_filename': None,
                           u'scroll_displacements': {}}
 
         self.assertEqual(status, initial_status)
@@ -151,6 +152,13 @@ class TestSession(unittest.TestCase):
         displacements = self.session.getScrollDisplacements('1001')
         self.assertEqual(displacements['filename1.java'], 126)
 
+    def test_current_opened_filenamed(self):
+        self.session.addParticipant('1001', 'oo')
+        self.assertEqual(self.session.getCurrentOpenedFilename('1001'), None)
+
+        self.session.setCurrentOpenedFilename('1001', 'filename1.java')
+        current_opened_filename = self.session.getCurrentOpenedFilename('1001')
+        self.assertEqual(current_opened_filename, 'filename1.java')
 
 if __name__ == '__main__':
     unittest.main()

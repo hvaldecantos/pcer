@@ -58,6 +58,9 @@ class Experiment():
             del self.pretest_data[question]
         self.session.setPretestData(self.pretest_data, self.participant_id)
 
+    def getScrollDisplacement(self, filename):
+        return self.session.getScrollDisplacements(self.participant_id)[filename]
+
     def setScrollDisplacement(self, filename, scroll_displacement):
         displacements = self.session.getScrollDisplacements(self.participant_id)
         displacements[filename] = scroll_displacement
@@ -65,6 +68,12 @@ class Experiment():
 
     def clearScrollDisplacements(self):
         self.session.setScrollDisplacements(self.participant_id, {})
+
+    def getCurrentOpenedFilename(self):
+        return self.session.getCurrentOpenedFilename(self.participant_id)
+
+    def setCurrentOpenedFilename(self, filename):
+        self.session.setCurrentOpenedFilename(self.participant_id, filename)
 
     def getExperimentalSystem(self):
         # print("-----------")

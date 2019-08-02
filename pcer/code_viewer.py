@@ -86,7 +86,7 @@ class CodeViewer(PcerWindow):
         self.editor.document().setDocumentMargin(self.margin_pixel_size)
         self.editor.setReadOnly(True)
         if self.hide_scroll_bar:
-            self.editor.verticalScrollBar().setStyleSheet("QScrollBar: vertical {width: 0px;}")
+            self.editor.verticalScrollBar().setStyleSheet("QScrollBar:vertical {width: 0px;}")
 
         self.highlighter = Highlighter(self.editor.document())
 

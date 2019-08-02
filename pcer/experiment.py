@@ -58,6 +58,14 @@ class Experiment():
             del self.pretest_data[question]
         self.session.setPretestData(self.pretest_data, self.participant_id)
 
+    def setScrollDisplacement(self, filename, scroll_displacement):
+        displacements = self.session.getScrollDisplacements(self.participant_id)
+        displacements[filename] = scroll_displacement
+        self.session.setScrollDisplacements(self.participant_id, displacements)
+
+    def clearScrollDisplacements(self):
+        self.session.setScrollDisplacements(self.participant_id, {})
+
     def getExperimentalSystem(self):
         # print("-----------")
         # print(self.resource.getWarmupSystems()[0])

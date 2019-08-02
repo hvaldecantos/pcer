@@ -37,6 +37,8 @@ class CodeViewer(PcerWindow):
         self.padding_right = config['code_viewer']['document']['padding_right']
         self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
 
+        self.current_file = None
+
         super(CodeViewer, self).__init__(experiment)
 
     def initUI(self):
@@ -150,10 +152,18 @@ class CodeViewer(PcerWindow):
         print("----------------------------------------")
 
     def onListItemClick(self, l):
+        if self.current_file:
+            self.experiment.setScrollDisplacement(self.current_file, self.editor.scrollbar_displacement)
+        else:
+            self.experiment.setScrollDisplacement(l.text(), self.editor.scrollbar_displacement)
+
+        self.current_file = l.text()
         self.openFile(os.path.join(self.code_path, l.text()))
 
     def onBackButtonClick(self):
         print("TaskForm.onBackButtonClick")
+        if self.current_file:
+            self.experiment.setScrollDisplacement(self.current_file, self.editor.scrollbar_displacement)
         self.back.emit()
 
     def openFile(self, path=None):
@@ -174,7 +184,7 @@ class CodeViewer(PcerWindow):
                     text = str(text)
 
                 self.editor.setPlainText(text)
-                self.editor.verticalScrollBar().setValue(120) # to jump the scroll to a saved position
+                # self.editor.verticalScrollBar().setValue(120) # to jump the scroll to a saved position
     
 
 class Highlighter(QSyntaxHighlighter):

@@ -34,7 +34,9 @@ class Session():
                 'warmup_finished': False,
                 'experiment_finished': False,
                 'trials': [],
-                'pretest_data': {}
+                'pretest_data': {},
+                'current_opened_filename': None,
+                'scroll_displacements': {}
             }
         )
 
@@ -128,3 +130,17 @@ class Session():
 
     def setPretestData(self, pretest_data, participant_id):
         self.db.update({'pretest_data': pretest_data}, self.participant.id == participant_id)
+
+    def getScrollDisplacements(self, participant_id):
+        status = self.getParticipantStatus(participant_id)
+        return status['scroll_displacements']
+
+    def setScrollDisplacements(self, participant_id, displacement_dict):
+        self.db.update({'scroll_displacements': displacement_dict}, self.participant.id == participant_id)
+
+    def getCurrentOpenedFilename(self, participant_id):
+        status = self.getParticipantStatus(participant_id)
+        return status['current_opened_filename']
+
+    def setCurrentOpenedFilename(self, participant_id, filename):
+        self.db.update({'current_opened_filename': filename}, self.participant.id == participant_id)

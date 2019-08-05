@@ -18,6 +18,7 @@ class PcerWindow(QWidget):
         self.experiment = experiment
         self.vbox = QVBoxLayout()
         self.initBaseUI()
+
         self.initUI() # invokes method in subclass
         self.setStatusBar()
         self.setLayout(self.vbox)
@@ -40,6 +41,7 @@ class PcerWindow(QWidget):
         self.statusBar.insertWidget(0, QLabel("Message 1"))
         self.statusBar.insertWidget(1, QLabel("Message 2"))
         self.vbox.addWidget(self.statusBar)
+        self.statusBar.setStyleSheet("background: rgba(250, 250, 250)")
 
     def addTimer(self, timer):
         self.statusBar.insertPermanentWidget(2, timer)

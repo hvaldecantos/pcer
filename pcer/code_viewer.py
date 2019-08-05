@@ -37,8 +37,6 @@ class CodeViewer(PcerWindow):
         self.padding_right = config['code_viewer']['document']['padding_right']
         self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
 
-        self.current_file = None
-
         super(CodeViewer, self).__init__(experiment)
 
     def initUI(self):
@@ -55,14 +53,21 @@ class CodeViewer(PcerWindow):
         self.setFixedSize(self.width, self.editorHeight + self.status_bar_height)
         self.centerOnScreen()
 
+        self.current_file = self.experiment.getCurrentOpenedFilename()
         self.code_path = self.experiment.getSourceCodePath()
 
+        if(self.current_file):
+            found = self.listWidget.findItems(self.current_file, QtCore.Qt.MatchExactly)
+            found[0].setSelected(True)
+            self.show()
+            self.openFile(os.path.join(self.code_path, self.current_file))
+
     def setupFileList(self):
-        listWidget = QListWidget(self)
-        listWidget.move(0, 0)
-        listWidget.resize(self.listWidth, self.editorHeight)
-        listWidget.addItems(self.experiment.getExperimentalSystemFilenames())
-        listWidget.itemClicked.connect(self.onListItemClick)
+        self.listWidget = QListWidget(self)
+        self.listWidget.move(0, 0)
+        self.listWidget.resize(self.listWidth, self.editorHeight)
+        self.listWidget.addItems(self.experiment.getExperimentalSystemFilenames())
+        self.listWidget.itemClicked.connect(self.onListItemClick)
 
     def setupBackButton(self):
         backButton = QPushButton("Back", self)
@@ -152,16 +157,18 @@ class CodeViewer(PcerWindow):
         print("----------------------------------------")
 
     def onListItemClick(self, l):
+        # current_file is the past clicked file
         if self.current_file:
             self.experiment.setScrollDisplacement(self.current_file, self.editor.scrollbar_displacement)
         else:
             self.experiment.setScrollDisplacement(l.text(), self.editor.scrollbar_displacement)
 
+        # uptades current_file to the current clicked file
         self.current_file = l.text()
+        self.experiment.setCurrentOpenedFilename(self.current_file)
         self.openFile(os.path.join(self.code_path, l.text()))
 
     def onBackButtonClick(self):
-        print("TaskForm.onBackButtonClick")
         if self.current_file:
             self.experiment.setScrollDisplacement(self.current_file, self.editor.scrollbar_displacement)
         self.back.emit()
@@ -184,8 +191,13 @@ class CodeViewer(PcerWindow):
                     text = str(text)
 
                 self.editor.setPlainText(text)
-                # self.editor.verticalScrollBar().setValue(120) # to jump the scroll to a saved position
-    
+
+                try:
+                    amount = self.experiment.getScrollDisplacement(self.current_file)
+                    self.editor.verticalScrollBar().setValue(amount * (-1))
+                except KeyError as e:
+                    pass
+
 
 class Highlighter(QSyntaxHighlighter):
     def __init__(self, parent=None):

@@ -18,6 +18,21 @@ The path of the experimental resource to run the experiment:
     resource:
       "resource"
 
+For the code viewer during the eye tracking you can set the following document properties:
+
+    code_viewer:
+      status_bar_height: 40
+      document:
+        height_in_characters: 25
+        font_pixel_size: 20
+        margin_pixel_size: 0
+        hide_scroll_bar: true
+        padding_left: 0
+        padding_top: 0
+        padding_bottom: 0
+        padding_right: 0
+      side_bar_percentage_width: 0.2
+
 ### Resource directory
 
 In the resource directory there is all the experimental material related to the experimental units, that is, the code in the versions needed to execute the experiment, the comprehension tasks and the general descriptions of the systems that will be presented to the subjects.

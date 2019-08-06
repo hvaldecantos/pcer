@@ -58,6 +58,23 @@ class Experiment():
             del self.pretest_data[question]
         self.session.setPretestData(self.pretest_data, self.participant_id)
 
+    def getScrollDisplacement(self, filename):
+        return self.session.getScrollDisplacements(self.participant_id)[filename]
+
+    def setScrollDisplacement(self, filename, scroll_displacement):
+        displacements = self.session.getScrollDisplacements(self.participant_id)
+        displacements[filename] = scroll_displacement
+        self.session.setScrollDisplacements(self.participant_id, displacements)
+
+    def clearScrollDisplacements(self):
+        self.session.setScrollDisplacements(self.participant_id, {})
+
+    def getCurrentOpenedFilename(self):
+        return self.session.getCurrentOpenedFilename(self.participant_id)
+
+    def setCurrentOpenedFilename(self, filename):
+        self.session.setCurrentOpenedFilename(self.participant_id, filename)
+
     def getExperimentalSystem(self):
         # print("-----------")
         # print(self.resource.getWarmupSystems()[0])
@@ -90,3 +107,9 @@ class Experiment():
         print(current_system_id)
 
         # when reaching the task_form, there is a current_system_id in the session db
+
+    def getExperimentalSystemFilenames(self):
+        return self.resource.getExperimentalSystemFilenames(self.participant_group, self.session.getCurrentSystemId(self.participant_id))
+
+    def getSourceCodePath(self):
+         return self.getExperimentalSystem()['code'][self.participant_group]

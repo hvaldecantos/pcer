@@ -20,7 +20,7 @@ class Experiment():
         pass
 
     def hasActiveParticipant(self):
-        return self.participant_id != None and participant_group != None
+        return self.participant_id != None and self.participant_group != None
 
     #Added new function setCurrent participant for modularity
     def setCurrentParticipant(self,p_id, p_group=None):

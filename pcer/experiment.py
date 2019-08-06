@@ -13,8 +13,8 @@ class Experiment():
     resource = None
     pretest_data = {}
 
-    def __init__(self):
-        self.session = Session('db.json', 'experiment')
+    def __init__(self, db_filename = 'db.json'):
+        self.session = Session(db_filename, 'experiment')
         self.resource = Resource()
         self.form_builder = FormBuilder()
         pass
@@ -22,13 +22,11 @@ class Experiment():
     def hasActiveParticipant(self):
         return self.participant_id != None and self.participant_group != None
 
-    #Added new function setCurrent participant for modularity
     def setCurrentParticipant(self,p_id, p_group=None):
         self.participant_id = p_id
         self.participant_group = p_group
 
     def addParticipant(self, p_id, p_group):
-        print("Experiment.openParticipanSession")
         self.session.addParticipant(p_id, p_group)
         self.setCurrentParticipant(p_id, p_group)
 
@@ -115,6 +113,9 @@ class Experiment():
             random.shuffle(filenames)
             self.session.setFilenamesOrder(self.participant_id, filenames)
         return filenames
+
+    def clearExperimentalSystemFilenames(self):
+        self.session.setFilenamesOrder(self.participant_id, [])
 
     def getSourceCodePath(self):
          return self.getExperimentalSystem()['code'][self.participant_group]

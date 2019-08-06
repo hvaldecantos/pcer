@@ -109,7 +109,12 @@ class Experiment():
         # when reaching the task_form, there is a current_system_id in the session db
 
     def getExperimentalSystemFilenames(self):
-        return self.resource.getExperimentalSystemFilenames(self.participant_group, self.session.getCurrentSystemId(self.participant_id))
+        filenames = self.session.getFilenamesOrder(self.participant_id)
+        if len(filenames) == 0:
+            filenames = self.resource.getExperimentalSystemFilenames(self.participant_group, self.session.getCurrentSystemId(self.participant_id))
+            random.shuffle(filenames)
+            self.session.setFilenamesOrder(self.participant_id, filenames)
+        return filenames
 
     def getSourceCodePath(self):
          return self.getExperimentalSystem()['code'][self.participant_group]

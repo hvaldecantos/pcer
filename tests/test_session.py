@@ -47,7 +47,8 @@ class TestSession(unittest.TestCase):
                           u'experiment_finished': False,
                           u'pretest_data': {},
                           u'current_opened_filename': None,
-                          u'scroll_displacements': {}}
+                          u'scroll_displacements': {},
+                          u'filenames_order': []}
 
         self.assertEqual(status, initial_status)
 

@@ -14,11 +14,11 @@ import re
 class TestSession(unittest.TestCase):
 
     def setUp(self):
-        self.session = Session("tinydb001.json", "experiment")
+        self.session = Session("tinydbTestSession.json", "experiment")
 
     def tearDown(self):
         self.session.close()
-        os.remove("tinydb001.json")
+        os.remove("tinydbTestSession.json")
 
     def test_add_participant(self):
         self.assertEqual(len(self.session.db.all()), 0)
@@ -47,7 +47,8 @@ class TestSession(unittest.TestCase):
                           u'experiment_finished': False,
                           u'pretest_data': {},
                           u'current_opened_filename': None,
-                          u'scroll_displacements': {}}
+                          u'scroll_displacements': {},
+                          u'filenames_order': []}
 
         self.assertEqual(status, initial_status)
 

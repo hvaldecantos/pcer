@@ -16,22 +16,20 @@ class Experiment():
     pretest_data = {}
     current_task_data = {}
 
-    def __init__(self):
-        self.session = Session('db.json', 'experiment')
+    def __init__(self, db_filename = 'db.json'):
+        self.session = Session(db_filename, 'experiment')
         self.resource = Resource()
         self.form_builder = FormBuilder()
         pass
 
     def hasActiveParticipant(self):
-        return self.participant_id != None and participant_group != None
+        return self.participant_id != None and self.participant_group != None
 
-    #Added new function setCurrent participant for modularity
     def setCurrentParticipant(self,p_id, p_group=None):
         self.participant_id = p_id
         self.participant_group = p_group
 
     def addParticipant(self, p_id, p_group):
-        print("Experiment.openParticipanSession")
         self.session.addParticipant(p_id, p_group)
         self.setCurrentParticipant(p_id, p_group)
 
@@ -149,7 +147,15 @@ class Experiment():
         return self.current_task
 
     def getExperimentalSystemFilenames(self):
-        return self.resource.getExperimentalSystemFilenames(self.participant_group, self.session.getCurrentSystemId(self.participant_id))
+        filenames = self.session.getFilenamesOrder(self.participant_id)
+        if len(filenames) == 0:
+            filenames = self.resource.getExperimentalSystemFilenames(self.participant_group, self.session.getCurrentSystemId(self.participant_id))
+            random.shuffle(filenames)
+            self.session.setFilenamesOrder(self.participant_id, filenames)
+        return filenames
+
+    def clearExperimentalSystemFilenames(self):
+        self.session.setFilenamesOrder(self.participant_id, [])
 
     def getSourceCodePath(self):
          return self.getExperimentalSystem()['code'][self.participant_group]

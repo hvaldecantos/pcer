@@ -36,7 +36,8 @@ class Session():
                 'trials': [],
                 'pretest_data': {},
                 'current_opened_filename': None,
-                'scroll_displacements': {}
+                'scroll_displacements': {},
+                'filenames_order': []
             }
         )
 
@@ -183,3 +184,10 @@ class Session():
 
     def setCurrentOpenedFilename(self, participant_id, filename):
         self.db.update({'current_opened_filename': filename}, self.participant.id == participant_id)
+
+    def setFilenamesOrder(self, participant_id, filename_list):
+        self.db.update({'filenames_order': filename_list}, self.participant.id == participant_id)
+
+    def getFilenamesOrder(self, participant_id):
+        status = self.getParticipantStatus(participant_id)
+        return status['filenames_order']

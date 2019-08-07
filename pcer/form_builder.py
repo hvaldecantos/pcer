@@ -45,3 +45,27 @@ class FormBuilder:
         inner_vbox.addWidget(description_label)
         group_box.setLayout(inner_vbox)
         return group_box
+
+    def build_task_form(self, task):
+        choice_combo_question_pair = []
+        task_id = task['id']
+        name = task['name']
+        description = task['description']
+        questions = task['questions']
+        options = task['options']
+        description_label = QLabel(description)
+        group_box = QGroupBox(name)
+        inner_vbox = QVBoxLayout()
+        inner_vbox.addWidget(description_label)
+        for i in range(0,len(questions)):
+            question_label = QLabel(questions[i])
+            inner_vbox.addWidget(question_label)
+            choiceCombo = QComboBox()
+            for option in options:
+                choiceCombo.addItem(option)
+            choice_combo_question_pair.append([questions[i], choiceCombo])
+            inner_vbox.addWidget(choiceCombo)
+        group_box.setLayout(inner_vbox)
+        return group_box, choice_combo_question_pair
+
+

@@ -2,6 +2,8 @@ from session import Session
 from resource import Resource
 import random
 from form_builder import FormBuilder
+import json
+
 
 class Experiment():
     
@@ -46,7 +48,9 @@ class Experiment():
         pass
 
     def getNextTask(self):
-        pass
+        random.shuffle(tasks)
+        next_task = tasks[0]
+        return next_task
 
     def getGroups(self):
         return self.resource.getGroups()
@@ -102,11 +106,33 @@ class Experiment():
         return system
 
     def getExperimentalTasks(self):
-        tasks = None
+        task = None
+        next_task = None
         current_system_id = self.session.getCurrentSystemId(self.participant_id)
-        print(current_system_id)
-
-        # when reaching the task_form, there is a current_system_id in the session db
+        print('current_system_id : ',current_system_id)
+        current_task_id = self.session.getCurrentTaskId(self.participant_id)
+        print('current_task_id : ',current_task_id)
+        #Total tasks
+        tasks = self.resource.getTasks(self.participant_group, current_system_id)
+        finished_tasks = []
+        remaning_tasks = []
+        print('Total tasks :------- ',json.dumps(tasks, indent=4, sort_keys=False))
+        if not current_task_id:
+            print('No current Task')
+            finished_tasks = self.session.getFinishedTasks(self.participant_id)
+            print('finished_tasks :------ ',json.dumps(finished_tasks, indent=4, sort_keys=False))
+            remaning_tasks = [task for task in tasks if task not in finished_tasks]
+            print(remaning_tasks)
+            print('remaning_tasks : ',len(remaning_tasks))
+            next_task = self.getNextTask(remaning_tasks)
+            self.current_task = next_task
+            print('next tasks is : ',next_task)
+            current_task_id = next_task['id']
+            print('current_task_id : ',current_task_id)
+            self.session.setCurrentTaskId(self.participant_id, current_system_id, current_task_id)
+        else:
+            pass
+        return self.current_task
 
     def getExperimentalSystemFilenames(self):
         return self.resource.getExperimentalSystemFilenames(self.participant_group, self.session.getCurrentSystemId(self.participant_id))

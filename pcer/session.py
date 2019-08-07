@@ -128,6 +128,45 @@ class Session():
         trials[trial_index]['tasks'] = tasks
         self.db.update({'trials': trials}, self.participant.id == participant_id)
 
+    def finishCurrentTask(self, participant_id):
+        current_system_id = self.getCurrentSystemId(participant_id)
+        current_task_id = self.getCurrentTaskId(participant_id)
+        trials = self.getTrials(participant_id)
+        print('Setting task to finished')
+        for t in trials:
+            if t['system_id'] == current_system_id:
+                for task in t['tasks']:
+                    if task['task_id'] == current_task_id:
+                        task['finished'] = True
+        self.db.update({'trials': trials}, self.participant.id == participant_id)
+
+
+    def setCurrentTaskData(self, answers, participant_id):
+        current_system_id = self.getCurrentSystemId(participant_id)
+        current_task_id = self.getCurrentTaskId(participant_id)
+
+        trials = self.getTrials(participant_id)
+        for t in trials:
+            if t['system_id'] == current_system_id:
+                for task in t['tasks']:
+                    if task['task_id'] == current_task_id:
+                        task['answer'] = answers
+        self.db.update({'trials': trials}, self.participant.id == participant_id)
+
+
+    def getFinishedTasks(self, participant_id):
+        current_task_id = None
+        trials = self.getTrials(participant_id)
+        finished_tasks = []
+        for t in trials:
+            if t['finished'] == False:
+                tasks = t['tasks']
+                break
+        for t in tasks:
+            if t['finished'] == True:
+                finished_tasks.append(t)
+        return finished_tasks
+
     def setPretestData(self, pretest_data, participant_id):
         self.db.update({'pretest_data': pretest_data}, self.participant.id == participant_id)
 

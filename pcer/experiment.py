@@ -14,6 +14,7 @@ class Experiment():
     session = None
     resource = None
     pretest_data = {}
+    current_task_data = {}
 
     def __init__(self):
         self.session = Session('db.json', 'experiment')
@@ -47,7 +48,7 @@ class Experiment():
     def getNextSystemDescription(self):
         pass
 
-    def getNextTask(self):
+    def getNextTask(self, tasks):
         random.shuffle(tasks)
         next_task = tasks[0]
         return next_task

@@ -52,6 +52,9 @@ class Experiment():
         next_task = tasks[0]
         return next_task
 
+    def finishCurrentTask(self):
+        self.session.finishCurrentTask(self.participant_id)
+
     def getGroups(self):
         return self.resource.getGroups()
 
@@ -61,6 +64,16 @@ class Experiment():
         else:
             del self.pretest_data[question]
         self.session.setPretestData(self.pretest_data, self.participant_id)
+
+    def setTaskData(self, question, choice):
+        if choice != '--':
+            self.current_task_data[question] = choice
+        else:
+            del self.current_task_data[question]
+        #current_system_id = self.session.getCurrentSystemId(self.participant_id)
+        #current_task_id = self.session.getCurrentTaskId(self.participant_id)
+        self.session.setCurrentTaskData(self.current_task_data, self.participant_id)
+
 
     def getScrollDisplacement(self, filename):
         return self.session.getScrollDisplacements(self.participant_id)[filename]

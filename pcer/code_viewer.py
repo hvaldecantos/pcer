@@ -82,7 +82,10 @@ class CodeViewer(PcerWindow):
 
         font.setPixelSize(self.font_pixel_size)
 
-        self.editorHeight = self.height_in_characters * QFontMetrics(font).lineSpacing()
+        self.editorHeight = (self.height_in_characters * QFontMetrics(font).height()) + \
+                             self.margin_pixel_size + \
+                             self.padding_top + \
+                             self.padding_bottom
 
         self.editor = MyQTextEdit(self)
         self.editor.setFont(font)

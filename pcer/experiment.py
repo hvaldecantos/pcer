@@ -57,20 +57,22 @@ class Experiment():
     def getGroups(self):
         return self.resource.getGroups()
 
-    def setPretestData(self,question, choice):
+    def setPretestData(self,question_id, question, choice):
         if choice != '--':
-            self.pretest_data[question] = choice
+            self.pretest_data[question_id] = {}
+            self.pretest_data[question_id]['question'] = question
+            self.pretest_data[question_id]['answer'] = choice
         else:
-            del self.pretest_data[question]
+            del self.pretest_data[question_id]
         self.session.setPretestData(self.pretest_data, self.participant_id)
 
-    def setTaskData(self, question, choice):
+    def setTaskData(self,question_id, question, choice):
         if choice != '--':
-            self.current_task_data[question] = choice
+            self.current_task_data[question_id] = {}
+            self.current_task_data[question_id]['question'] = question
+            self.current_task_data[question_id]['answer'] = choice
         else:
-            del self.current_task_data[question]
-        #current_system_id = self.session.getCurrentSystemId(self.participant_id)
-        #current_task_id = self.session.getCurrentTaskId(self.participant_id)
+            del self.current_task_data[question_id]
         self.session.setCurrentTaskData(self.current_task_data, self.participant_id)
 
 

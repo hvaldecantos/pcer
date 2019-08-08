@@ -121,7 +121,7 @@ class Session():
             {
                 "timestamp": str(datetime.now()), 
                 "finished": False, 
-                "answers": { }, 
+                "questionnaire": { },
                 "task_id": task_id
             }
         )
@@ -151,7 +151,7 @@ class Session():
             if t['system_id'] == current_system_id:
                 for task in t['tasks']:
                     if task['task_id'] == current_task_id:
-                        task['answer'] = answers
+                        task['questionnaire'] = answers
         self.db.update({'trials': trials}, self.participant.id == participant_id)
 
 

@@ -24,11 +24,11 @@ class PretestForm(PcerWindow):
         hbox.addStretch(1)
         hbox.addWidget(submitButton)
 
-        self.group_box, self.choice_combo_question_pair = self.experiment.form_builder.build_pretest_form(self.experiment)
+        self.group_box, self.choice_combo_question_list = self.experiment.form_builder.build_pretest_form(self.experiment)
 
-        for ccq_pair in self.choice_combo_question_pair:
-            cb = ccq_pair[1]
-            cb.currentIndexChanged.connect(partial(self.choiceSelection, ccq_pair))
+        for ccq_dict in self.choice_combo_question_list:
+            cb = ccq_dict['combobox']
+            cb.currentIndexChanged.connect(partial(self.choiceSelection, ccq_dict))
 
         self.vbox.addWidget(self.group_box)
         self.vbox.addStretch(1)
@@ -39,8 +39,8 @@ class PretestForm(PcerWindow):
         print("PretestForm.onSubmitButtonClick")
         self.submit_answer.emit()
 
-    def choiceSelection(self,ccq_pair,i):
-        print('Choice :',ccq_pair[1].currentText(), ' is selected for question ',ccq_pair[0])
-        question = ccq_pair[0]
-        choice = ccq_pair[1].currentText()
-        self.experiment.setPretestData(question, choice)
+    def choiceSelection(self,ccq_dict,i):
+        print('Choice :',ccq_dict['combobox'].currentText(), ' is selected for question ',ccq_dict['question'])
+        question = ccq_dict['question']
+        choice = ccq_dict['combobox'].currentText()
+        self.experiment.setPretestData(ccq_dict['id'], question, choice)

@@ -19,7 +19,7 @@ class FormBuilder:
         groupbox = QGroupBox(name)
         inner_vbox = QVBoxLayout()
         inner_vbox.addStretch(1)
-        choice_combo_question_pair = []
+        choice_combo_question_list = []
 
         description_label = QLabel(description)
         for i in range(0,len(questions)):
@@ -29,11 +29,15 @@ class FormBuilder:
             choiceCombo = QComboBox()
             for option in options:
                 choiceCombo.addItem(option)
-            choice_combo_question_pair.append([questions[i], choiceCombo])
+            choice_combo_question_dict = {}
+            choice_combo_question_dict['id'] = 'Q'+str(i+1)
+            choice_combo_question_dict['question'] = questions[i]
+            choice_combo_question_dict['combobox'] = choiceCombo
+            choice_combo_question_list.append(choice_combo_question_dict)
             inner_vbox.addWidget(choiceCombo)
 
         groupbox.setLayout(inner_vbox)
-        return groupbox, choice_combo_question_pair
+        return groupbox, choice_combo_question_list
 
     def build_system_form(self, system):
         name = system['name']
@@ -47,7 +51,7 @@ class FormBuilder:
         return group_box
 
     def build_task_form(self, task):
-        choice_combo_question_pair = []
+        choice_combo_question_list = []
         task_id = task['id']
         name = task['name']
         description = task['description']
@@ -63,9 +67,13 @@ class FormBuilder:
             choiceCombo = QComboBox()
             for option in options:
                 choiceCombo.addItem(option)
-            choice_combo_question_pair.append([questions[i], choiceCombo])
+            choice_combo_question_dict = {}
+            choice_combo_question_dict['id'] = 'Q'+str(i+1)
+            choice_combo_question_dict['question'] = questions[i]
+            choice_combo_question_dict['combobox'] = choiceCombo
+            choice_combo_question_list.append(choice_combo_question_dict)
             inner_vbox.addWidget(choiceCombo)
         group_box.setLayout(inner_vbox)
-        return group_box, choice_combo_question_pair
+        return group_box, choice_combo_question_list
 
 

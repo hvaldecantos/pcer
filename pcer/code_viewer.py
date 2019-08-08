@@ -35,6 +35,7 @@ class CodeViewer(PcerWindow):
         self.padding_top = config['code_viewer']['document']['padding_top']
         self.padding_bottom = config['code_viewer']['document']['padding_bottom']
         self.padding_right = config['code_viewer']['document']['padding_right']
+        self.use_leading_space = config['code_viewer']['document']['use_leading_space']
         self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
 
         super(CodeViewer, self).__init__(experiment)
@@ -82,7 +83,11 @@ class CodeViewer(PcerWindow):
 
         font.setPixelSize(self.font_pixel_size)
 
-        self.editorHeight = (self.height_in_characters * QFontMetrics(font).height()) + \
+        if self.use_leading_space:
+            line_height = QFontMetrics(font).lineSpacing()
+        else:
+            line_height = QFontMetrics(font).height()
+        self.editorHeight = (self.height_in_characters * line_height) + \
                              self.margin_pixel_size + \
                              self.padding_top + \
                              self.padding_bottom

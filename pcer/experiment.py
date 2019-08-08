@@ -130,15 +130,14 @@ class Experiment():
         tasks = self.resource.getTasks(self.participant_group, current_system_id)
         finished_tasks = []
         remaning_tasks = []
-        print('Total tasks :------- ',json.dumps(tasks, indent=4, sort_keys=False))
+        print('Total tasks :------- ',json.dumps([t['id'] for t in tasks], indent=4, sort_keys=False))
         if not current_task_id:
             print('No current Task')
             finished_tasks = self.session.getFinishedTasks(self.participant_id)
-            print('finished_tasks :------ ',json.dumps(finished_tasks, indent=4, sort_keys=False))
-            remaning_tasks = [task for task in tasks if task not in finished_tasks]
-            print(remaning_tasks)
-            print('remaning_tasks : ',len(remaning_tasks))
-            next_task = self.getNextTask(remaning_tasks)
+            print('finished_tasks :------ ',json.dumps([t['task_id'] for t in finished_tasks], indent=4, sort_keys=False))
+            remaining_tasks = [task for task in tasks if task['id'] not in [f_task['task_id'] for f_task in finished_tasks]]
+            print('remaning_tasks : ',[t['id'] for t in remaining_tasks])
+            next_task = self.getNextTask(remaining_tasks)
             self.current_task = next_task
             print('next tasks is : ',next_task)
             current_task_id = next_task['id']

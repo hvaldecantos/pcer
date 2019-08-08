@@ -24,6 +24,7 @@ class TaskForm(PcerWindow):
 
         task = self.experiment.getExperimentalTasks()
         self.group_box, self.choice_combo_question_list = self.experiment.form_builder.build_task_form(task)
+        self.setExistingData()
         self.vbox.addWidget(self.group_box)
 
         for ccq_dict in self.choice_combo_question_list:
@@ -32,14 +33,22 @@ class TaskForm(PcerWindow):
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
-        
         hbox.addWidget(submitButton)
         hbox.addWidget(readButton)
 
         self.vbox.addStretch(1)
         self.vbox.addLayout(hbox)
-        
         self.setWindowTitle('Task presentation')
+
+    def setExistingData(self):
+        if self.experiment.current_task_data.keys() > 0:
+            for question_id in self.experiment.current_task_data.keys():
+                for question in self.choice_combo_question_list:
+                    if question_id == question['id']:
+                        index = question['combobox'].findText(self.experiment.current_task_data[question_id]['answer'])
+                        question['combobox'].setCurrentIndex(index)
+        else:
+            print('No existing session')
 
     def areValidInputs(self):
         for ccq_dict in self.choice_combo_question_list:

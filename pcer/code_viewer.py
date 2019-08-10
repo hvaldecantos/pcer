@@ -35,6 +35,7 @@ class CodeViewer(PcerWindow):
         self.padding_top = config['code_viewer']['document']['padding_top']
         self.padding_bottom = config['code_viewer']['document']['padding_bottom']
         self.padding_right = config['code_viewer']['document']['padding_right']
+        self.use_leading_space = config['code_viewer']['document']['use_leading_space']
         self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
 
         super(CodeViewer, self).__init__(experiment)
@@ -67,7 +68,7 @@ class CodeViewer(PcerWindow):
         self.listWidget.move(0, 0)
         self.listWidget.resize(self.listWidth, self.editorHeight)
         self.listWidget.addItems(self.experiment.getExperimentalSystemFilenames())
-        self.listWidget.itemClicked.connect(self.onListItemClick)
+        self.listWidget.currentItemChanged.connect(self.onCurrentItemChanged)
 
     def setupBackButton(self):
         backButton = QPushButton("Back", self)
@@ -82,7 +83,11 @@ class CodeViewer(PcerWindow):
 
         font.setPixelSize(self.font_pixel_size)
 
-        self.editorHeight = (self.height_in_characters * QFontMetrics(font).height()) + \
+        if self.use_leading_space:
+            line_height = QFontMetrics(font).lineSpacing()
+        else:
+            line_height = QFontMetrics(font).height()
+        self.editorHeight = (self.height_in_characters * line_height) + \
                              self.margin_pixel_size + \
                              self.padding_top + \
                              self.padding_bottom
@@ -159,17 +164,17 @@ class CodeViewer(PcerWindow):
         print("Bottom-Right position in screen: (%d, %d)" % (wposition.x() + self.width, wposition.y() + self.editorHeight + self.status_bar_height))
         print("----------------------------------------")
 
-    def onListItemClick(self, l):
+    def onCurrentItemChanged(self, current_item, previous_item):
         # current_file is the past clicked file
         if self.current_file:
             self.experiment.setScrollDisplacement(self.current_file, self.editor.scrollbar_displacement)
         else:
-            self.experiment.setScrollDisplacement(l.text(), self.editor.scrollbar_displacement)
+            self.experiment.setScrollDisplacement(current_item.text(), self.editor.scrollbar_displacement)
 
         # uptades current_file to the current clicked file
-        self.current_file = l.text()
+        self.current_file = current_item.text()
         self.experiment.setCurrentOpenedFilename(self.current_file)
-        self.openFile(os.path.join(self.code_path, l.text()))
+        self.openFile(os.path.join(self.code_path, current_item.text()))
 
     def onBackButtonClick(self):
         if self.current_file:
@@ -180,7 +185,6 @@ class CodeViewer(PcerWindow):
         if not path:
             path, _ = QFileDialog.getOpenFileName(self, "Open File", '',
                     "C++ Files (*.cpp *.h)")
-        print(path)
         if path:
             inFile = QFile(path)
             if inFile.open(QFile.ReadOnly | QFile.Text):

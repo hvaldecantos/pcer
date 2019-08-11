@@ -76,11 +76,12 @@ class Session():
         trials = self.getTrials(participant_id)
         trials.append(
             {
-                "timestamp": str(datetime.now()), 
+                "timestamp_start": str(datetime.now()),
+                "timestamp_end": None
                 "finished": False,
                 "tasks": [],
                 "system_id": system_id, 
-                "warmup": isWarmup
+                "warmup": isWarmup,
             }
         )
         self.db.update({'trials': trials}, self.participant.id == participant_id)
@@ -119,7 +120,7 @@ class Session():
 
         tasks.append(
             {
-                "timestamp": str(datetime.now()), 
+                "timestamp_start": str(datetime.now()),
                 "finished": False, 
                 "questionnaire": { },
                 "task_id": task_id
@@ -139,6 +140,7 @@ class Session():
                 for task in t['tasks']:
                     if task['task_id'] == current_task_id:
                         task['finished'] = True
+                        task['timestamp_end'] = str(datetime.now())
         self.db.update({'trials': trials}, self.participant.id == participant_id)
 
 

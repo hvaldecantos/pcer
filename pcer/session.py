@@ -77,7 +77,7 @@ class Session():
         trials.append(
             {
                 "timestamp_start": str(datetime.now()),
-                "timestamp_end": None
+                "timestamp_end": None,
                 "finished": False,
                 "tasks": [],
                 "system_id": system_id, 

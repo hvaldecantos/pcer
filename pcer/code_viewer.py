@@ -3,22 +3,64 @@ import os
 import yaml
 from PyQt5.QtWidgets import (QWidget, QPushButton,
      QApplication, QDesktopWidget, QListWidget, QTextEdit)
-from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics, QFontInfo
+from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics, QFontInfo, QPainter, QPen, QPixmap #, QCursor
 from PyQt5 import QtCore
-from PyQt5.QtCore import QFile, QRegExp, Qt
+from PyQt5.QtCore import QFile, QRegExp, Qt, QRectF
 from pcer_window import PcerWindow
+from datetime import datetime
 
-
-class MyQTextEdit(QTextEdit):
+class MouseTrackerTextEdit(QTextEdit):
     scrollbar_displacement = 0
+    filename = None
 
     def __init__(self, parent=None):
-        super(MyQTextEdit, self).__init__(parent)
+        self.x = 0
+        self.y = 0
+        super(MouseTrackerTextEdit, self).__init__(parent)
+        self.setMouseTracking(True)
+        # QApplication.setOverrideCursor(QCursor(Qt.BlankCursor))
+        # self.setCursor(Qt.BlankCursor)
 
     def scrollContentsBy(self, dx, dy):
-        super(MyQTextEdit, self).scrollContentsBy(dx, dy)
+        super(MouseTrackerTextEdit, self).scrollContentsBy(dx, dy)
         self.scrollbar_displacement += dy
         print(self.scrollbar_displacement)
+
+    def setFilename(self, filename):
+        self.filename = filename
+
+    def paintEvent(self, event):
+        painter = QPainter(self.viewport())
+        pen = QPen(Qt.SolidLine)
+        pen.setColor(Qt.black)
+        pen.setWidth(1)
+        painter.setPen(pen)
+        # painter.drawLine(0, 0, self.x, self.y)
+        painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
+        super(MouseTrackerTextEdit, self).paintEvent(event)
+
+    def keyPressEvent(self, event):
+        if (event.modifiers() & QtCore.Qt.ShiftModifier):
+            self.shift = True
+            print 'Shift!'
+            self.save()
+        # call base class keyPressEvent
+        # PyQt5.QtGui.QLineEdit.keyPressEvent(self, event)
+
+    def mouseMoveEvent(self, event):
+        self.x = event.x()
+        self.y = event.y()
+        print('%s coords: (%d, %d + %d = %d) filename: %s' % (datetime.now(), self.x, self.y, self.scrollbar_displacement, self.y - self.scrollbar_displacement, self.filename))
+        self.update()
+
+    def save(self):
+        doc = self.document()
+        pixmap = QPixmap(doc.idealWidth(), doc.size().height())
+        pixmap.fill(Qt.white)
+        painter = QPainter(pixmap)
+        doc.drawContents(painter, QRectF(0, 0, doc.idealWidth(),  doc.size().height()))
+        painter.end()
+        pixmap.save("%s.png" % self.filename, "PNG")
 
 class CodeViewer(PcerWindow):
 
@@ -92,7 +134,7 @@ class CodeViewer(PcerWindow):
                              self.padding_top + \
                              self.padding_bottom
 
-        self.editor = MyQTextEdit(self)
+        self.editor = MouseTrackerTextEdit(self)
         self.editor.setFont(font)
         self.editor.move(self.listWidth, 0)
         self.editor.resize(self.editorWidth, self.editorHeight)
@@ -197,6 +239,7 @@ class CodeViewer(PcerWindow):
                     # Python v2.
                     text = str(text)
 
+                self.editor.setFilename(self.current_file)
                 self.editor.setPlainText(text)
 
                 try:

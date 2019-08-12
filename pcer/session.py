@@ -77,7 +77,7 @@ class Session():
         trials.append(
             {
                 "timestamp_start": str(datetime.now()),
-                "timestamp_end": None
+                "timestamp_end": None,
                 "finished": False,
                 "tasks": [],
                 "system_id": system_id, 
@@ -156,6 +156,18 @@ class Session():
                         task['questionnaire'] = answers
         self.db.update({'trials': trials}, self.participant.id == participant_id)
 
+    def getCurrentTaskState(self, participant_id):
+        questionnaire = None
+        trials = self.getTrials(participant_id)
+        for t in trials:
+            if t['finished'] == False:
+                tasks = t['tasks']
+                break
+        for t in tasks:
+            if t['finished'] == False:
+                questionnaire = t['questionnaire']
+                break
+        return questionnaire
 
     def getFinishedTasks(self, participant_id):
         current_task_id = None

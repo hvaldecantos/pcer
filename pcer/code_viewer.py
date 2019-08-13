@@ -8,6 +8,42 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import QFile, QRegExp, Qt, QRectF
 from pcer_window import PcerWindow
 from datetime import datetime
+from eye_tracker import ET
+
+class EyeTrackerTextEdit(QTextEdit):
+    scrollbar_displacement = 0
+    filename = None
+    x_offset = 0
+
+    def __init__(self, parent=None):
+        self.x = 0
+        self.y = 0
+        super(EyeTrackerTextEdit, self).__init__(parent)
+
+    def scrollContentsBy(self, dx, dy):
+        super(EyeTrackerTextEdit, self).scrollContentsBy(dx, dy)
+        self.scrollbar_displacement += dy
+        print(self.scrollbar_displacement)
+
+    def setFilename(self, filename):
+        self.filename = filename
+
+    def paintEvent(self, event):
+        painter = QPainter(self.viewport())
+        pen = QPen(Qt.SolidLine)
+        pen.setColor(Qt.black)
+        pen.setWidth(1)
+        painter.setPen(pen)
+        # painter.drawLine(0, 0, self.x, self.y)
+        painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
+        super(EyeTrackerTextEdit, self).paintEvent(event)
+
+    def gazeMoveEvent(self, x, y):
+        self.x = x - self.x_offset
+        self.y = y
+        print('%s coords: (%d, %d + %d = %d) filename: %s' % (datetime.now(), x, y, self.scrollbar_displacement, y - self.scrollbar_displacement, self.filename))
+        self.update()
+
 
 class MouseTrackerTextEdit(QTextEdit):
     scrollbar_displacement = 0
@@ -78,6 +114,7 @@ class CodeViewer(PcerWindow):
         self.padding_bottom = config['code_viewer']['document']['padding_bottom']
         self.padding_right = config['code_viewer']['document']['padding_right']
         self.use_leading_space = config['code_viewer']['document']['use_leading_space']
+        self.tracking_devise = config['code_viewer']['document']['tracking_devise']
         self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
 
         super(CodeViewer, self).__init__(experiment)
@@ -134,7 +171,15 @@ class CodeViewer(PcerWindow):
                              self.padding_top + \
                              self.padding_bottom
 
-        self.editor = MouseTrackerTextEdit(self)
+        # Selecting the tracker devise
+        self.editor = None
+        if self.tracking_devise == "gaze":
+            self.editor = EyeTrackerTextEdit(self)
+            self.et = ET(self.editor)
+            self.et.plugg()
+        elif self.tracking_devise == "mouse":
+            self.editor = MouseTrackerTextEdit(self)
+
         self.editor.setFont(font)
         self.editor.move(self.listWidth, 0)
         self.editor.resize(self.editorWidth, self.editorHeight)
@@ -193,6 +238,7 @@ class CodeViewer(PcerWindow):
         y1 = wposition.y() + self.padding_top
         x2 = wposition.x() + self.listWidth + self.editorWidth - self.padding_right
         y2 = wposition.y() + self.editorHeight - self.padding_bottom
+        self.editor.x_offset = x1 # For the eye tracker, as it uses the entire screen
         print("Size: width: %d, height: %d" % (x2 - x1, y2 - y1))
         print("Top-Left position in screen: (%d, %d)" % (x1, y1))
         print("Top-Right position in screen: (%d, %d)" % (x2, y1))

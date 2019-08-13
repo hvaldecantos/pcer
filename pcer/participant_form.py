@@ -10,6 +10,7 @@ import json
 class ParticipantForm(PcerWindow):
 
     continue_with_the_experiment = QtCore.pyqtSignal()
+    calibrate_eye_tracker = QtCore.pyqtSignal()
 
     def __init__(self, experiment):
         super(ParticipantForm, self).__init__(experiment)
@@ -18,10 +19,13 @@ class ParticipantForm(PcerWindow):
         continueButton = QPushButton("Continue")
         loadButton = QPushButton("Load")
         exitButton = QPushButton("Exit experiment")
+        calibrateButton = QPushButton("Calibrate ET")
+        # calibrateButton.setEnabled(False)
 
         continueButton.clicked.connect(self.onContinueButtonClick)
         loadButton.clicked.connect(self.onLoadButtonClick)
         exitButton.clicked.connect(self.onExitButtonClick)
+        calibrateButton.clicked.connect(self.onCalibrateButtonClick)
 
         idLabel = QLabel()
         idLabel.setText('ID:')
@@ -46,6 +50,7 @@ class ParticipantForm(PcerWindow):
         hbox.addStretch(1)
         
         hbox.addWidget(exitButton)
+        hbox.addWidget(calibrateButton)
         hbox.addWidget(loadButton)        
         hbox.addWidget(continueButton)
 
@@ -113,6 +118,10 @@ class ParticipantForm(PcerWindow):
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")
         QApplication.instance().quit()
+
+    def onCalibrateButtonClick(self):
+        print("onCalibrateButtonClick")
+        self.calibrate_eye_tracker.emit()
 
     def popUpWarning(self, msg):
         warning = QMessageBox()

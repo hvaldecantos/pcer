@@ -102,7 +102,7 @@ class CodeViewer(PcerWindow):
 
     back = QtCore.pyqtSignal()
 
-    def __init__(self, experiment):
+    def __init__(self, experiment, et):
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
         self.height_in_characters = config['code_viewer']['document']['height_in_characters']
         self.font_pixel_size = config['code_viewer']['document']['font_pixel_size']
@@ -117,6 +117,7 @@ class CodeViewer(PcerWindow):
         self.tracking_devise = config['code_viewer']['document']['tracking_devise']
         self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
 
+        self.et = et
         super(CodeViewer, self).__init__(experiment)
 
     def initUI(self):
@@ -175,8 +176,8 @@ class CodeViewer(PcerWindow):
         self.editor = None
         if self.tracking_devise == "gaze":
             self.editor = EyeTrackerTextEdit(self)
-            self.et = ET(self.editor)
-            self.et.plugg()
+            # self.et = ET(self.editor)
+            self.et.plugg(self.editor)
         elif self.tracking_devise == "mouse":
             self.editor = MouseTrackerTextEdit(self)
 
@@ -267,6 +268,7 @@ class CodeViewer(PcerWindow):
     def onBackButtonClick(self):
         if self.current_file:
             self.experiment.setScrollDisplacement(self.current_file, self.editor.scrollbar_displacement)
+        if self.tracking_devise == "gaze": self.et.unplugg()
         self.back.emit()
 
     def openFile(self, path=None):

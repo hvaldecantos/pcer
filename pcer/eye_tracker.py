@@ -3,20 +3,20 @@ from ctypes import *
 import ctypes
 
 class ET:
-    call_back_function = None
+    # call_back_function = None
 
-    def __init__(self, ex):
+    def __init__(self):
 
-        @WINFUNCTYPE(None, CSample)
-        def sample_callback(sample):
-            try:
-                ex.gazeMoveEvent((sample.leftEye.gazeX + sample.rightEye.gazeX)/2,
-                                 (sample.leftEye.gazeY + sample.rightEye.gazeY)/2)
-            except Exception as e:
-                print("========>", e)
-                pass
+        # @WINFUNCTYPE(None, CSample)
+        # def sample_callback(sample):
+        #     try:
+        #         ex.gazeMoveEvent((sample.leftEye.gazeX + sample.rightEye.gazeX)/2,
+        #                          (sample.leftEye.gazeY + sample.rightEye.gazeY)/2)
+        #     except Exception as e:
+        #         print("========>", e)
+        #         pass
 
-        self.call_back_function =  sample_callback
+        # self.call_back_function =  sample_callback
         print('Make UDP connection\n')
         iViewXAPI.iV_Connect(c_char_p('192.168.74.1'), c_int(4444), c_char_p('192.168.74.2'), c_int(5555))
         # print('Set tracking mode\n')
@@ -87,9 +87,22 @@ class ET:
         iViewXAPI.iV_GetGazeChannelQuality(byref(channelQuality))
         print(channelQuality.to_str())
 
-    def plugg(self):
+    def plugg(self, editor):
+        @WINFUNCTYPE(None, CSample)
+        def sample_callback(sample):
+            try:
+                editor.gazeMoveEvent((sample.leftEye.gazeX + sample.rightEye.gazeX)/2,
+                                     (sample.leftEye.gazeY + sample.rightEye.gazeY)/2)
+            except Exception as e:
+                print("========>", e)
+                pass
+
+        self.call_back_function =  sample_callback
         print('Set callback function\n')
         iViewXAPI.iV_SetSampleCallback(self.call_back_function)
+
+    def unplugg(self):
+        iViewXAPI.iV_SetSampleCallback(None)
 
     def __del__(self):
         print('Disconnect eye tracker\n')

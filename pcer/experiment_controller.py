@@ -5,16 +5,23 @@ from code_viewer import CodeViewer
 from pretest_form import PretestForm
 from experiment import Experiment
 from pcer_timer import PcerTimer
+from eye_tracker import ET
+import yaml
 
 class ExperimentController:
 
     experiment = None
     timer = None
+    et = None
 
     def __init__(self):
         self.window = None
         self.experiment = Experiment()
         self.timer = PcerTimer(15)
+        config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
+        self.tracking_devise = config['code_viewer']['document']['tracking_devise']
+        if self.tracking_devise == "gaze":
+            self.et = ET()
 
     def show_participant_form(self):
     	self.timer.stop()
@@ -22,6 +29,7 @@ class ExperimentController:
     		self.window.close()
         self.window = ParticipantForm(self.experiment)
         self.window.continue_with_the_experiment.connect(self.show_system_form)
+        self.window.calibrate_eye_tracker.connect(self.start_calibration)
 
         # the timer has to be added, although there is here a reference the
         # wrapped C/C++ object of type QTimer is deleted by pyqt
@@ -29,6 +37,10 @@ class ExperimentController:
         self.timer.hide()
 
         self.window.show()
+
+    def start_calibration(self):
+        self.et.calibrate()
+        self.et.getAccuracyData()
 
     def show_system_form(self):
         self.timer.stop()
@@ -69,7 +81,7 @@ class ExperimentController:
     def show_src_navigator(self):
         print("show_src_navigator")
         self.window.close()
-        self.window = CodeViewer(self.experiment)
+        self.window = CodeViewer(self.experiment, self.et)
         self.window.back.connect(self.show_task_form)
         self.window.addTimer(self.timer)
         self.timer.start()

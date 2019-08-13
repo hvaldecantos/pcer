@@ -31,7 +31,11 @@ For the code viewer during the eye tracking you can set the following document p
         padding_top: 0
         padding_bottom: 0
         padding_right: 0
+        use_leading_space: false
+        tracking_devise: "gaze"
       side_bar_percentage_width: 0.2
+
+Note: The `tracking_devise` option accepts "gaze" or "mouse". The system supports only the SMI RED-250 eye tracking devise.
 
 ### Resource directory
 

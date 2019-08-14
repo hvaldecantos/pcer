@@ -67,7 +67,7 @@ class TestSession(unittest.TestCase):
         trial = status['trials'][0]
 
         self.assertEqual(re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{1}", timestamp),
-                         re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{1}", trial['timestamp'])
+                         re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{1}", trial['timestamp_start'])
                         )
         self.assertEqual(trial['finished'], False)
         self.assertEqual(trial['tasks'], [])
@@ -116,7 +116,7 @@ class TestSession(unittest.TestCase):
         current_task = status['trials'][0]['tasks'][0]
 
         self.assertEqual(re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.", timestamp),
-                         re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.", current_task['timestamp'])
+                         re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.", current_task['timestamp_start'])
                         )
         self.assertEqual(current_task['finished'], False)
         self.assertEqual(current_task['questionnaire'], {})

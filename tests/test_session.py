@@ -201,6 +201,60 @@ class TestSession(unittest.TestCase):
         with self.assertRaises(CurrentTaskAlreadyExistError):
             self.session.setCurrentTaskId('1001', 'library', 'execflow')
 
+    def test_finish_current_task(self):
+        self.session.addParticipant('1001', 'oo')
+        self.session.setCurrentSystemId('1001', 'library', False)
+        self.session.setCurrentTaskId('1001', 'library', 'objsinteracts')
+        status = self.session.getParticipantStatus('1001')
+        current_task = status['trials'][0]['tasks'][0]
+        self.assertEqual(current_task['finished'], False)
+        self.session.finishCurrentTask('1001')
+        self.assertEqual(current_task['finished'], True)
+
+    def test_set_current_task_data(self):
+        #working on simple way to test this
+        pass
+
+    def test_get_current_system_finished_tasks(self):
+        self.session.addParticipant('1001', 'oo')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 0)
+
+        self.session.setCurrentSystemId('1001', 'clock', True)
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 0)
+
+        self.session.setCurrentTaskId('1001', 'clock', 'objsinteracts')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 0)
+
+        self.session.finishCurrentTask('1001')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 1)
+
+        self.session.setCurrentTaskId('1001', 'clock', 'implfeats')
+        self.session.finishCurrentTask('1001')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 2)
+
+        self.session.setCurrentTaskId('1001', 'clock', 'execflow')
+        self.session.finishCurrentTask('1001')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 3)
+
+        self.session.setCurrentTaskId('1001', 'clock', 'changedobjs')
+        self.session.finishCurrentTask('1001')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 4)
+
+        self.session.finishCurrentSystem('1001')
+        self.session.setCurrentSystemId('1001', 'spell', True)
+        self.session.setCurrentTaskId('1001', 'spell', 'changedobjs')
+        self.session.finishCurrentTask('1001')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 1)
+
+
     """ Code viewer data tests
     """
     def test_scroll_displacement_data(self):
@@ -219,77 +273,6 @@ class TestSession(unittest.TestCase):
         current_opened_filename = self.session.getCurrentOpenedFilename('1001')
         self.assertEqual(current_opened_filename, 'filename1.java')
 
-    def test_finish_current_task(self):
-        self.session.addParticipant('1001', 'oo')
-        self.session.setCurrentSystemId('1001', 'library', False)
-        self.session.setCurrentTaskId('1001', 'library', 'objsinteracts')
-        status = self.session.getParticipantStatus('1001')
-        current_task = status['trials'][0]['tasks'][0]
-        self.assertEqual(current_task['finished'], False)
-        self.session.finishCurrentTask('1001')
-        self.assertEqual(current_task['finished'], True)
-
-    def test_set_current_task_data(self):
-        #working on simple way to test this
-        pass
-
-    def test_get_finished_task(self):
-        self.session.addParticipant('1001', 'oo')
-        self.session.setCurrentSystemId('1001', 'library', False)
-        #self.session.setCurrentTaskId('1001', 'library', 'objsinteracts')
-        self.assertEqual(self.session.getFinishedTasks('1001'), [])
-
-        task_list1 = [
-                        {
-                            "timestamp": "2019-08-08 15:58:41.128000",
-                            "finished": True,
-                            "questionnaire": {
-                                "Q1": {
-                                    "answer": "dk",
-                                    "question": "The Timer role-player object requires a Clock role-player object to update its time."
-                                },
-                                "Q3": {
-                                    "answer": "dk",
-                                    "question": "A Clock role-player object invokes update on another Clock role-player object."
-                                },
-                                "Q2": {
-                                    "answer": "dk",
-                                    "question": "A Clock role-player object uses a Timer role-player object to update its time."
-                                }
-                            },
-                            "task_id": "objsinteracts"
-                        }
-                    ]
-        self.session.addParticipant('1002', 'oo')
-        self.session.setCurrentSystemId('1002', 'library', False)
-        self.session.setCurrentTaskId('1002', 'library', 'objsinteracts')
-        self.session.finishCurrentTask('1002')
-        self.assertEqual(self.session.getFinishedTasks('1002'), task_list1)
-
-        task_list2 = [
-                        {
-                            "timestamp": "2019-08-08 15:58:41.128000",
-                            "finished": False,
-                            "questionnaire": {
-                                "Q1": {
-                                    "answer": "dk",
-                                    "question": "The Timer role-player object requires a Clock role-player object to update its time."
-                                },
-                                "Q3": {
-                                    "answer": "dk",
-                                    "question": "A Clock role-player object invokes update on another Clock role-player object."
-                                },
-                                "Q2": {
-                                    "answer": "dk",
-                                    "question": "A Clock role-player object uses a Timer role-player object to update its time."
-                                }
-                            },
-                            "task_id": "objsinteracts"
-                        }]
-        self.session.addParticipant('1003', 'oo')
-        self.session.setCurrentSystemId('1003', 'library', False)
-        self.session.setCurrentTaskId('1003', 'library', 'objsinteracts')
-        self.assertEqual(self.session.getFinishedTasks('1003'), [])
 
 if __name__ == '__main__':
     unittest.main()

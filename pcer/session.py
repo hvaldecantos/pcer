@@ -209,10 +209,11 @@ class Session():
                 break
         return questionnaire
 
-    def getFinishedTasks(self, participant_id):
+    def getCurrentSystemFinishedTasks(self, participant_id):
         current_task_id = None
         trials = self.getTrials(participant_id)
         finished_tasks = []
+        tasks = []
         for t in trials:
             if t['finished'] == False:
                 tasks = t['tasks']
@@ -223,7 +224,7 @@ class Session():
         return finished_tasks
 
     def isTaskRemaining(self, participant_id, total_tasks): #TODO name
-        finished_tasks = self.getFinishedTasks(participant_id)
+        finished_tasks = self.getCurrentSystemFinishedTasks(participant_id)
         if len(total_tasks) > len(finished_tasks):
             return True
         return False

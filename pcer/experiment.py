@@ -136,7 +136,7 @@ class Experiment():
         print('Total tasks :------- ',json.dumps([t['id'] for t in tasks], indent=4, sort_keys=False))
         if not current_task_id:
             print('No current Task')
-            finished_tasks = self.session.getFinishedTasks(self.participant_id)
+            finished_tasks = self.session.getCurrentSystemFinishedTasks(self.participant_id)
             print('finished_tasks :------ ',json.dumps([t['task_id'] for t in finished_tasks], indent=4, sort_keys=False))
             remaining_tasks = [task for task in tasks if task['id'] not in [f_task['task_id'] for f_task in finished_tasks]]
             print('remaning_tasks : ',[t['id'] for t in remaining_tasks])

@@ -3,5 +3,5 @@ class UnfinishableSystemError(Exception):
         self.msg = msg
         if msg is None:
             self.msg = ("The 'system_id': '%s' cannot be finished." % system_id)
-        super(UnfinishableSystemError, self).__init__(msg)
+        super(UnfinishableSystemError, self).__init__(self.msg)
         self.system_id = system_id

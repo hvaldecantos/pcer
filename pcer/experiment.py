@@ -47,8 +47,11 @@ class Experiment():
         pass
 
     def getNextTask(self, tasks):
-        random.shuffle(tasks)
-        next_task = tasks[0]
+        if len(tasks):
+            random.shuffle(tasks)
+            next_task = tasks[0]
+        else:
+            next_task = None
         return next_task
 
     def finishCurrentTask(self):
@@ -137,12 +140,13 @@ class Experiment():
             print('finished_tasks :------ ',json.dumps([t['task_id'] for t in finished_tasks], indent=4, sort_keys=False))
             remaining_tasks = [task for task in tasks if task['id'] not in [f_task['task_id'] for f_task in finished_tasks]]
             print('remaning_tasks : ',[t['id'] for t in remaining_tasks])
-            next_task = self.getNextTask(remaining_tasks)
-            self.current_task = next_task
-            print('next tasks is : ',next_task)
-            current_task_id = next_task['id']
-            print('current_task_id : ',current_task_id)
-            self.session.setCurrentTaskId(self.participant_id, current_system_id, current_task_id)
+            if len(remaining_tasks):
+                next_task = self.getNextTask(remaining_tasks)
+                self.current_task = next_task
+                print('next tasks is : ',next_task)
+                current_task_id = next_task['id']
+                print('current_task_id : ',current_task_id)
+                self.session.setCurrentTaskId(self.participant_id, current_system_id, current_task_id)
         else:
             pass
         return self.current_task

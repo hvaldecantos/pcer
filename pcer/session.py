@@ -86,6 +86,16 @@ class Session():
         )
         self.db.update({'trials': trials}, self.participant.id == participant_id)
 
+    def finishCurrentSystem(self, participant_id):
+        system_id = getCurrentSystemId(participant_id)
+        trials = self.getTrials(participant_id)
+        for t in trials:
+            if t['system_id'] == system_id:
+                t['finished'] = True
+                if 'warmup_finished' in t.keys():
+                    t['warmup_finished'] = True
+        self.db.update({'trials': trials}, self.participant.id == participant_id)
+
     def getCurrentTaskId(self, participant_id):
         current_task_id = None
         trials = self.getTrials(participant_id)
@@ -181,6 +191,14 @@ class Session():
             if t['finished'] == True:
                 finished_tasks.append(t)
         return finished_tasks
+
+
+    def isTaskRemaining(self, participant_id, total_tasks):
+        finished_tasks = self.getFinishedTasks(participant_id)
+        if len(total_tasks) > len(finished_tasks):
+            return True
+        return False
+
 
     def setPretestData(self, pretest_data, participant_id):
         self.db.update({'pretest_data': pretest_data}, self.participant.id == participant_id)

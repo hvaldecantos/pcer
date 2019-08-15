@@ -48,6 +48,15 @@ class Session():
         if len(status) <= 0: raise ParticipantDoesNotExistError(id)
         else: return status[0]
 
+    def getFinishedWarmupSystems(self, participant_id):
+        finished_warmup_systems = []
+        trials = self.getTrials(participant_id)
+
+        for t in trials:
+            if t['warmup'] and t['finished']:
+                finished_warmup_systems.append(t['system_id'])
+        return finished_warmup_systems
+
     def isWarmupSystemFinished(self, participant_id):
         return self.getParticipantStatus(participant_id)['warmup_finished']
     
@@ -174,7 +183,7 @@ class Session():
         current_system_id = self.getCurrentSystemId(participant_id)
         current_task_id = self.getCurrentTaskId(participant_id)
         trials = self.getTrials(participant_id)
-        print('Setting task to finished')
+
         for t in trials:
             if t['system_id'] == current_system_id:
                 for task in t['tasks']:
@@ -182,6 +191,7 @@ class Session():
                         task['finished'] = True
                         task['timestamp_end'] = str(datetime.now())
                         break
+
         self.db.update({'trials': trials}, self.participant.id == participant_id)
 
     def setCurrentTaskData(self, answers, participant_id):

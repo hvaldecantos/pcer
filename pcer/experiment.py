@@ -2,6 +2,8 @@ from session import Session
 from resource import Resource
 import random
 from form_builder import FormBuilder
+import json
+
 
 class Experiment():
     
@@ -12,6 +14,7 @@ class Experiment():
     session = None
     resource = None
     pretest_data = {}
+    current_task_data = {}
 
     def __init__(self, db_filename = 'db.json'):
         self.session = Session(db_filename, 'experiment')
@@ -43,18 +46,38 @@ class Experiment():
     def getNextSystemDescription(self):
         pass
 
-    def getNextTask(self):
-        pass
+    def getNextTask(self, tasks):
+        if len(tasks):
+            random.shuffle(tasks)
+            next_task = tasks[0]
+        else:
+            next_task = None
+        return next_task
+
+    def finishCurrentTask(self):
+        self.session.finishCurrentTask(self.participant_id)
 
     def getGroups(self):
         return self.resource.getGroups()
 
-    def setPretestData(self,question, choice):
+    def setPretestData(self,question_id, question, choice):
         if choice != '--':
-            self.pretest_data[question] = choice
+            self.pretest_data[question_id] = {}
+            self.pretest_data[question_id]['question'] = question
+            self.pretest_data[question_id]['answer'] = choice
         else:
-            del self.pretest_data[question]
+            del self.pretest_data[question_id]
         self.session.setPretestData(self.pretest_data, self.participant_id)
+
+    def setTaskData(self,question_id, question, choice):
+        if choice != '--':
+            self.current_task_data[question_id] = {}
+            self.current_task_data[question_id]['question'] = question
+            self.current_task_data[question_id]['answer'] = choice
+        else:
+            del self.current_task_data[question_id]
+        self.session.setCurrentTaskData(self.current_task_data, self.participant_id)
+
 
     def getScrollDisplacement(self, filename):
         return self.session.getScrollDisplacements(self.participant_id)[filename]
@@ -100,11 +123,33 @@ class Experiment():
         return system
 
     def getExperimentalTasks(self):
-        tasks = None
+        task = None
+        next_task = None
         current_system_id = self.session.getCurrentSystemId(self.participant_id)
-        print(current_system_id)
-
-        # when reaching the task_form, there is a current_system_id in the session db
+        print('current_system_id : ',current_system_id)
+        current_task_id = self.session.getCurrentTaskId(self.participant_id)
+        print('current_task_id : ',current_task_id)
+        #Total tasks
+        tasks = self.resource.getTasks(self.participant_group, current_system_id)
+        finished_tasks = []
+        remaning_tasks = []
+        print('Total tasks :------- ',json.dumps([t['id'] for t in tasks], indent=4, sort_keys=False))
+        if not current_task_id:
+            print('No current Task')
+            finished_tasks = self.session.getCurrentSystemFinishedTasks(self.participant_id)
+            print('finished_tasks :------ ',json.dumps([t['task_id'] for t in finished_tasks], indent=4, sort_keys=False))
+            remaining_tasks = [task for task in tasks if task['id'] not in [f_task['task_id'] for f_task in finished_tasks]]
+            print('remaning_tasks : ',[t['id'] for t in remaining_tasks])
+            if len(remaining_tasks):
+                next_task = self.getNextTask(remaining_tasks)
+                self.current_task = next_task
+                print('next tasks is : ',next_task)
+                current_task_id = next_task['id']
+                print('current_task_id : ',current_task_id)
+                self.session.setCurrentTaskId(self.participant_id, current_system_id, current_task_id)
+        else:
+            pass
+        return self.current_task
 
     def getExperimentalSystemFilenames(self):
         filenames = self.session.getFilenamesOrder(self.participant_id)

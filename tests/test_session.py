@@ -7,9 +7,12 @@ from pcer.current_system_already_exist_error import CurrentSystemAlreadyExistErr
 from pcer.system_already_exist_error import SystemAlreadyExistError
 from pcer.wrong_current_system_error import WrongCurrentSystemError
 from pcer.current_task_already_exist_error import CurrentTaskAlreadyExistError
+from pcer.no_current_system_available_error import NoCurrentSystemAvailableError
+from pcer.unfinishable_system_error import UnfinishableSystemError
 from datetime import datetime
 import re
 
+import json
 
 class TestSession(unittest.TestCase):
 
@@ -20,6 +23,8 @@ class TestSession(unittest.TestCase):
         self.session.close()
         os.remove("tinydbTestSession.json")
 
+    """ Participant tests
+    """
     def test_add_participant(self):
         self.assertEqual(len(self.session.db.all()), 0)
         self.assertEqual(self.session.existParticipant('1001'), False)
@@ -52,6 +57,8 @@ class TestSession(unittest.TestCase):
 
         self.assertEqual(status, initial_status)
 
+    """ Trial (Experimental systems) tests
+    """
     def test_experimental_system_existance(self):
         self.session.addParticipant('1001', 'oo')
         self.assertFalse(self.session.existExperimentalSystem('1001', 'library'))
@@ -67,7 +74,7 @@ class TestSession(unittest.TestCase):
         trial = status['trials'][0]
 
         self.assertEqual(re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{1}", timestamp),
-                         re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{1}", trial['timestamp'])
+                         re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{1}", trial['timestamp_start'])
                         )
         self.assertEqual(trial['finished'], False)
         self.assertEqual(trial['tasks'], [])
@@ -96,6 +103,32 @@ class TestSession(unittest.TestCase):
         self.session.setCurrentSystemId('1001', 'clock', True)
         self.assertEqual(self.session.getCurrentSystemId('1001'), 'clock')
 
+    def test_get_current_system_id_and_index(self):
+        self.session.addParticipant('1001', 'oo')
+
+        self.session.setCurrentSystemId('1001', 'clock', True)
+        self.session.setCurrentTaskId('1001', 'clock', 'objsinteracts')
+        # print(json.dumps(self.session.getParticipantStatus('1001'), indent=4, sort_keys=False))
+        system_id, idx = self.session.getCurrentSystemIdAndIndex('1001')
+        self.assertEqual(system_id, 'clock')
+        self.assertEqual(idx, 0)
+
+        self.session.finishCurrentTask('1001')
+        self.session.finishCurrentSystem('1001')
+        self.session.setCurrentSystemId('1001', 'menu', False)
+        self.session.setCurrentTaskId('1001', 'menu', 'objsinteracts')
+        system_id, idx = self.session.getCurrentSystemIdAndIndex('1001')
+        self.assertEqual(system_id, 'menu')
+        self.assertEqual(idx, 1)
+
+        self.session.finishCurrentTask('1001')
+        self.session.finishCurrentSystem('1001')
+        self.session.setCurrentSystemId('1001', 'spell', False)
+        self.session.setCurrentTaskId('1001', 'spell', 'objsinteracts')
+        system_id, idx = self.session.getCurrentSystemIdAndIndex('1001')
+        self.assertEqual(system_id, 'spell')
+        self.assertEqual(idx, 2)
+
     def test_get_current_system_id_when_there_is_no_current_system(self):
         self.session.addParticipant('1001', 'oo')
         self.assertEqual(self.session.getCurrentSystemId('1001'), None)
@@ -106,6 +139,27 @@ class TestSession(unittest.TestCase):
         with self.assertRaises(ParticipantDoesNotExistError):
             self.session.getCurrentSystemId('5005')
 
+    def test_finishing_a_current_system_when_there_is_no_current_system(self):
+        self.session.addParticipant('1001', 'oo')
+        with self.assertRaises(NoCurrentSystemAvailableError):
+            self.session.finishCurrentSystem('1001')
+
+        self.session.setCurrentSystemId('1001', 'clock', True)
+        self.session.setCurrentTaskId('1001', 'clock', 'objsinteracts')
+        self.session.finishCurrentTask('1001')
+        self.session.finishCurrentSystem('1001')
+        with self.assertRaises(NoCurrentSystemAvailableError):
+            self.session.finishCurrentSystem('1001')
+
+    def test_finish_current_system_when_it_has_a_task_not_finished(self):
+        self.session.addParticipant('1001', 'oo')
+        self.session.setCurrentSystemId('1001', 'clock', True)
+        self.session.setCurrentTaskId('1001', 'clock', 'objsinteracts')
+        with self.assertRaises(UnfinishableSystemError):
+            self.session.finishCurrentSystem('1001')
+
+    """ Task tests
+    """
     def test_set_current_task_id(self):
         self.session.addParticipant('1001', 'oo')
         self.session.setCurrentSystemId('1001', 'clock', True)
@@ -116,23 +170,25 @@ class TestSession(unittest.TestCase):
         current_task = status['trials'][0]['tasks'][0]
 
         self.assertEqual(re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.", timestamp),
-                         re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.", current_task['timestamp'])
+                         re.findall(r"^\d{4}\-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.", current_task['timestamp_start'])
                         )
         self.assertEqual(current_task['finished'], False)
-        self.assertEqual(current_task['answers'], {})
+        self.assertEqual(current_task['questionnaire'], {})
         self.assertEqual(current_task['task_id'], 'objsinteracts')
 
-    def test_adding_a_new_task_to_a_invalid_participant_id(self):
+    def test_adding_a_new_task_to_an_invalid_participant_id(self):
         self.session.addParticipant('1001', 'oo')
         self.session.setCurrentSystemId('1001', 'clock', True)
         with self.assertRaises(ParticipantDoesNotExistError):
             self.session.setCurrentTaskId('1000', 'clock', 'objsinteracts')
 
-    def test_adding_a_new_task_to_a_wrong_system_id(self):
+    def test_adding_a_new_task_when_there_is_no_current_system(self):
         self.session.addParticipant('1001', 'oo')
-        with self.assertRaises(WrongCurrentSystemError):
+        with self.assertRaises(NoCurrentSystemAvailableError):
             self.session.setCurrentTaskId('1001', 'clock', 'objsinteracts')
 
+    def test_adding_a_new_task_to_a_wrong_system_id(self):
+        self.session.addParticipant('1001', 'oo')
         self.session.setCurrentSystemId('1001', 'clock', True)
         with self.assertRaises(WrongCurrentSystemError):
             self.session.setCurrentTaskId('1001', 'menu', 'objsinteracts')
@@ -145,6 +201,62 @@ class TestSession(unittest.TestCase):
         with self.assertRaises(CurrentTaskAlreadyExistError):
             self.session.setCurrentTaskId('1001', 'library', 'execflow')
 
+    def test_finish_current_task(self):
+        self.session.addParticipant('1001', 'oo')
+        self.session.setCurrentSystemId('1001', 'library', False)
+        self.session.setCurrentTaskId('1001', 'library', 'objsinteracts')
+        status = self.session.getParticipantStatus('1001')
+        current_task = status['trials'][0]['tasks'][0]
+        self.assertEqual(current_task['finished'], False)
+        self.session.finishCurrentTask('1001')
+        self.assertEqual(current_task['finished'], True)
+
+    def test_set_current_task_data(self):
+        #working on simple way to test this
+        pass
+
+    def test_get_current_system_finished_tasks(self):
+        self.session.addParticipant('1001', 'oo')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 0)
+
+        self.session.setCurrentSystemId('1001', 'clock', True)
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 0)
+
+        self.session.setCurrentTaskId('1001', 'clock', 'objsinteracts')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 0)
+
+        self.session.finishCurrentTask('1001')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 1)
+
+        self.session.setCurrentTaskId('1001', 'clock', 'implfeats')
+        self.session.finishCurrentTask('1001')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 2)
+
+        self.session.setCurrentTaskId('1001', 'clock', 'execflow')
+        self.session.finishCurrentTask('1001')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 3)
+
+        self.session.setCurrentTaskId('1001', 'clock', 'changedobjs')
+        self.session.finishCurrentTask('1001')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 4)
+
+        self.session.finishCurrentSystem('1001')
+        self.session.setCurrentSystemId('1001', 'spell', True)
+        self.session.setCurrentTaskId('1001', 'spell', 'changedobjs')
+        self.session.finishCurrentTask('1001')
+        finished_tasks = self.session.getCurrentSystemFinishedTasks('1001')
+        self.assertEqual(len(finished_tasks), 1)
+
+
+    """ Code viewer data tests
+    """
     def test_scroll_displacement_data(self):
         self.session.addParticipant('1001', 'oo')
         self.assertEqual(self.session.getScrollDisplacements('1001'), {})
@@ -160,6 +272,7 @@ class TestSession(unittest.TestCase):
         self.session.setCurrentOpenedFilename('1001', 'filename1.java')
         current_opened_filename = self.session.getCurrentOpenedFilename('1001')
         self.assertEqual(current_opened_filename, 'filename1.java')
+
 
 if __name__ == '__main__':
     unittest.main()

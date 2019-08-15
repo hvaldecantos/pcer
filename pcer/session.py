@@ -57,7 +57,7 @@ class Session():
                 finished_warmup_systems.append(t['system_id'])
         return finished_warmup_systems
 
-    def isWarmupSystemFinished(self, participant_id):
+    def isWarmupSystemFinished(self, participant_id): # TODO delete
         return self.getParticipantStatus(participant_id)['warmup_finished']
     
     def getTrials(self, participant_id):
@@ -86,6 +86,14 @@ class Session():
                 break
 
         return current_system_id, trial_index
+
+    def getFinishedSystems(self, participant_id):
+        trials = self.getTrials(participant_id)
+        systems = []
+        for t in trials:
+            if t['finished']:
+                systems.append(t)
+        return systems
 
     def existExperimentalSystem(self, participant_id, system_id):
         trials = self.getTrials(participant_id)

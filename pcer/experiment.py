@@ -47,7 +47,7 @@ class Experiment():
         pass
 
     def getNextTask(self, tasks):
-        if len(tasks):
+        if len(tasks) > 0:
             random.shuffle(tasks)
             next_task = tasks[0]
         else:
@@ -96,27 +96,36 @@ class Experiment():
     def setCurrentOpenedFilename(self, filename):
         self.session.setCurrentOpenedFilename(self.participant_id, filename)
 
+    def isWarmupSystemsFinished(self, participant_id):
+        warmup_systems = self.resource.getWarmupSystems()
+        finished_warmup_systems =  self.session.getFinishedWarmupSystems(participant_id)
+
+        fws_ids = [f for f in finished_warmup_systems]
+        
+        for ws in warmup_systems:
+            if not (ws['id'] in fws_ids):
+                return False
+        return True
+
     def getExperimentalSystem(self):
-        # print("-----------")
-        # print(self.resource.getWarmupSystems()[0])
-        # print("-----------")
         system = None
 
         current_system_id = self.session.getCurrentSystemId(self.participant_id)
-        print(current_system_id)
 
         if not current_system_id:
-            if not self.session.isWarmupSystemFinished(self.participant_id):
+            if not self.isWarmupSystemsFinished(self.participant_id):
                 warmup_systems = self.resource.getWarmupSystems()
                 random.shuffle(warmup_systems)
                 system = warmup_systems[0] # there must be at least one
+            else:
+                finished_systems = self.session.getFinishedSystems(self.participant_id)
+                all_systems = self.resource.getExperimentalSystems()
+                
+                fs = [f['system_id'] for f in finished_systems]
+                remaining_systems = [s for s in all_systems if s['id'] not in fs]
 
-            # else:
-            #     finished_systems = self.session.getFinishedExperimentalSystems(participant_id):
-            #     all_systems = self.resource.getExperimentalSystems()
-            #     remaining_systems = all_systems - finished_systems
-            #     system = random.shuffle(remaining_systems)[0]
-
+                random.shuffle(remaining_systems)
+                system = remaining_systems[0]
             self.session.setCurrentSystemId(self.participant_id, system['id'], system['warmup'])
         else:
             system = self.resource.getSystem(current_system_id)
@@ -126,26 +135,18 @@ class Experiment():
         task = None
         next_task = None
         current_system_id = self.session.getCurrentSystemId(self.participant_id)
-        print('current_system_id : ',current_system_id)
         current_task_id = self.session.getCurrentTaskId(self.participant_id)
-        print('current_task_id : ',current_task_id)
         #Total tasks
         tasks = self.resource.getTasks(self.participant_group, current_system_id)
         finished_tasks = []
         remaning_tasks = []
-        print('Total tasks :------- ',json.dumps([t['id'] for t in tasks], indent=4, sort_keys=False))
         if not current_task_id:
-            print('No current Task')
             finished_tasks = self.session.getCurrentSystemFinishedTasks(self.participant_id)
-            print('finished_tasks :------ ',json.dumps([t['task_id'] for t in finished_tasks], indent=4, sort_keys=False))
             remaining_tasks = [task for task in tasks if task['id'] not in [f_task['task_id'] for f_task in finished_tasks]]
-            print('remaning_tasks : ',[t['id'] for t in remaining_tasks])
             if len(remaining_tasks):
                 next_task = self.getNextTask(remaining_tasks)
                 self.current_task = next_task
-                print('next tasks is : ',next_task)
                 current_task_id = next_task['id']
-                print('current_task_id : ',current_task_id)
                 self.session.setCurrentTaskId(self.participant_id, current_system_id, current_task_id)
         else:
             pass

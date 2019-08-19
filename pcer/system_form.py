@@ -8,6 +8,7 @@ class SystemForm(PcerWindow):
 
     back = QtCore.pyqtSignal()
     show_task = QtCore.pyqtSignal()
+    group_box = None
 
     def __init__(self, experiment):
         super(SystemForm, self).__init__(experiment)
@@ -21,19 +22,22 @@ class SystemForm(PcerWindow):
 
         hbox = QHBoxLayout()
         hbox.addStretch(1)
-        
+
         hbox.addWidget(backButton)
         hbox.addWidget(showTaskButton)
 
         # Get the system info to fill the system form
         system = self.experiment.getExperimentalSystem()
-        system_name = QLabel()
-        system_name.setText(system['name'])
-        self.vbox.addWidget(system_name)
+        self.group_box = self.experiment.form_builder.build_system_form(system)
 
-        system_description = QLabel()
-        system_description.setText(system['description'])
-        self.vbox.addWidget(system_description)
+        #system_name = QLabel()
+        #system_name.setText(system['name'])
+        #self.vbox.addWidget(system_name)
+        self.vbox.addWidget(self.group_box)
+
+        #system_description = QLabel()
+        #system_description.setText(system['description'])
+        #self.vbox.addWidget(system_description)
         # --------------------------------------
 
         self.vbox.addStretch(1)

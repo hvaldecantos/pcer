@@ -64,10 +64,13 @@ class ExperimentController:
         self.window.show()
 
     def task_form_submit_answer(self):
-        print("submit_answer task_counter = {}".format(self.task_counter))
-        if self.task_counter < 3:
+        participant_id = self.experiment.participant_id
+        system_id = self.experiment.session.getCurrentSystemId(participant_id)
+        total_tasks = self.experiment.resource.getTasks(self.experiment.participant_group, system_id)
+        if self.experiment.session.isTaskRemaining(participant_id, total_tasks):
             self.show_task_form()
         else:
+            self.experiment.session.finishCurrentSystem(participant_id)
             self.show_pretest_form()
 
     def show_pretest_form(self):

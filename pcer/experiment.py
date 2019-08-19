@@ -140,15 +140,15 @@ class Experiment():
             task = self.resource.getTask(self.participant_group, current_system_id, current_task_id)
         return task
 
-    def getExperimentalSystemFilenames(self):
+    def getCurrentExperimentalSystemFilenames(self):
         filenames = self.session.getFilenamesOrder(self.participant_id)
         if len(filenames) == 0:
-            filenames = self.resource.getExperimentalSystemFilenames(self.participant_group, self.session.getCurrentSystemId(self.participant_id))
+            filenames = self.resource.getCurrentExperimentalSystemFilenames(self.participant_group, self.session.getCurrentSystemId(self.participant_id))
             random.shuffle(filenames)
             self.session.setFilenamesOrder(self.participant_id, filenames)
         return filenames
 
-    def clearExperimentalSystemFilenames(self):
+    def clearCurrentExperimentalSystemFilenamesOrder(self):
         self.session.setFilenamesOrder(self.participant_id, [])
 
     def getSourceCodePath(self):

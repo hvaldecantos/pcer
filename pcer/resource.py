@@ -75,6 +75,6 @@ class Resource():
         pretests = yaml.load(open(path), Loader = yaml.SafeLoader)
         return pretests
 
-    def getExperimentalSystemFilenames(self, group, system_id):
+    def getCurrentExperimentalSystemFilenames(self, group, system_id):
         system = self.getSystem(system_id)
         return os.listdir(system['code'][group])

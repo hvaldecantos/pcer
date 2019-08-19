@@ -67,7 +67,7 @@ class CodeViewer(PcerWindow):
         self.listWidget = QListWidget(self)
         self.listWidget.move(0, 0)
         self.listWidget.resize(self.listWidth, self.editorHeight)
-        self.listWidget.addItems(self.experiment.getExperimentalSystemFilenames())
+        self.listWidget.addItems(self.experiment.getCurrentExperimentalSystemFilenames())
         self.listWidget.currentItemChanged.connect(self.onCurrentItemChanged)
 
     def setupBackButton(self):

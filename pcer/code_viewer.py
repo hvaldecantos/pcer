@@ -174,12 +174,13 @@ class CodeViewer(PcerWindow):
 
         # Selecting the tracker devise
         self.editor = None
-        if self.tracking_devise == "gaze":
+        if self.tracking_devise == "eye tracker":
             self.editor = EyeTrackerTextEdit(self)
-            # self.et = ET(self.editor)
             self.et.plugg(self.editor)
         elif self.tracking_devise == "mouse":
             self.editor = MouseTrackerTextEdit(self)
+        else:
+            raise Exception("You should especify your tracker devise: 'eye tracker' or 'mouse'.")
 
         self.editor.setFont(font)
         self.editor.move(self.listWidth, 0)
@@ -268,7 +269,7 @@ class CodeViewer(PcerWindow):
     def onBackButtonClick(self):
         if self.current_file:
             self.experiment.setScrollDisplacement(self.current_file, self.editor.scrollbar_displacement)
-        if self.tracking_devise == "gaze": self.et.unplugg()
+        if self.tracking_devise == "eye tracker": self.et.unplugg()
         self.back.emit()
 
     def openFile(self, path=None):

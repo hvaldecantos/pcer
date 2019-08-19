@@ -15,7 +15,7 @@ class ParticipantForm(PcerWindow):
 
     def __init__(self, experiment):
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
-        self.tracking_devise = config['code_viewer']['document']['tracking_devise']
+        self.tracking_devise = config['tracker']['devise']
         super(ParticipantForm, self).__init__(experiment)
 
     def initUI(self):

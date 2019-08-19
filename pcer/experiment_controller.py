@@ -19,7 +19,7 @@ class ExperimentController:
         self.experiment = Experiment()
         self.timer = PcerTimer(15)
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
-        self.tracking_devise = config['code_viewer']['document']['tracking_devise']
+        self.tracking_devise = config['tracker']['devise']
         if self.tracking_devise == "eye tracker":
             self.et = ET()
 

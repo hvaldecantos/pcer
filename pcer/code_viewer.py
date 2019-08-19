@@ -20,9 +20,11 @@ class EyeTrackerTextEdit(QTextEdit):
     csv_file = None
 
     def __init__(self, csv_filename, parent=None):
+        config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
+        tracking_data_path = config['tracker']['tracking_data_path']
         self.x = 0
         self.y = 0
-        self.csv_file = open(os.path.join("tracking_data", csv_filename + '.csv'),'w')
+        self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'w')
         super(EyeTrackerTextEdit, self).__init__(parent)
 
     def scrollContentsBy(self, dx, dy):
@@ -124,7 +126,7 @@ class CodeViewer(PcerWindow):
         self.padding_bottom = config['code_viewer']['document']['padding_bottom']
         self.padding_right = config['code_viewer']['document']['padding_right']
         self.use_leading_space = config['code_viewer']['document']['use_leading_space']
-        self.tracking_devise = config['code_viewer']['document']['tracking_devise']
+        self.tracking_devise = config['tracker']['devise']
         self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
 
         self.et = et

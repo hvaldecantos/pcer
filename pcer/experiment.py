@@ -115,8 +115,10 @@ class Experiment():
         if not current_system_id:
             if not self.isWarmupSystemsFinished(self.participant_id):
                 warmup_systems = self.resource.getWarmupSystems()
-                random.shuffle(warmup_systems)
-                system = warmup_systems[0] # there must be at least one
+                finished_warmup_systems =  self.session.getFinishedWarmupSystemIds(self.participant_id)
+                remaining_warmup_systems = [s for s in warmup_systems if s['id'] not in finished_warmup_systems]
+                random.shuffle(remaining_warmup_systems)
+                system = remaining_warmup_systems[0]
             else:
                 finished_systems = self.session.getFinishedSystems(self.participant_id)
                 all_systems = self.resource.getExperimentalSystems()

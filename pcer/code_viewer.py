@@ -15,10 +15,14 @@ class EyeTrackerTextEdit(QTextEdit):
     filename = None
     x_offset = 0
     y_offset = 0
+    x2 = 0
+    y2 = 0
+    csv_file = None
 
-    def __init__(self, parent=None):
+    def __init__(self, csv_filename, parent=None):
         self.x = 0
         self.y = 0
+        self.csv_file = open(os.path.join("tracking_data", csv_filename + '.csv'),'w')
         super(EyeTrackerTextEdit, self).__init__(parent)
 
     def scrollContentsBy(self, dx, dy):
@@ -40,11 +44,16 @@ class EyeTrackerTextEdit(QTextEdit):
         super(EyeTrackerTextEdit, self).paintEvent(event)
 
     def gazeMoveEvent(self, x, y):
+        print("x: %f, y: %f" % (x,y))
         self.x = x - self.x_offset
         self.y = y - self.y_offset
-        print('%s coords: (%d, %d + %d = %d) filename: %s' % (datetime.now(), x, y, self.scrollbar_displacement, y - self.scrollbar_displacement, self.filename))
-        self.update()
 
+        if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
+            # print('%s coords: (%d, %d + %d = %d) filename: %s' % (datetime.now(), x, y, self.scrollbar_displacement, y - self.scrollbar_displacement, self.filename))
+            str_dat = "'%s', %d', '%d', '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
+            # print(str_dat)
+            self.csv_file.write(str_dat)
+            self.update()
 
 class MouseTrackerTextEdit(QTextEdit):
     scrollbar_displacement = 0
@@ -176,7 +185,7 @@ class CodeViewer(PcerWindow):
         # Selecting the tracker devise
         self.editor = None
         if self.tracking_devise == "eye tracker":
-            self.editor = EyeTrackerTextEdit(self)
+            self.editor = EyeTrackerTextEdit(self.experiment.participant_id, self)
             self.et.plugg(self.editor)
         elif self.tracking_devise == "mouse":
             self.editor = MouseTrackerTextEdit(self)
@@ -243,6 +252,8 @@ class CodeViewer(PcerWindow):
         y2 = wposition.y() + self.editorHeight - self.padding_bottom
         self.editor.x_offset = x1 # For the eye tracker, as it uses the entire screen
         self.editor.y_offset = y1 # For the eye tracker, as it uses the entire screen
+        self.editor.x2 = x2
+        self.editor.y2 = y2
         print("Size: width: %d, height: %d" % (x2 - x1, y2 - y1))
         print("Top-Left position in screen: (%d, %d)" % (x1, y1))
         print("Top-Right position in screen: (%d, %d)" % (x2, y1))

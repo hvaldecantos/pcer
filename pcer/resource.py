@@ -46,6 +46,17 @@ class Resource():
         except IndexError:
             raise Exception("System with 'id': '%s' not found." % system_id)
 
+    def getTask(self, group, system_id, task_id):
+        task = None
+        tasks = self.getTasks(group, system_id)
+        for t in tasks:
+            if t['id'] == task_id:
+                task = t
+                break
+        if not task:
+            raise Exception("Task 'id': '%s' not found for participant's group '%s' and 'system_id': '%s' in resource .yml files" % (task_id, group, system_id))
+        return task
+
     def getTasks(self, group, system_id):
         task_db = TinyDB(storage = MemoryStorage)
         system = self.getSystem(system_id)

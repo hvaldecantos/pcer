@@ -46,14 +46,6 @@ class Experiment():
     def getNextSystemDescription(self):
         pass
 
-    def getNextTask(self, tasks):
-        if len(tasks) > 0:
-            random.shuffle(tasks)
-            next_task = tasks[0]
-        else:
-            next_task = None
-        return next_task
-
     def finishCurrentTask(self):
         self.session.finishCurrentTask(self.participant_id)
 
@@ -109,7 +101,6 @@ class Experiment():
 
     def getExperimentalSystem(self):
         system = None
-
         current_system_id = self.session.getCurrentSystemId(self.participant_id)
 
         if not current_system_id:
@@ -135,24 +126,19 @@ class Experiment():
 
     def getExperimentalTasks(self):
         task = None
-        next_task = None
         current_system_id = self.session.getCurrentSystemId(self.participant_id)
         current_task_id = self.session.getCurrentTaskId(self.participant_id)
-        #Total tasks
-        tasks = self.resource.getTasks(self.participant_group, current_system_id)
-        finished_tasks = []
-        remaning_tasks = []
+
         if not current_task_id:
+            tasks = self.resource.getTasks(self.participant_group, current_system_id)
             finished_tasks = self.session.getCurrentSystemFinishedTasks(self.participant_id)
             remaining_tasks = [task for task in tasks if task['id'] not in [f_task['task_id'] for f_task in finished_tasks]]
-            if len(remaining_tasks):
-                next_task = self.getNextTask(remaining_tasks)
-                self.current_task = next_task
-                current_task_id = next_task['id']
-                self.session.setCurrentTaskId(self.participant_id, current_system_id, current_task_id)
+            random.shuffle(remaining_tasks)
+            task = remaining_tasks[0]
+            self.session.setCurrentTaskId(self.participant_id, current_system_id, task['id'])
         else:
-            pass
-        return self.current_task
+            task = self.resource.getTask(self.participant_group, current_system_id, current_task_id)
+        return task
 
     def getExperimentalSystemFilenames(self):
         filenames = self.session.getFilenamesOrder(self.participant_id)

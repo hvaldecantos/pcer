@@ -88,6 +88,9 @@ class Experiment():
     def setCurrentOpenedFilename(self, filename):
         self.session.setCurrentOpenedFilename(self.participant_id, filename)
 
+    def clearCurrentOpenedFilename(self):
+        self.session.setCurrentOpenedFilename(self.participant_id, None)
+
     def isWarmupSystemsFinished(self, participant_id):
         warmup_systems = self.resource.getWarmupSystems()
         finished_warmup_systems =  self.session.getFinishedWarmupSystemIds(participant_id)
@@ -104,6 +107,9 @@ class Experiment():
         current_system_id = self.session.getCurrentSystemId(self.participant_id)
 
         if not current_system_id:
+            self.clearCurrentOpenedFilename()
+            self.clearCurrentExperimentalSystemFilenamesOrder()
+            self.clearScrollDisplacements()
             if not self.isWarmupSystemsFinished(self.participant_id):
                 warmup_systems = self.resource.getWarmupSystems()
                 finished_warmup_systems =  self.session.getFinishedWarmupSystemIds(self.participant_id)

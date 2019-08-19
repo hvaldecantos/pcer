@@ -14,6 +14,7 @@ class EyeTrackerTextEdit(QTextEdit):
     scrollbar_displacement = 0
     filename = None
     x_offset = 0
+    y_offset = 0
 
     def __init__(self, parent=None):
         self.x = 0
@@ -40,7 +41,7 @@ class EyeTrackerTextEdit(QTextEdit):
 
     def gazeMoveEvent(self, x, y):
         self.x = x - self.x_offset
-        self.y = y
+        self.y = y - self.y_offset
         print('%s coords: (%d, %d + %d = %d) filename: %s' % (datetime.now(), x, y, self.scrollbar_displacement, y - self.scrollbar_displacement, self.filename))
         self.update()
 
@@ -241,6 +242,7 @@ class CodeViewer(PcerWindow):
         x2 = wposition.x() + self.listWidth + self.editorWidth - self.padding_right
         y2 = wposition.y() + self.editorHeight - self.padding_bottom
         self.editor.x_offset = x1 # For the eye tracker, as it uses the entire screen
+        self.editor.y_offset = y1 # For the eye tracker, as it uses the entire screen
         print("Size: width: %d, height: %d" % (x2 - x1, y2 - y1))
         print("Top-Left position in screen: (%d, %d)" % (x1, y1))
         print("Top-Right position in screen: (%d, %d)" % (x2, y1))

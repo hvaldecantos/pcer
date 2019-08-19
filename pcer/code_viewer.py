@@ -24,7 +24,7 @@ class EyeTrackerTextEdit(QTextEdit):
         tracking_data_path = config['tracker']['tracking_data_path']
         self.x = 0
         self.y = 0
-        self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'w')
+        self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'a+')
         super(EyeTrackerTextEdit, self).__init__(parent)
 
     def scrollContentsBy(self, dx, dy):
@@ -285,6 +285,7 @@ class CodeViewer(PcerWindow):
         if self.current_file:
             self.experiment.setScrollDisplacement(self.current_file, self.editor.scrollbar_displacement)
         if self.tracking_devise == "eye tracker": self.et.unplugg()
+        self.editor.csv_file.close()
         self.back.emit()
 
     def openFile(self, path=None):

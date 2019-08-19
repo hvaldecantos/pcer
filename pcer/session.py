@@ -110,9 +110,7 @@ class Session():
         if current_task_id: raise UnfinishableSystemError(current_system_id, "The 'system_id': '%s' cannot be finished with the unfinished 'task_id': '%s'." % (current_system_id, current_task_id))
         tasks = self.getTasks(participant_id, current_system_id)
         if len(tasks) == 0: raise UnfinishableSystemError(current_system_id, "You cannot finished a system with no tasks")
-
         trials = self.getTrials(participant_id)
-
         for t in trials:
             if t['system_id'] == current_system_id:
                 t['finished'] = True

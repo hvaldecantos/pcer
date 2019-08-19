@@ -48,7 +48,7 @@ class Session():
         if len(status) <= 0: raise ParticipantDoesNotExistError(id)
         else: return status[0]
 
-    def getFinishedWarmupSystems(self, participant_id):
+    def getFinishedWarmupSystemIds(self, participant_id):
         finished_warmup_systems = []
         trials = self.getTrials(participant_id)
 

@@ -98,7 +98,7 @@ class Experiment():
 
     def isWarmupSystemsFinished(self, participant_id):
         warmup_systems = self.resource.getWarmupSystems()
-        finished_warmup_systems =  self.session.getFinishedWarmupSystems(participant_id)
+        finished_warmup_systems =  self.session.getFinishedWarmupSystemIds(participant_id)
 
         fws_ids = [f for f in finished_warmup_systems]
         

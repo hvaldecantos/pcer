@@ -174,19 +174,19 @@ class TestSession(unittest.TestCase):
         self.session.setCurrentTaskId('1001', 'clock', 'changedobjs')
         self.session.finishCurrentTask('1001')
 
-        self.assertEqual(self.session.getFinishedWarmupSystems('1001'), [])
+        self.assertEqual(self.session.getFinishedWarmupSystemIds('1001'), [])
         self.session.finishCurrentSystem('1001')
-        self.assertEqual(self.session.getFinishedWarmupSystems('1001'), ['clock'])
+        self.assertEqual(self.session.getFinishedWarmupSystemIds('1001'), ['clock'])
 
         self.session.setCurrentSystemId('1001', 'store', isWarmup = True)
-        self.assertEqual(self.session.getFinishedWarmupSystems('1001'), ['clock'])
+        self.assertEqual(self.session.getFinishedWarmupSystemIds('1001'), ['clock'])
 
         self.session.setCurrentTaskId('1001', 'store', 'execflow')
         self.session.finishCurrentTask('1001')
-        self.assertEqual(self.session.getFinishedWarmupSystems('1001'), ['clock'])
+        self.assertEqual(self.session.getFinishedWarmupSystemIds('1001'), ['clock'])
 
         self.session.finishCurrentSystem('1001')
-        self.assertEqual(self.session.getFinishedWarmupSystems('1001'), ['clock', 'store'])
+        self.assertEqual(self.session.getFinishedWarmupSystemIds('1001'), ['clock', 'store'])
 
     """ Task tests
     """

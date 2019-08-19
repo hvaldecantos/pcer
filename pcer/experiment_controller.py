@@ -40,7 +40,8 @@ class ExperimentController:
 
     def start_calibration(self):
         self.et.calibrate()
-        self.et.getAccuracyData()
+        result = self.et.getAccuracyData()
+        self.experiment.session.addETCalibrationAccuracy(self.experiment.participant_id, result)
 
     def show_system_form(self):
         self.timer.stop()

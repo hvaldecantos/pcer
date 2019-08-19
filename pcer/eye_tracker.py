@@ -79,7 +79,9 @@ class ET:
         print("------------------- Accuracy data after validation   -------------\n")
         accuracyData = CAccuracy(0, 0, 0, 0)
         iViewXAPI.iV_GetAccuracy(byref(accuracyData), show_image)
-        print(accuracyData.to_str())
+        result = accuracyData.to_dict()
+        print(result)
+        return result
 
     def getGazeChannelQuality(self):
         print("------------------- Gaze Channel Quality Information -------------\n")

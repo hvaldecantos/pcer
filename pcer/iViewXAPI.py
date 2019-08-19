@@ -104,6 +104,14 @@ class CAccuracy(Structure):
     def to_str(self):
         return ("LX: %f, LY: %f, RX: %f, RY: %f" % (self.deviationLX, self.deviationLY, self.deviationRX, self.deviationRY))
 
+    def to_dict(self):
+        result = {}
+        result['LX'] = self.deviationLX
+        result['LY'] = self.deviationLY
+        result['RX'] = self.deviationRX
+        result['RY'] = self.deviationRY
+        return result
+
 class CRedGeometry(Structure):
     _fields_ = [("monitorSize",c_int),
                 ("redGeometry",c_int),

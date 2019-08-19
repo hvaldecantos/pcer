@@ -37,7 +37,8 @@ class Session():
                 'pretest_data': {},
                 'current_opened_filename': None,
                 'scroll_displacements': {},
-                'filenames_order': []
+                'filenames_order': [],
+                'calibrations': []
             }
         )
 
@@ -152,3 +153,13 @@ class Session():
     def getFilenamesOrder(self, participant_id):
         status = self.getParticipantStatus(participant_id)
         return status['filenames_order']
+
+    def getETCalibrationAccuracyResults(self, participant_id, calibration_result):
+        status = self.getParticipantStatus(participant_id)
+        return status['calibrations']
+
+    def addETCalibrationAccuracy(self, participant_id, calibration_result):
+        calibrations = self.getETCalibrationAccuracyResults(participant_id, calibration_result)
+        calibration_result['timestamp'] = str(datetime.now())
+        calibrations.append(calibration_result)
+        self.db.update({'calibrations': calibrations}, self.participant.id == participant_id)

@@ -124,7 +124,7 @@ class Experiment():
             system = self.resource.getSystem(current_system_id)
         return system
 
-    def getExperimentalTasks(self):
+    def getExperimentalTask(self):
         task = None
         current_system_id = self.session.getCurrentSystemId(self.participant_id)
         current_task_id = self.session.getCurrentTaskId(self.participant_id)

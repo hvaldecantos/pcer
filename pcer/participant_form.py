@@ -6,22 +6,31 @@ from pcer_window import PcerWindow
 from participant_already_exist_error import ParticipantAlreadyExistError
 from participant_does_not_exist_error import ParticipantDoesNotExistError
 import json
+import yaml
 
 class ParticipantForm(PcerWindow):
 
     continue_with_the_experiment = QtCore.pyqtSignal()
+    calibrate_eye_tracker = QtCore.pyqtSignal()
 
     def __init__(self, experiment):
+        config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
+        self.tracking_devise = config['tracker']['devise']
         super(ParticipantForm, self).__init__(experiment)
 
     def initUI(self):
         continueButton = QPushButton("Continue")
         loadButton = QPushButton("Load")
         exitButton = QPushButton("Exit experiment")
+        self.calibrateButton = QPushButton("Calibrate ET")
+
+        if not self.experiment.participant_id or self.tracking_devise != "eye tracker":
+            self.calibrateButton.setEnabled(False)
 
         continueButton.clicked.connect(self.onContinueButtonClick)
         loadButton.clicked.connect(self.onLoadButtonClick)
         exitButton.clicked.connect(self.onExitButtonClick)
+        self.calibrateButton.clicked.connect(self.onCalibrateButtonClick)
 
         idLabel = QLabel()
         idLabel.setText('ID:')
@@ -46,6 +55,7 @@ class ParticipantForm(PcerWindow):
         hbox.addStretch(1)
         
         hbox.addWidget(exitButton)
+        hbox.addWidget(self.calibrateButton)
         hbox.addWidget(loadButton)        
         hbox.addWidget(continueButton)
 
@@ -106,6 +116,8 @@ class ParticipantForm(PcerWindow):
             self.setIdGroupFieldInTheForm(status['id'], status['group'])
             self.statusText.setPlainText(json.dumps(status, indent=4, sort_keys=False))
             self.experiment.setCurrentParticipant(self.idField.text(), self.groupCombo.currentText())
+            if self.tracking_devise == "eye tracker":
+                self.calibrateButton.setEnabled(True)
         except ParticipantDoesNotExistError as e:
             self.popUpWarning(e.msg)
             self.idField.setFocus()
@@ -113,6 +125,10 @@ class ParticipantForm(PcerWindow):
     def onExitButtonClick(self):
         print("ParticipantForm.onExitButtonClick")
         QApplication.instance().quit()
+
+    def onCalibrateButtonClick(self):
+        print("onCalibrateButtonClick")
+        self.calibrate_eye_tracker.emit()
 
     def popUpWarning(self, msg):
         warning = QMessageBox()

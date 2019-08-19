@@ -31,7 +31,16 @@ For the code viewer during the eye tracking you can set the following document p
         padding_top: 0
         padding_bottom: 0
         padding_right: 0
+        use_leading_space: false
       side_bar_percentage_width: 0.2
+
+For the tracking devise use the following properties:
+
+    tracker:
+      devise: "eye tracker"
+      tracking_data_path: "tracking_data"
+
+Note: The `devise` option accepts "eye tracker" or "mouse". The system supports only the SMI RED-250 eye tracking devise.
 
 ### Resource directory
 

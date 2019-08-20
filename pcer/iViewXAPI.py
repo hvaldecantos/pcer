@@ -150,7 +150,14 @@ class CGazeChannelQuality(Structure):
 #       Loading iViewX.dll 
 #===========================
 
-if platform.architecture()[0] == '64bit':
-        iViewXAPI = windll.LoadLibrary("iViewXAPI64.dll")
+if(platform.system() == "Linux"):
+    windss = None
+    iViewXAPI = None
+    WINFUNCTYPE = None
+elif (platform.system() == "Windows"):
+    if platform.architecture()[0] == '64bit':
+            iViewXAPI = windll.LoadLibrary("iViewXAPI64.dll")
+    else:
+            iViewXAPI = windll.LoadLibrary("iViewXAPI.dll")
 else:
-        iViewXAPI = windll.LoadLibrary("iViewXAPI.dll")
+    raise Exception("Your OS system is not supported yet.")

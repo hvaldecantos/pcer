@@ -3,9 +3,9 @@ import os
 import yaml
 from PyQt5.QtWidgets import (QWidget, QPushButton,
      QApplication, QDesktopWidget, QListWidget, QTextEdit)
-from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics, QFontInfo, QPainter, QPen, QPixmap #, QCursor
+from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics, QFontInfo, QPainter, QPen, QPixmap, QMouseEvent #, QCursor
 from PyQt5 import QtCore
-from PyQt5.QtCore import QFile, QRegExp, Qt, QRectF
+from PyQt5.QtCore import QFile, QRegExp, Qt, QRectF,  QPoint, QEvent
 from pcer_window import PcerWindow
 from datetime import datetime
 from eye_tracker import ET
@@ -76,6 +76,8 @@ class MouseTrackerTextEdit(QTextEdit):
     def scrollContentsBy(self, dx, dy):
         super(MouseTrackerTextEdit, self).scrollContentsBy(dx, dy)
         self.scrollbar_displacement += dy
+        event = QMouseEvent(QEvent.MouseMove, QPoint(self.x, self.y), Qt.NoButton, QApplication.mouseButtons(), Qt.NoModifier)
+        self.mouseMoveEvent(event)
         print(self.scrollbar_displacement)
 
     def setFilename(self, filename):

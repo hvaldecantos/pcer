@@ -3,9 +3,9 @@ import os
 import yaml
 from PyQt5.QtWidgets import (QWidget, QPushButton,
      QApplication, QDesktopWidget, QListWidget, QTextEdit)
-from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics, QFontInfo, QPainter, QPen, QPixmap #, QCursor
+from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics, QFontInfo, QPainter, QPen, QPixmap, QMouseEvent #, QCursor
 from PyQt5 import QtCore
-from PyQt5.QtCore import QFile, QRegExp, Qt, QRectF
+from PyQt5.QtCore import QFile, QRegExp, Qt, QRectF,  QPoint, QEvent
 from pcer_window import PcerWindow
 from datetime import datetime
 from eye_tracker import ET
@@ -60,10 +60,14 @@ class EyeTrackerTextEdit(QTextEdit):
 class MouseTrackerTextEdit(QTextEdit):
     scrollbar_displacement = 0
     filename = None
+    csv_file = None
 
-    def __init__(self, parent=None):
+    def __init__(self, csv_filename, parent=None):
+        config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
+        tracking_data_path = config['tracker']['tracking_data_path']
         self.x = 0
         self.y = 0
+        self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'a+')
         super(MouseTrackerTextEdit, self).__init__(parent)
         self.setMouseTracking(True)
         # QApplication.setOverrideCursor(QCursor(Qt.BlankCursor))
@@ -72,6 +76,8 @@ class MouseTrackerTextEdit(QTextEdit):
     def scrollContentsBy(self, dx, dy):
         super(MouseTrackerTextEdit, self).scrollContentsBy(dx, dy)
         self.scrollbar_displacement += dy
+        event = QMouseEvent(QEvent.MouseMove, QPoint(self.x, self.y), Qt.NoButton, QApplication.mouseButtons(), Qt.NoModifier)
+        self.mouseMoveEvent(event)
         print(self.scrollbar_displacement)
 
     def setFilename(self, filename):
@@ -98,7 +104,8 @@ class MouseTrackerTextEdit(QTextEdit):
     def mouseMoveEvent(self, event):
         self.x = event.x()
         self.y = event.y()
-        print('%s coords: (%d, %d + %d = %d) filename: %s' % (datetime.now(), self.x, self.y, self.scrollbar_displacement, self.y - self.scrollbar_displacement, self.filename))
+        str_dat = "'%s', %d', '%d', '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
+        self.csv_file.write(str_dat)
         self.update()
 
     def save(self):
@@ -190,7 +197,7 @@ class CodeViewer(PcerWindow):
             self.editor = EyeTrackerTextEdit(self.experiment.participant_id, self)
             self.et.plugg(self.editor)
         elif self.tracking_devise == "mouse":
-            self.editor = MouseTrackerTextEdit(self)
+            self.editor = MouseTrackerTextEdit(self.experiment.participant_id, self)
         else:
             raise Exception("You should especify your tracker devise: 'eye tracker' or 'mouse'.")
 

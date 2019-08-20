@@ -158,6 +158,36 @@ class TestSession(unittest.TestCase):
         with self.assertRaises(UnfinishableSystemError):
             self.session.finishCurrentSystem('1001')
 
+    def test_get_finished_warmup_systems(self):
+        self.session.addParticipant('1001', 'oo')
+        self.session.setCurrentSystemId('1001', 'clock', isWarmup = True)
+
+        self.session.setCurrentTaskId('1001', 'clock', 'objsinteracts')
+        self.session.finishCurrentTask('1001')
+
+        self.session.setCurrentTaskId('1001', 'clock', 'implfeats')
+        self.session.finishCurrentTask('1001')
+
+        self.session.setCurrentTaskId('1001', 'clock', 'execflow')
+        self.session.finishCurrentTask('1001')
+
+        self.session.setCurrentTaskId('1001', 'clock', 'changedobjs')
+        self.session.finishCurrentTask('1001')
+
+        self.assertEqual(self.session.getFinishedWarmupSystemIds('1001'), [])
+        self.session.finishCurrentSystem('1001')
+        self.assertEqual(self.session.getFinishedWarmupSystemIds('1001'), ['clock'])
+
+        self.session.setCurrentSystemId('1001', 'store', isWarmup = True)
+        self.assertEqual(self.session.getFinishedWarmupSystemIds('1001'), ['clock'])
+
+        self.session.setCurrentTaskId('1001', 'store', 'execflow')
+        self.session.finishCurrentTask('1001')
+        self.assertEqual(self.session.getFinishedWarmupSystemIds('1001'), ['clock'])
+
+        self.session.finishCurrentSystem('1001')
+        self.assertEqual(self.session.getFinishedWarmupSystemIds('1001'), ['clock', 'store'])
+
     """ Task tests
     """
     def test_set_current_task_id(self):

@@ -13,3 +13,6 @@ config.txt
 
 # ignore resource directory
 resource/
+
+# ignore tracking data directory
+tracking_data/

@@ -14,7 +14,6 @@ class Experiment():
     session = None
     resource = None
     pretest_data = {}
-    current_task_data = {}
 
     def __init__(self, db_filename = 'db.json'):
         self.session = Session(db_filename, 'experiment')
@@ -62,13 +61,14 @@ class Experiment():
         self.session.setPretestData(self.pretest_data, self.participant_id)
 
     def setTaskData(self,question_id, question, choice):
+        current_task_data = self.session.getCurrentTaskState(self.participant_id)
         if choice != '--':
-            self.current_task_data[question_id] = {}
-            self.current_task_data[question_id]['question'] = question
-            self.current_task_data[question_id]['answer'] = choice
+            current_task_data[question_id] = {}
+            current_task_data[question_id]['question'] = question
+            current_task_data[question_id]['answer'] = choice
         else:
-            del self.current_task_data[question_id]
-        self.session.setCurrentTaskData(self.current_task_data, self.participant_id)
+            del current_task_data[question_id]
+        self.session.setCurrentTaskData(current_task_data, self.participant_id)
 
 
     def getScrollDisplacement(self, filename):

@@ -10,32 +10,25 @@ from pcer_window import PcerWindow
 from datetime import datetime
 from eye_tracker import ET
 
-class EyeTrackerTextEdit(QTextEdit):
+
+class TrackerTextEdit(QTextEdit):
     scrollbar_displacement = 0
     filename = None
-    x_offset = 0
-    y_offset = 0
-    x2 = 0
-    y2 = 0
     csv_file = None
+    x = 0
+    y = 0
 
     def __init__(self, csv_filename, parent=None):
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
         tracking_data_path = config['tracker']['tracking_data_path']
-        self.x = 0
-        self.y = 0
+
         self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'a+')
         self.csv_file.seek(0)
         if self.csv_file.read() == "":
             self.csv_file.write("time,x,y,filename\n")
         else:
             self.csv_file.seek(0, os.SEEK_END)
-        super(EyeTrackerTextEdit, self).__init__(parent)
-
-    def scrollContentsBy(self, dx, dy):
-        super(EyeTrackerTextEdit, self).scrollContentsBy(dx, dy)
-        self.scrollbar_displacement += dy
-        print(self.scrollbar_displacement)
+        super(TrackerTextEdit, self).__init__(parent)
 
     def setFilename(self, filename):
         self.filename = filename
@@ -47,7 +40,25 @@ class EyeTrackerTextEdit(QTextEdit):
         pen.setWidth(1)
         painter.setPen(pen)
         painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
-        super(EyeTrackerTextEdit, self).paintEvent(event)
+        super(TrackerTextEdit, self).paintEvent(event)
+
+    def closeEvent(self, event):
+        print("+++++++++++++++++ CLOSE EVENT")
+
+
+class EyeTrackerTextEdit(TrackerTextEdit):
+    x_offset = 0
+    y_offset = 0
+    x2 = 0
+    y2 = 0
+
+    def __init__(self, csv_filename, parent=None):
+        super(EyeTrackerTextEdit, self).__init__(csv_filename, parent)
+
+    def scrollContentsBy(self, dx, dy):
+        super(EyeTrackerTextEdit, self).scrollContentsBy(dx, dy)
+        self.scrollbar_displacement += dy
+        print(self.scrollbar_displacement)
 
     def gazeMoveEvent(self, x, y):
         print("x: %f, y: %f" % (x,y))
@@ -59,23 +70,11 @@ class EyeTrackerTextEdit(QTextEdit):
             self.csv_file.write(str_dat)
             self.update()
 
-class MouseTrackerTextEdit(QTextEdit):
-    scrollbar_displacement = 0
-    filename = None
-    csv_file = None
+
+class MouseTrackerTextEdit(TrackerTextEdit):
 
     def __init__(self, csv_filename, parent=None):
-        config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
-        tracking_data_path = config['tracker']['tracking_data_path']
-        self.x = 0
-        self.y = 0
-        self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'a+')
-        self.csv_file.seek(0)
-        if self.csv_file.read() == "":
-            self.csv_file.write("time,x,y,filename\n")
-        else:
-            self.csv_file.seek(0, os.SEEK_END)
-        super(MouseTrackerTextEdit, self).__init__(parent)
+        super(MouseTrackerTextEdit, self).__init__(csv_filename, parent)
         self.setMouseTracking(True)
 
     def scrollContentsBy(self, dx, dy):
@@ -84,18 +83,6 @@ class MouseTrackerTextEdit(QTextEdit):
         event = QMouseEvent(QEvent.MouseMove, QPoint(self.x, self.y), Qt.NoButton, QApplication.mouseButtons(), Qt.NoModifier)
         self.mouseMoveEvent(event)
         print(self.scrollbar_displacement)
-
-    def setFilename(self, filename):
-        self.filename = filename
-
-    def paintEvent(self, event):
-        painter = QPainter(self.viewport())
-        pen = QPen(Qt.SolidLine)
-        pen.setColor(Qt.black)
-        pen.setWidth(1)
-        painter.setPen(pen)
-        painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
-        super(MouseTrackerTextEdit, self).paintEvent(event)
 
     def keyPressEvent(self, event):
         if (event.modifiers() & QtCore.Qt.ShiftModifier):
@@ -118,6 +105,7 @@ class MouseTrackerTextEdit(QTextEdit):
         doc.drawContents(painter, QRectF(0, 0, doc.idealWidth(),  doc.size().height()))
         painter.end()
         pixmap.save("%s.png" % self.filename, "PNG")
+
 
 class CodeViewer(PcerWindow):
 

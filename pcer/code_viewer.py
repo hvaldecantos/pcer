@@ -42,9 +42,6 @@ class TrackerTextEdit(QTextEdit):
         painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
         super(TrackerTextEdit, self).paintEvent(event)
 
-    def closeEvent(self, event):
-        print("+++++++++++++++++ CLOSE EVENT")
-
 
 class EyeTrackerTextEdit(TrackerTextEdit):
     x_offset = 0

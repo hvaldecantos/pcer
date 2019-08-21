@@ -17,6 +17,8 @@ class PcerWindow(QWidget):
             self.start = time.time()
         self.experiment = experiment
         self.vbox = QVBoxLayout()
+        self.statusBar = QStatusBar()
+        self.setParticipantIdGroupInStatusBar(experiment.participant_id, experiment.participant_group)
         self.initBaseUI()
 
         self.initUI() # invokes method in subclass
@@ -36,12 +38,12 @@ class PcerWindow(QWidget):
         self.centerOnScreen()
 
     def setStatusBar(self):
-        self.statusBar = QStatusBar()
         self.statusBar.setSizeGripEnabled(False)
-        self.statusBar.insertWidget(0, QLabel("Message 1"))
-        self.statusBar.insertWidget(1, QLabel("Message 2"))
         self.vbox.addWidget(self.statusBar)
         self.statusBar.setStyleSheet("background: rgba(250, 250, 250)")
+
+    def setParticipantIdGroupInStatusBar(self, id, group):
+        self.statusBar.showMessage("[ID: " + str(id) + " - Group: " + str(group) + "]")
 
     def addTimer(self, timer):
         self.statusBar.insertPermanentWidget(2, timer)

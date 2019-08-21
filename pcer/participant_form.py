@@ -81,6 +81,7 @@ class ParticipantForm(PcerWindow):
         self.idField.setText(id)
         index = self.groupCombo.findText(group)
         self.groupCombo.setCurrentIndex(index)
+        self.setParticipantIdGroupInStatusBar(id, group)
 
     def loadCurrentParticipantStatus(self):
         print("ParticipantForm.loadCurrentParticipantStatus")

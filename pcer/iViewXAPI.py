@@ -36,12 +36,12 @@
 # This script shows how to set up an experiment with Python 2.7.1 (with ctypes Library) 
 
 
-from ctypes import *
-import platform
+from ctypes import Structure, c_char, c_char_p, c_int, c_double, c_longlong, byref
+# import platform
 
 
 #===========================
-#       Struct Definition
+#       Struct Definitions
 #===========================
 
 class CSystem(Structure):
@@ -145,19 +145,3 @@ class CGazeChannelQuality(Structure):
                 ('gazeChannelQualityRight', c_double)]
     def to_str(self):
         return ("Binocular: %f Left: %f Right: %f" % (self.gazeChannelQualityBinocular, self.gazeChannelQualityLeft, self.gazeChannelQualityRight))
-
-#===========================
-#       Loading iViewX.dll 
-#===========================
-
-if(platform.system() == "Linux"):
-    windss = None
-    iViewXAPI = None
-    WINFUNCTYPE = None
-elif (platform.system() == "Windows"):
-    if platform.architecture()[0] == '64bit':
-            iViewXAPI = windll.LoadLibrary("iViewXAPI64.dll")
-    else:
-            iViewXAPI = windll.LoadLibrary("iViewXAPI.dll")
-else:
-    raise Exception("Your OS system is not supported yet.")

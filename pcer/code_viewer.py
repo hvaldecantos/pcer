@@ -46,7 +46,6 @@ class EyeTrackerTextEdit(QTextEdit):
         pen.setColor(Qt.black)
         pen.setWidth(1)
         painter.setPen(pen)
-        # painter.drawLine(0, 0, self.x, self.y)
         painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
         super(EyeTrackerTextEdit, self).paintEvent(event)
 
@@ -56,9 +55,7 @@ class EyeTrackerTextEdit(QTextEdit):
         self.y = y - self.y_offset
 
         if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
-            # print('%s coords: (%d, %d + %d = %d) filename: %s' % (datetime.now(), x, y, self.scrollbar_displacement, y - self.scrollbar_displacement, self.filename))
             str_dat = "'%s', %d, %d, '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
-            # print(str_dat)
             self.csv_file.write(str_dat)
             self.update()
 
@@ -80,8 +77,6 @@ class MouseTrackerTextEdit(QTextEdit):
             self.csv_file.seek(0, os.SEEK_END)
         super(MouseTrackerTextEdit, self).__init__(parent)
         self.setMouseTracking(True)
-        # QApplication.setOverrideCursor(QCursor(Qt.BlankCursor))
-        # self.setCursor(Qt.BlankCursor)
 
     def scrollContentsBy(self, dx, dy):
         super(MouseTrackerTextEdit, self).scrollContentsBy(dx, dy)
@@ -99,7 +94,6 @@ class MouseTrackerTextEdit(QTextEdit):
         pen.setColor(Qt.black)
         pen.setWidth(1)
         painter.setPen(pen)
-        # painter.drawLine(0, 0, self.x, self.y)
         painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
         super(MouseTrackerTextEdit, self).paintEvent(event)
 
@@ -108,8 +102,6 @@ class MouseTrackerTextEdit(QTextEdit):
             self.shift = True
             print 'Shift!'
             self.save()
-        # call base class keyPressEvent
-        # PyQt5.QtGui.QLineEdit.keyPressEvent(self, event)
 
     def mouseMoveEvent(self, event):
         self.x = event.x()

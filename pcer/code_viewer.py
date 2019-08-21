@@ -25,6 +25,11 @@ class EyeTrackerTextEdit(QTextEdit):
         self.x = 0
         self.y = 0
         self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'a+')
+        self.csv_file.seek(0)
+        if self.csv_file.read() == "":
+            self.csv_file.write("time,x,y,filename\n")
+        else:
+            self.csv_file.seek(0, os.SEEK_END)
         super(EyeTrackerTextEdit, self).__init__(parent)
 
     def scrollContentsBy(self, dx, dy):
@@ -52,7 +57,7 @@ class EyeTrackerTextEdit(QTextEdit):
 
         if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
             # print('%s coords: (%d, %d + %d = %d) filename: %s' % (datetime.now(), x, y, self.scrollbar_displacement, y - self.scrollbar_displacement, self.filename))
-            str_dat = "'%s', %d', '%d', '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
+            str_dat = "'%s', %d, %d, '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
             # print(str_dat)
             self.csv_file.write(str_dat)
             self.update()
@@ -68,6 +73,11 @@ class MouseTrackerTextEdit(QTextEdit):
         self.x = 0
         self.y = 0
         self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'a+')
+        self.csv_file.seek(0)
+        if self.csv_file.read() == "":
+            self.csv_file.write("time,x,y,filename\n")
+        else:
+            self.csv_file.seek(0, os.SEEK_END)
         super(MouseTrackerTextEdit, self).__init__(parent)
         self.setMouseTracking(True)
         # QApplication.setOverrideCursor(QCursor(Qt.BlankCursor))
@@ -104,7 +114,7 @@ class MouseTrackerTextEdit(QTextEdit):
     def mouseMoveEvent(self, event):
         self.x = event.x()
         self.y = event.y()
-        str_dat = "'%s', %d', '%d', '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
+        str_dat = "'%s', %d, %d, '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
         self.csv_file.write(str_dat)
         self.update()
 

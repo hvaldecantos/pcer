@@ -180,11 +180,12 @@ class CodeViewer(PcerWindow):
 
         # Selecting the tracker devise
         self.editor = None
+        csv_filename = self.experiment.participant_id + "_" + self.experiment.current_system_id
         if self.tracking_devise == "eye tracker":
-            self.editor = EyeTrackerTextEdit(self.experiment.participant_id, self)
+            self.editor = EyeTrackerTextEdit(csv_filename, self)
             self.et.plugg(self.editor)
         elif self.tracking_devise == "mouse":
-            self.editor = MouseTrackerTextEdit(self.experiment.participant_id, self)
+            self.editor = MouseTrackerTextEdit(csv_filename, self)
         else:
             raise Exception("You should especify your tracker devise: 'eye tracker' or 'mouse'.")
 

@@ -15,6 +15,7 @@ class TrackerTextEdit(QTextEdit):
     scrollbar_displacement = 0
     filename = None
     csv_file = None
+    header = None
     x = 0
     y = 0
 
@@ -25,7 +26,7 @@ class TrackerTextEdit(QTextEdit):
         self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'a+')
         self.csv_file.seek(0)
         if self.csv_file.read() == "":
-            self.csv_file.write("time,x,y,filename\n")
+            self.csv_file.write(self.header)
         else:
             self.csv_file.seek(0, os.SEEK_END)
         super(TrackerTextEdit, self).__init__(parent)
@@ -50,6 +51,7 @@ class EyeTrackerTextEdit(TrackerTextEdit):
     y2 = 0
 
     def __init__(self, csv_filename, parent=None):
+        self.header = "timestamp,x,y,pupildiam,filename\n"
         super(EyeTrackerTextEdit, self).__init__(csv_filename, parent)
 
     def scrollContentsBy(self, dx, dy):
@@ -57,13 +59,13 @@ class EyeTrackerTextEdit(TrackerTextEdit):
         self.scrollbar_displacement += dy
         print(self.scrollbar_displacement)
 
-    def gazeMoveEvent(self, x, y):
-        print("x: %f, y: %f" % (x,y))
+    def gazeMoveEvent(self, x, y, diam):
+        print("x: %d, y: %d, diam: %f" % (x,y, diam))
         self.x = x - self.x_offset
         self.y = y - self.y_offset
 
         if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
-            str_dat = "'%s', %d, %d, '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
+            str_dat = "'%s',%d,%d,%f,'%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, diam, self.filename)
             self.csv_file.write(str_dat)
             self.update()
 
@@ -71,6 +73,7 @@ class EyeTrackerTextEdit(TrackerTextEdit):
 class MouseTrackerTextEdit(TrackerTextEdit):
 
     def __init__(self, csv_filename, parent=None):
+        self.header = "timestamp,x,y,filename\n"
         super(MouseTrackerTextEdit, self).__init__(csv_filename, parent)
         self.setMouseTracking(True)
 
@@ -90,7 +93,7 @@ class MouseTrackerTextEdit(TrackerTextEdit):
     def mouseMoveEvent(self, event):
         self.x = event.x()
         self.y = event.y()
-        str_dat = "'%s', %d, %d, '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
+        str_dat = "'%s',%d,%d,'%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
         self.csv_file.write(str_dat)
         self.update()
 

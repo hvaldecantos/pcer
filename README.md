@@ -32,8 +32,8 @@ For the code viewer during the eye tracking you can set the following document p
         padding_bottom: 0
         padding_right: 0
         use_leading_space: false
-      side_bar_percentage_width: 0.2
       sidebar:
+        percentage_width: 0.2
         font_pixel_size: 18
         font_type: "Courier"
 

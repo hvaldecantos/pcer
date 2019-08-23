@@ -121,7 +121,7 @@ class CodeViewer(PcerWindow):
         self.padding_right = config['code_viewer']['document']['padding_right']
         self.use_leading_space = config['code_viewer']['document']['use_leading_space']
         self.tracking_devise = config['tracker']['devise']
-        self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
+        self.sidebar_percentage_width = config['code_viewer']['sidebar']['percentage_width']
         self.sidebar_font_type = config['code_viewer']['sidebar']['font_type']
         self.sidebar_font_pixel_size = config['code_viewer']['sidebar']['font_pixel_size']
 
@@ -131,8 +131,8 @@ class CodeViewer(PcerWindow):
     def initUI(self):
         self.vbox.addStretch(1) # => necessary to send the status bar at the bottom
 
-        self.listWidth = self.width * self.side_bar_percentage_width
-        self.editorWidth = self.width * (1 - self.side_bar_percentage_width)
+        self.listWidth = self.width * self.sidebar_percentage_width
+        self.editorWidth = self.width * (1 - self.sidebar_percentage_width)
         self.backButtonWidth = self.listWidth / 2
 
         self.setupEditor()

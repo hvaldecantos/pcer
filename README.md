@@ -33,6 +33,11 @@ For the code viewer during the eye tracking you can set the following document p
         padding_right: 0
         use_leading_space: false
       side_bar_percentage_width: 0.2
+      sidebar:
+        font_pixel_size: 18
+        font_type: "Courier"
+
+Note: The code viewer is a window that shows a sidebar and a document area. At the left is the sidebar with a list of files from the current experimental system, and at the wight is the document area with the source code for the participant to read.
 
 For the tracking devise use the following properties:
 
@@ -41,6 +46,7 @@ For the tracking devise use the following properties:
       tracking_data_path: "tracking_data"
 
 Note: The `devise` option accepts "eye tracker" or "mouse". The system supports only the SMI RED-250 eye tracking devise.
+
 
 ### Resource directory
 

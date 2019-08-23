@@ -122,6 +122,8 @@ class CodeViewer(PcerWindow):
         self.use_leading_space = config['code_viewer']['document']['use_leading_space']
         self.tracking_devise = config['tracker']['devise']
         self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
+        self.sidebar_font_type = config['code_viewer']['sidebar']['font_type']
+        self.sidebar_font_pixel_size = config['code_viewer']['sidebar']['font_pixel_size']
 
         self.et = et
         super(CodeViewer, self).__init__(experiment)
@@ -151,6 +153,11 @@ class CodeViewer(PcerWindow):
 
     def setupFileList(self):
         self.listWidget = QListWidget(self)
+
+        font = QFont (self.sidebar_font_type)
+        font.setPixelSize(self.sidebar_font_pixel_size)
+        font.setFixedPitch(True)
+        self.listWidget.setFont(font)
         self.listWidget.move(0, 0)
         self.listWidget.resize(self.listWidth, self.editorHeight)
         self.listWidget.addItems(self.experiment.getCurrentExperimentalSystemFilenames())

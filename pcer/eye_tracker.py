@@ -1,6 +1,7 @@
-from iViewXAPI import CCalibration, CSample, CSystem, CAccuracy, CRedGeometry, CGazeChannelQuality
+from iViewXAPI import CCalibration, CSample, CSystem, CAccuracy, CRedGeometry, CGazeChannelQuality, RET_VALUE
 import ctypes
 import platform
+
 
 class ET:
 
@@ -16,43 +17,74 @@ class ET:
 
         print("------------------ Make UDP connection ---------------------------\n")
         self.iViewXAPI.iV_Connect(ctypes.c_char_p('192.168.74.1'), ctypes.c_int(4444), ctypes.c_char_p('192.168.74.2'), ctypes.c_int(5555))
-        # print('Set tracking mode\n')
-        # self.iViewXAPI.SetTrackingMode()
 
     def getDeviseInfo(self):
         print("------------------- Devise Information         -------------------\n")
-        # name = (ctypes.c_char * 64)
-        name = ctypes.c_char_p()
-        name.value = "hola mundo"
 
-        print(self.iViewXAPI.iV_GetDeviceName(ctypes.byref(name)))
-        print("Devise Name: ", name.value)
-        print(self.iViewXAPI.iV_GetSerialNumber(ctypes.byref(name)))
-        print("Serial numb: ", name.value)
+        tracking_mode = ctypes.c_int
+        tracking_mode = 0
+        res = self.iViewXAPI.iV_GetTrackingMode(tracking_mode)
+        print("Tracking mode: ", tracking_mode, " result: ", RET_VALUE[res])
+
+        # name = (ctypes.c_char * 64)
+        class CName(ctypes.Structure):
+            _fields_ = [("name", ctypes.c_char * 64)]
+        # name = ctypes.c_char_p()
+        # name.value = "hola mundo"
+        name = CName()
+
+        res = self.iViewXAPI.iV_GetDeviceName(ctypes.byref(name))
+        print("Devise Name  : ", name.name, " result: ", RET_VALUE[res])
+
+
+        # name = ctypes.c_char * 64
+        res = self.iViewXAPI.iV_GetSerialNumber(ctypes.byref(name))
+        print("Serial number: ", name.name, " result: ", RET_VALUE[res])
+
+        # name = "123456789012345678901234567890"
+        # print(self.iViewXAPI.iV_GetDeviceName(name))
+        # print("Devise Name: ", name)
 
         systemData = CSystem(0, 0, 0, 0, 0, 0, 0, 0)
 
         res = self.iViewXAPI.iV_GetSystemInfo(ctypes.byref(systemData))
-        print("iV_GetSystemInfo result: " + str(res))
+        print("iV_GetSystemInfo result: " + RET_VALUE[res])
         print(systemData.to_str())
 
         res = self.iViewXAPI.iV_GetTrackingMode(ctypes.byref(name))
-        print("Tracking mode: ", name.value)
+        print("Tracking mode: ", name.name, " result: ", RET_VALUE[res])
 
     def getGeometryInfo(self):
         print("------------------- RED Geometry information   -------------------\n")
-        redGeometry = CRedGeometry(0, 0, 0, 0, 0, 0, 0, "empty", 0, 0, 0)
+        # redGeometry = CRedGeometry(0, 0, 0, 0, 0, 0, 0, "empty", 0, 0, 0)
+        redGeometry = CRedGeometry(0, 0, "empty", 0, 0, 0, 0, 0, 0, 0, 0)
         self.iViewXAPI.iV_GetCurrentREDGeometry(ctypes.byref(redGeometry))
         print(redGeometry.to_str())
 
+        # redGeometry = CRedGeometry(0, 19, "hector", 474, 297, 0, 0, 0, 0, 0, 0)
+        # self.iViewXAPI.iV_SetREDGeometry(ctypes.byref(redGeometry))
+
+        # self.iViewXAPI.iV_GetCurrentREDGeometry(ctypes.byref(redGeometry))
+        # print(redGeometry.to_str())
+
     def getGeometryProfiles(self):
         print("------------------- Geometry profiles information ----------------\n")
+        # class CName(ctypes.Structure):
+        #     _fields_ = [("name", ctypes.c_char * 64)]
+
         maxSize = ctypes.c_int()
+        # maxSize = 2
         # names = ctypes.c_char * 256
         names = ctypes.c_char_p()
-        self.iViewXAPI.iV_GetGeometryProfiles(ctypes.byref(maxSize), ctypes.byref(names))
+        self.iViewXAPI.iV_GetGeometryProfiles(maxSize, names)
+        # self.iViewXAPI.iV_GetGeometryProfiles(ctypes.byref(maxSize), ctypes.byref(names))
         # self.iViewXAPI.iV_GetGeometryProfiles(ctypes.byref(maxSize, names]))
-        # print("Max size: %d, profile names: %s" % (str(maxSize), str(names)))
+        print("Max size: %s, profile names: %s" % (str(maxSize), str(names)))
+
+        maxSize = 126
+        names = '                                        '
+        self.iViewXAPI.iV_GetGeometryProfiles(maxSize, names)
+        print("Max size: %s, profile names: %s" % (str(maxSize), str(names)))
 
     def calibrate(self):
         print("------------------- Setting up the calibration -------------------\n")
@@ -67,10 +99,14 @@ class ET:
                                        10,   # ("targetSize", c_int), set calibration/validation target size in pixel (minimum: 10 pixels, default: 20 pixels
                                        b"") # ("targetFilename", c_char * 256), selectcustomcalibration/validationtarget(onlyiftargetShape=0)
 
-        self.iViewXAPI.iV_ShowAccuracyMonitor()
-        self.iViewXAPI.iV_SetupCalibration(ctypes.byref(calibrationData))
-        self.iViewXAPI.iV_Calibrate()
-        self.iViewXAPI.iV_Validate()
+        res = self.iViewXAPI.iV_SetupCalibration(ctypes.byref(calibrationData))
+        print("iV_SetupCalibration res = ", res)
+        res = self.iViewXAPI.iV_Calibrate()
+        print("iV_Calibrate res = ", res)
+        res = self.iViewXAPI.iV_Validate()
+        print("iV_Validate res = ", res)
+        res = self.iViewXAPI.iV_ShowAccuracyMonitor()
+        print("iV_ShowAccuracyMonitor res = ", res)
 
     def getAccuracyData(self, show_image = 0):
         print("------------------- Accuracy data after validation   -------------\n")
@@ -107,3 +143,8 @@ class ET:
     def __del__(self):
         print('Disconnect eye tracker\n')
         self.iViewXAPI.iV_Disconnect()
+
+# et = ET()
+# et.getDeviseInfo()
+# et.getGeometryInfo()
+# et.getGeometryProfiles()

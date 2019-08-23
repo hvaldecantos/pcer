@@ -37,8 +37,6 @@
 
 
 from ctypes import Structure, c_char, c_char_p, c_int, c_double, c_longlong, byref
-# import platform
-
 
 #===========================
 #       Struct Definitions
@@ -113,30 +111,32 @@ class CAccuracy(Structure):
         return result
 
 class CRedGeometry(Structure):
-    _fields_ = [("monitorSize",c_int),
-                ("redGeometry",c_int),
-                ("redHeightOverFloor",c_int),
-                ("redInclAngle",c_int),
-                ("redStimDist",c_int),
-                ("redStimDistDepth",c_int),
-                ("redStimDistHeight",c_int),
-                ("setupName",c_char * 256),
-                ("redStimHeightOverFloor",c_int),
-                ("redStimX",c_int),
-                ("redStimY",c_int),]
+
+    _fields_ = [
+        ('redGeometry', c_int),
+        ('monitorSize', c_int),
+        ('setupName', c_char * 256),
+        ('stimX', c_int),
+        ('stimY', c_int),
+        ('stimHeightOverFloor', c_int),
+        ('redHeightOverFloor', c_int),
+        ('redStimDist', c_int),
+        ('redInclAngle', c_int),
+        ('redStimDistHeight', c_int),
+        ('redStimDistDepth', c_int)]
 
     def to_str(self):
-        string = "monitorSize: " + str(self.monitorSize) + "\n" + \
-                 "redGeometry: " + str(self.redGeometry) + "\n" + \
-                 "redHeightOverFloor: " + str(self.redHeightOverFloor) + "\n" + \
-                 "redInclAngle: " + str(self.redInclAngle) + "\n" + \
-                 "redStimDist: " + str(self.redStimDist) + "\n" + \
-                 "redStimDistDepth: " + str(self.redStimDistDepth) + "\n" + \
-                 "redStimDistHeight: " + str(self.redStimDistHeight) + "\n" + \
+        string = "redGeometry: " + str(self.redGeometry) + "\n" + \
+                 "monitorSize: " + str(self.monitorSize) + "\n" + \
                  "setupName: " + str(self.setupName) + "\n" + \
-                 "redStimHeightOverFloor: " + str(self.redStimHeightOverFloor) + "\n" + \
-                 "redStimX: " + str(self.redStimX) + "\n" + \
-                 "redStimY: " + str(self.redStimY) + "\n"
+                 "stimX: " + str(self.stimX) + "\n" + \
+                 "stimY: " + str(self.stimY) + "\n" + \
+                 "stimHeightOverFloor: " + str(self.stimHeightOverFloor) + "\n" + \
+                 "redHeightOverFloor: " + str(self.redHeightOverFloor) + "\n" + \
+                 "redStimDist: " + str(self.redStimDist) + "\n" + \
+                 "redInclAngle: " + str(self.redInclAngle) + "\n" + \
+                 "redStimDistHeight: " + str(self.redStimDistHeight) + "\n" + \
+                 "redStimDistDepth: " + str(self.redStimDistDepth) + "\n"
         return string
 
 class CGazeChannelQuality(Structure):
@@ -145,3 +145,52 @@ class CGazeChannelQuality(Structure):
                 ('gazeChannelQualityRight', c_double)]
     def to_str(self):
         return ("Binocular: %f Left: %f Right: %f" % (self.gazeChannelQualityBinocular, self.gazeChannelQualityLeft, self.gazeChannelQualityRight))
+
+RET_VALUE = {}
+RET_VALUE[1] = 'RET_SUCCESS'
+RET_VALUE[2] = 'RET_NO_VALID_DATA'
+RET_VALUE[3] = 'RET_CALIBRATION_ABORTED'
+RET_VALUE[4] = 'RET_SERVER_IS_RUNNING'
+RET_VALUE[5] = 'RET_CALIBRATION_NOT_IN_PROGRESS'
+RET_VALUE[11] = 'RET_WINDOW_IS_OPEN'
+RET_VALUE[12] = 'RET_WINDOW_IS_CLOSED'
+RET_VALUE[100] = 'ERR_COULD_NOT_CONNECT'
+RET_VALUE[101] = 'ERR_NOT_CONNECTED'
+RET_VALUE[102] = 'ERR_NOT_CALIBRATED'
+RET_VALUE[103] = 'ERR_NOT_VALIDATED'
+RET_VALUE[104] = 'ERR_EYETRACKING_APPLICATION_NOT_RUNNING'
+RET_VALUE[105] = 'ERR_WRONG_COMMUNICATION_PARAMETER'
+RET_VALUE[111] = 'ERR_WRONG_DEVICE'
+RET_VALUE[112] = 'ERR_WRONG_PARAMETER'
+RET_VALUE[113] = 'ERR_WRONG_CALIBRATION_METHOD'
+RET_VALUE[114] = 'ERR_CALIBRATION_TIMEOUT'
+RET_VALUE[115] = 'ERR_TRACKING_NOT_STABLE'
+RET_VALUE[121] = 'ERR_CREATE_SOCKET'
+RET_VALUE[122] = 'ERR_CONNECT_SOCKET'
+RET_VALUE[123] = 'ERR_BIND_SOCKET'
+RET_VALUE[124] = 'ERR_DELETE_SOCKET'
+RET_VALUE[131] = 'ERR_NO_RESPONSE_FROM_IVIEWX'
+RET_VALUE[132] = 'ERR_INVALID_IVIEWX_VERSION'
+RET_VALUE[133] = 'ERR_WRONG_IVIEWX_VERSION'
+RET_VALUE[171] = 'ERR_ACCESS_TO_FILE'
+RET_VALUE[181] = 'ERR_SOCKET_CONNECTION'
+RET_VALUE[191] = 'ERR_EMPTY_DATA_BUFFER'
+RET_VALUE[192] = 'ERR_RECORDING_DATA_BUFFER'
+RET_VALUE[193] = 'ERR_FULL_DATA_BUFFER'
+RET_VALUE[194] = 'ERR_IVIEWX_IS_NOT_READY'
+RET_VALUE[201] = 'ERR_IVIEWX_NOT_FOUND'
+RET_VALUE[202] = 'ERR_IVIEWX_PATH_NOT_FOUND'
+RET_VALUE[203] = 'ERR_IVIEWX_ACCESS_DENIED'
+RET_VALUE[204] = 'ERR_IVIEWX_ACCESS_INCOMPLETE'
+RET_VALUE[205] = 'ERR_IVIEWX_OUT_OF_MEMORY'
+RET_VALUE[211] = 'ERR_CAMERA_NOT_FOUND'
+RET_VALUE[212] = 'ERR_WRONG_CAMERA'
+RET_VALUE[213] = 'ERR_WRONG_CAMERA_PORT'
+RET_VALUE[220] = 'ERR_COULD_NOT_OPEN_PORT'
+RET_VALUE[221] = 'ERR_COULD_NOT_CLOSE_PORT'
+RET_VALUE[222] = 'ERR_AOI_ACCESS'
+RET_VALUE[223] = 'ERR_AOI_NOT_DEFINED'
+RET_VALUE[250] = 'ERR_FEATURE_NOT_LICENSED'
+RET_VALUE[300] = 'ERR_DEPRECATED_FUNCTION'
+RET_VALUE[400] = 'ERR_INITIALIZATION'
+RET_VALUE[401] = 'ERR_FUNC_NOT_LOADED'

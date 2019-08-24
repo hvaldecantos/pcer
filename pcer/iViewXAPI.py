@@ -151,7 +151,7 @@ class CGazeChannelQuality(Structure):
 #===========================
 
 if(platform.system() == "Linux"):
-    windll = None
+    windss = None
     iViewXAPI = None
     WINFUNCTYPE = None
 elif (platform.system() == "Windows"):

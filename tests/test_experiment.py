@@ -29,8 +29,8 @@ class TestExperiment(unittest.TestCase):
         self.experiment.addParticipant('1234', 'dci')
         system = self.experiment.getExperimentalSystem()
 
-        filenames = self.experiment.getExperimentalSystemFilenames()
-        filenames_resource = self.experiment.resource.getExperimentalSystemFilenames(self.experiment.participant_group, system['id'])
+        filenames = self.experiment.getCurrentExperimentalSystemFilenames()
+        filenames_resource = self.experiment.resource.getCurrentExperimentalSystemFilenames(self.experiment.participant_group, system['id'])
 
         for filename in filenames:
             self.assertTrue(filename in filenames_resource)
@@ -39,13 +39,13 @@ class TestExperiment(unittest.TestCase):
         self.experiment.addParticipant('1234', 'dci')
         system = self.experiment.getExperimentalSystem() # adds a system in trials
 
-        filenames = self.experiment.getExperimentalSystemFilenames()
+        filenames = self.experiment.getCurrentExperimentalSystemFilenames()
         self.assertTrue(len(filenames) > 0)
 
         filenames_session = self.experiment.session.getFilenamesOrder(self.experiment.participant_id)
         self.assertTrue(len(filenames_session) > 0)
 
-        self.experiment.clearExperimentalSystemFilenames()
+        self.experiment.clearCurrentExperimentalSystemFilenamesOrder()
 
         filenames_session = self.experiment.session.getFilenamesOrder(self.experiment.participant_id)
         self.assertTrue(len(filenames_session) == 0)

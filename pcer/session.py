@@ -43,6 +43,15 @@ class Session():
             }
         )
 
+    def getFinishedWarmupSystemIds(self, participant_id):
+        finished_warmup_systems = []
+        trials = self.getTrials(participant_id)
+
+        for t in trials:
+            if t['warmup'] and t['finished']:
+                finished_warmup_systems.append(t['system_id'])
+        return finished_warmup_systems
+
     def getParticipantStatus(self, id):
         status = self.db.search(self.participant.id == id)
         if len(status) <= 0: raise ParticipantDoesNotExistError(id)
@@ -77,6 +86,17 @@ class Session():
                 break
 
         return current_system_id, trial_index
+
+    def setPretestFlag(self, participant_id):
+        self.db.update({'warmup_finished': True}, self.participant.id == participant_id)
+
+    def getFinishedSystems(self, participant_id):
+        trials = self.getTrials(participant_id)
+        systems = []
+        for t in trials:
+            if t['finished']:
+                systems.append(t)
+        return systems
 
     def existExperimentalSystem(self, participant_id, system_id):
         trials = self.getTrials(participant_id)

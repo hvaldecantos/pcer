@@ -58,7 +58,12 @@ class ExperimentController:
             self.show_task_form()
         else:
             self.experiment.session.finishCurrentSystem(participant_id)
-            self.show_pretest_form()
+            if not self.experiment.session.isWarmupSystemFinished(participant_id):
+                self.show_pretest_form()
+                self.experiment.session.setPretestFlag(participant_id)
+            else:
+                self.show_system_form()
+                
 
     def show_pretest_form(self):
         self.timer.stop()

@@ -22,7 +22,7 @@ class TaskForm(PcerWindow):
         submitButton.clicked.connect(self.onSubmitButtonClick)
         readButton.clicked.connect(self.onReadButtonClick)
 
-        task = self.experiment.getExperimentalTasks()
+        task = self.experiment.getExperimentalTask()
         self.group_box, self.choice_combo_question_list = self.experiment.form_builder.build_task_form(task)
         self.setExistingData()
         self.vbox.addWidget(self.group_box)

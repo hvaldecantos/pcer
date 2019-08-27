@@ -9,8 +9,8 @@ class Experiment():
     
     participant_id = None
     participant_group = None
-    current_system = None
-    current_task = None
+    current_system_id = None
+    current_task_id = None
     session = None
     resource = None
     pretest_data = {}
@@ -125,8 +125,10 @@ class Experiment():
 
                 random.shuffle(remaining_systems)
                 system = remaining_systems[0]
+            self.current_system_id = system['id']
             self.session.setCurrentSystemId(self.participant_id, system['id'], system['warmup'])
         else:
+            self.current_system_id = current_system_id
             system = self.resource.getSystem(current_system_id)
         return system
 
@@ -141,8 +143,10 @@ class Experiment():
             remaining_tasks = [task for task in tasks if task['id'] not in [f_task['task_id'] for f_task in finished_tasks]]
             random.shuffle(remaining_tasks)
             task = remaining_tasks[0]
+            self.current_task_id = task['id']
             self.session.setCurrentTaskId(self.participant_id, current_system_id, task['id'])
         else:
+            self.current_task_id = current_task_id
             task = self.resource.getTask(self.participant_group, current_system_id, current_task_id)
         return task
 

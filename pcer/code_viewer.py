@@ -10,27 +10,26 @@ from pcer_window import PcerWindow
 from datetime import datetime
 from eye_tracker import ET
 
-class EyeTrackerTextEdit(QTextEdit):
+
+class TrackerTextEdit(QTextEdit):
     scrollbar_displacement = 0
     filename = None
-    x_offset = 0
-    y_offset = 0
-    x2 = 0
-    y2 = 0
     csv_file = None
+    header = None
+    x = 0
+    y = 0
 
     def __init__(self, csv_filename, parent=None):
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
         tracking_data_path = config['tracker']['tracking_data_path']
-        self.x = 0
-        self.y = 0
-        self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'a+')
-        super(EyeTrackerTextEdit, self).__init__(parent)
 
-    def scrollContentsBy(self, dx, dy):
-        super(EyeTrackerTextEdit, self).scrollContentsBy(dx, dy)
-        self.scrollbar_displacement += dy
-        print(self.scrollbar_displacement)
+        self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'a+')
+        self.csv_file.seek(0)
+        if self.csv_file.read() == "":
+            self.csv_file.write(self.header)
+        else:
+            self.csv_file.seek(0, os.SEEK_END)
+        super(TrackerTextEdit, self).__init__(parent)
 
     def setFilename(self, filename):
         self.filename = filename
@@ -41,37 +40,42 @@ class EyeTrackerTextEdit(QTextEdit):
         pen.setColor(Qt.black)
         pen.setWidth(1)
         painter.setPen(pen)
-        # painter.drawLine(0, 0, self.x, self.y)
         painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
-        super(EyeTrackerTextEdit, self).paintEvent(event)
+        super(TrackerTextEdit, self).paintEvent(event)
 
-    def gazeMoveEvent(self, x, y):
-        print("x: %f, y: %f" % (x,y))
+
+class EyeTrackerTextEdit(TrackerTextEdit):
+    x_offset = 0
+    y_offset = 0
+    x2 = 0
+    y2 = 0
+
+    def __init__(self, csv_filename, parent=None):
+        self.header = "timestamp,x,y,pupildiam,filename\n"
+        super(EyeTrackerTextEdit, self).__init__(csv_filename, parent)
+
+    def scrollContentsBy(self, dx, dy):
+        super(EyeTrackerTextEdit, self).scrollContentsBy(dx, dy)
+        self.scrollbar_displacement += dy
+        print(self.scrollbar_displacement)
+
+    def gazeMoveEvent(self, x, y, diam):
+        print("x: %d, y: %d, diam: %f" % (x,y, diam))
         self.x = x - self.x_offset
         self.y = y - self.y_offset
 
         if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
-            # print('%s coords: (%d, %d + %d = %d) filename: %s' % (datetime.now(), x, y, self.scrollbar_displacement, y - self.scrollbar_displacement, self.filename))
-            str_dat = "'%s', %d', '%d', '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
-            # print(str_dat)
+            str_dat = "'%s',%d,%d,%f,'%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, diam, self.filename)
             self.csv_file.write(str_dat)
             self.update()
 
-class MouseTrackerTextEdit(QTextEdit):
-    scrollbar_displacement = 0
-    filename = None
-    csv_file = None
+
+class MouseTrackerTextEdit(TrackerTextEdit):
 
     def __init__(self, csv_filename, parent=None):
-        config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
-        tracking_data_path = config['tracker']['tracking_data_path']
-        self.x = 0
-        self.y = 0
-        self.csv_file = open(os.path.join(tracking_data_path, csv_filename + '.csv'),'a+')
-        super(MouseTrackerTextEdit, self).__init__(parent)
+        self.header = "timestamp,x,y,filename\n"
+        super(MouseTrackerTextEdit, self).__init__(csv_filename, parent)
         self.setMouseTracking(True)
-        # QApplication.setOverrideCursor(QCursor(Qt.BlankCursor))
-        # self.setCursor(Qt.BlankCursor)
 
     def scrollContentsBy(self, dx, dy):
         super(MouseTrackerTextEdit, self).scrollContentsBy(dx, dy)
@@ -80,31 +84,16 @@ class MouseTrackerTextEdit(QTextEdit):
         self.mouseMoveEvent(event)
         print(self.scrollbar_displacement)
 
-    def setFilename(self, filename):
-        self.filename = filename
-
-    def paintEvent(self, event):
-        painter = QPainter(self.viewport())
-        pen = QPen(Qt.SolidLine)
-        pen.setColor(Qt.black)
-        pen.setWidth(1)
-        painter.setPen(pen)
-        # painter.drawLine(0, 0, self.x, self.y)
-        painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
-        super(MouseTrackerTextEdit, self).paintEvent(event)
-
     def keyPressEvent(self, event):
         if (event.modifiers() & QtCore.Qt.ShiftModifier):
             self.shift = True
             print 'Shift!'
             self.save()
-        # call base class keyPressEvent
-        # PyQt5.QtGui.QLineEdit.keyPressEvent(self, event)
 
     def mouseMoveEvent(self, event):
         self.x = event.x()
         self.y = event.y()
-        str_dat = "'%s', %d', '%d', '%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
+        str_dat = "'%s',%d,%d,'%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
         self.csv_file.write(str_dat)
         self.update()
 
@@ -116,6 +105,7 @@ class MouseTrackerTextEdit(QTextEdit):
         doc.drawContents(painter, QRectF(0, 0, doc.idealWidth(),  doc.size().height()))
         painter.end()
         pixmap.save("%s.png" % self.filename, "PNG")
+
 
 class CodeViewer(PcerWindow):
 
@@ -134,7 +124,9 @@ class CodeViewer(PcerWindow):
         self.padding_right = config['code_viewer']['document']['padding_right']
         self.use_leading_space = config['code_viewer']['document']['use_leading_space']
         self.tracking_devise = config['tracker']['devise']
-        self.side_bar_percentage_width = config['code_viewer']['side_bar_percentage_width']
+        self.sidebar_percentage_width = config['code_viewer']['sidebar']['percentage_width']
+        self.sidebar_font_type = config['code_viewer']['sidebar']['font_type']
+        self.sidebar_font_pixel_size = config['code_viewer']['sidebar']['font_pixel_size']
 
         self.et = et
         super(CodeViewer, self).__init__(experiment)
@@ -142,8 +134,8 @@ class CodeViewer(PcerWindow):
     def initUI(self):
         self.vbox.addStretch(1) # => necessary to send the status bar at the bottom
 
-        self.listWidth = self.width * self.side_bar_percentage_width
-        self.editorWidth = self.width * (1 - self.side_bar_percentage_width)
+        self.listWidth = self.width * self.sidebar_percentage_width
+        self.editorWidth = self.width * (1 - self.sidebar_percentage_width)
         self.backButtonWidth = self.listWidth / 2
 
         self.setupEditor()
@@ -164,6 +156,11 @@ class CodeViewer(PcerWindow):
 
     def setupFileList(self):
         self.listWidget = QListWidget(self)
+
+        font = QFont (self.sidebar_font_type)
+        font.setPixelSize(self.sidebar_font_pixel_size)
+        font.setFixedPitch(True)
+        self.listWidget.setFont(font)
         self.listWidget.move(0, 0)
         self.listWidget.resize(self.listWidth, self.editorHeight)
         self.listWidget.addItems(self.experiment.getCurrentExperimentalSystemFilenames())
@@ -193,11 +190,12 @@ class CodeViewer(PcerWindow):
 
         # Selecting the tracker devise
         self.editor = None
+        csv_filename = self.experiment.participant_id + "_" + self.experiment.current_system_id
         if self.tracking_devise == "eye tracker":
-            self.editor = EyeTrackerTextEdit(self.experiment.participant_id, self)
+            self.editor = EyeTrackerTextEdit(csv_filename, self)
             self.et.plugg(self.editor)
         elif self.tracking_devise == "mouse":
-            self.editor = MouseTrackerTextEdit(self.experiment.participant_id, self)
+            self.editor = MouseTrackerTextEdit(csv_filename, self)
         else:
             raise Exception("You should especify your tracker devise: 'eye tracker' or 'mouse'.")
 

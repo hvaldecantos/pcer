@@ -33,7 +33,7 @@ class Session():
             {
                 'id': id,
                 'group': group,
-                'warmup_finished': False,
+                'pretest_finished': False,
                 'experiment_finished': False,
                 'trials': [],
                 'pretest_data': {},
@@ -58,9 +58,12 @@ class Session():
                 finished_warmup_systems.append(t['system_id'])
         return finished_warmup_systems
 
-    def isWarmupSystemFinished(self, participant_id): # TODO delete
-        return self.getParticipantStatus(participant_id)['warmup_finished']
-    
+    def isPretestFinished(self, participant_id):
+        return self.getParticipantStatus(participant_id)['pretest_finished']
+
+    def setPretestFinishedTrue(self, participant_id):
+        self.db.update({'pretest_finished': True}, self.participant.id == participant_id)
+
     def getTrials(self, participant_id):
         status = self.getParticipantStatus(participant_id)
         return status['trials']

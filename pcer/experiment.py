@@ -70,7 +70,6 @@ class Experiment():
             del current_task_data[question_id]
         self.session.setCurrentTaskData(current_task_data, self.participant_id)
 
-
     def getScrollDisplacement(self, filename):
         return self.session.getScrollDisplacements(self.participant_id)[filename]
 
@@ -91,16 +90,20 @@ class Experiment():
     def clearCurrentOpenedFilename(self):
         self.session.setCurrentOpenedFilename(self.participant_id, None)
 
-    def isWarmupSystemsFinished(self, participant_id):
+    def isWarmupSystemsFinished(self):
         warmup_systems = self.resource.getWarmupSystems()
-        finished_warmup_systems =  self.session.getFinishedWarmupSystemIds(participant_id)
+        finished_warmup_systems =  self.session.getFinishedWarmupSystemIds(self.participant_id)
 
-        fws_ids = [f for f in finished_warmup_systems]
-        
         for ws in warmup_systems:
-            if not (ws['id'] in fws_ids):
+            if not (ws['id'] in finished_warmup_systems):
                 return False
         return True
+
+    def isPretestFinished(self):
+        return self.session.isPretestFinished(self.participant_id)
+
+    def setPretestFinishedTrue(self):
+        self.session.setPretestFinishedTrue(self.participant_id)
 
     def getExperimentalSystem(self):
         system = None
@@ -110,7 +113,7 @@ class Experiment():
             self.clearCurrentOpenedFilename()
             self.clearCurrentExperimentalSystemFilenamesOrder()
             self.clearScrollDisplacements()
-            if not self.isWarmupSystemsFinished(self.participant_id):
+            if not self.isWarmupSystemsFinished():
                 warmup_systems = self.resource.getWarmupSystems()
                 finished_warmup_systems =  self.session.getFinishedWarmupSystemIds(self.participant_id)
                 remaining_warmup_systems = [s for s in warmup_systems if s['id'] not in finished_warmup_systems]

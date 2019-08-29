@@ -44,6 +44,7 @@ class PretestForm(PcerWindow):
     def onSubmitButtonClick(self):
         print("PretestForm.onSubmitButtonClick")
         if self.areValidInputs():
+            self.experiment.setPretestFinishedTrue()
             self.submit_answer.emit()
         else:
             self.popUpWarning('Enter all the answers')

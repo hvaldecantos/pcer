@@ -229,6 +229,10 @@ class Session():
                 break
         return questionnaire
 
+    def getCurrentPretestState(self, participant_id):
+        status = self.getParticipantStatus(participant_id)
+        return status['pretest_data']
+
     def getCurrentSystemFinishedTasks(self, participant_id):
         current_task_id = None
         trials = self.getTrials(participant_id)

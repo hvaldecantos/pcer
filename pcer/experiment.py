@@ -13,7 +13,6 @@ class Experiment():
     current_task_id = None
     session = None
     resource = None
-    pretest_data = {}
 
     def __init__(self, db_filename = 'db.json'):
         self.session = Session(db_filename, 'experiment')
@@ -52,13 +51,14 @@ class Experiment():
         return self.resource.getGroups()
 
     def setPretestData(self,question_id, question, choice):
+        pretest_data = self.session.getCurrentPretestState(self.participant_id)
         if choice != '--':
-            self.pretest_data[question_id] = {}
-            self.pretest_data[question_id]['question'] = question
-            self.pretest_data[question_id]['answer'] = choice
+            pretest_data[question_id] = {}
+            pretest_data[question_id]['question'] = question
+            pretest_data[question_id]['answer'] = choice
         else:
-            del self.pretest_data[question_id]
-        self.session.setPretestData(self.pretest_data, self.participant_id)
+            del pretest_data[question_id]
+        self.session.setPretestData(pretest_data, self.participant_id)
 
     def setTaskData(self,question_id, question, choice):
         current_task_data = self.session.getCurrentTaskState(self.participant_id)

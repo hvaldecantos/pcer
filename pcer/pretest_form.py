@@ -20,20 +20,30 @@ class PretestForm(PcerWindow):
         submitButton = QPushButton("Submit answer")
         submitButton.clicked.connect(self.onSubmitButtonClick)
 
-        hbox = QHBoxLayout()
-        hbox.addStretch(1)
-        hbox.addWidget(submitButton)
-
         self.group_box, self.choice_combo_question_list = self.experiment.form_builder.build_pretest_form(self.experiment)
+        self.setExistingData()
+        self.vbox.addWidget(self.group_box)
 
         for ccq_dict in self.choice_combo_question_list:
             cb = ccq_dict['combobox']
             cb.currentIndexChanged.connect(partial(self.choiceSelection, ccq_dict))
 
-        self.vbox.addWidget(self.group_box)
+        hbox = QHBoxLayout()
+        hbox.addStretch(1)
+        hbox.addWidget(submitButton)
+
         self.vbox.addStretch(1)
         self.vbox.addLayout(hbox)
         self.setWindowTitle('Pretest')
+
+    def setExistingData(self):
+        current_pretest_data = self.experiment.session.getCurrentPretestState(self.experiment.participant_id)
+
+        for question_id in current_pretest_data.keys():
+            for question in self.choice_combo_question_list:
+                if question_id == question['id']:
+                    index = question['combobox'].findText(current_pretest_data[question_id]['answer'])
+                    question['combobox'].setCurrentIndex(index)
 
     def areValidInputs(self):
         for ccq_dict in self.choice_combo_question_list:

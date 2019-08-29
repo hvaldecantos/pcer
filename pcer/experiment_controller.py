@@ -28,7 +28,7 @@ class ExperimentController:
         if self.window is not None:
     		self.window.close()
         self.window = ParticipantForm(self.experiment)
-        self.window.continue_with_the_experiment.connect(self.show_system_form)
+        self.window.continue_with_the_experiment.connect(self.show_system_or_pretest)
         self.window.calibrate_eye_tracker.connect(self.start_calibration)
 
         # the timer has to be added, although there is here a reference the
@@ -63,6 +63,12 @@ class ExperimentController:
         self.window.addTimer(self.timer)
         self.window.show()
 
+    def show_system_or_pretest(self):
+        if(self.experiment.isWarmupSystemsFinished() and not self.experiment.isPretestFinished()):
+            self.show_pretest_form()
+        else:
+            self.show_system_form()
+
     def task_form_submit_answer(self):
         participant_id = self.experiment.participant_id
         system_id = self.experiment.session.getCurrentSystemId(participant_id)
@@ -71,10 +77,7 @@ class ExperimentController:
             self.show_task_form()
         else:
             self.experiment.session.finishCurrentSystem(participant_id)
-            if(self.experiment.isWarmupSystemsFinished() and not self.experiment.isPretestFinished()):
-                self.show_pretest_form()
-            else:
-                self.show_system_form()
+            self.show_system_or_pretest()
 
     def show_pretest_form(self):
         self.timer.stop()

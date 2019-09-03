@@ -123,7 +123,7 @@ class CodeViewer(PcerWindow):
         self.padding_bottom = config['code_viewer']['document']['padding_bottom']
         self.padding_right = config['code_viewer']['document']['padding_right']
         self.use_leading_space = config['code_viewer']['document']['use_leading_space']
-        self.tracking_devise = config['tracker']['devise']
+        self.tracking_device = config['tracker']['device']
         self.sidebar_percentage_width = config['code_viewer']['sidebar']['percentage_width']
         self.sidebar_font_type = config['code_viewer']['sidebar']['font_type']
         self.sidebar_font_pixel_size = config['code_viewer']['sidebar']['font_pixel_size']
@@ -188,16 +188,16 @@ class CodeViewer(PcerWindow):
                              self.padding_top + \
                              self.padding_bottom
 
-        # Selecting the tracker devise
+        # Selecting the tracker device
         self.editor = None
         csv_filename = self.experiment.participant_id + "_" + self.experiment.current_system_id
-        if self.tracking_devise == "eye tracker":
+        if self.tracking_device == "eye tracker":
             self.editor = EyeTrackerTextEdit(csv_filename, self)
             self.et.plugg(self.editor)
-        elif self.tracking_devise == "mouse":
+        elif self.tracking_device == "mouse":
             self.editor = MouseTrackerTextEdit(csv_filename, self)
         else:
-            raise Exception("You should especify your tracker devise: 'eye tracker' or 'mouse'.")
+            raise Exception("You should especify your tracker device: 'eye tracker' or 'mouse'.")
 
         self.editor.setFont(font)
         self.editor.move(self.listWidth, 0)
@@ -289,7 +289,7 @@ class CodeViewer(PcerWindow):
     def onBackButtonClick(self):
         if self.current_file:
             self.experiment.setScrollDisplacement(self.current_file, self.editor.scrollbar_displacement)
-        if self.tracking_devise == "eye tracker": self.et.unplugg()
+        if self.tracking_device == "eye tracker": self.et.unplugg()
         self.editor.csv_file.close()
         self.back.emit()
 

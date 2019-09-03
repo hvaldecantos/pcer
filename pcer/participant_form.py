@@ -15,7 +15,7 @@ class ParticipantForm(PcerWindow):
 
     def __init__(self, experiment):
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
-        self.tracking_devise = config['tracker']['devise']
+        self.tracking_device = config['tracker']['device']
         super(ParticipantForm, self).__init__(experiment)
 
     def initUI(self):
@@ -24,7 +24,7 @@ class ParticipantForm(PcerWindow):
         exitButton = QPushButton("Exit experiment")
         self.calibrateButton = QPushButton("Calibrate ET")
 
-        if not self.experiment.participant_id or self.tracking_devise != "eye tracker":
+        if not self.experiment.participant_id or self.tracking_device != "eye tracker":
             self.calibrateButton.setEnabled(False)
 
         continueButton.clicked.connect(self.onContinueButtonClick)
@@ -117,7 +117,7 @@ class ParticipantForm(PcerWindow):
             self.setIdGroupFieldInTheForm(status['id'], status['group'])
             self.statusText.setPlainText(json.dumps(status, indent=4, sort_keys=False))
             self.experiment.setCurrentParticipant(self.idField.text(), self.groupCombo.currentText())
-            if self.tracking_devise == "eye tracker":
+            if self.tracking_device == "eye tracker":
                 self.calibrateButton.setEnabled(True)
         except ParticipantDoesNotExistError as e:
             self.popUpWarning(e.msg)

@@ -19,8 +19,8 @@ class ExperimentController:
         self.experiment = Experiment()
         self.timer = PcerTimer(15)
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
-        self.tracking_devise = config['tracker']['devise']
-        if self.tracking_devise == "eye tracker":
+        self.tracking_device = config['tracker']['device']
+        if self.tracking_device == "eye tracker":
             self.et = ET()
 
     def show_participant_form(self):

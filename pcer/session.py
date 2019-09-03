@@ -247,7 +247,7 @@ class Session():
                 finished_tasks.append(t)
         return finished_tasks
 
-    def isTaskRemaining(self, participant_id, total_tasks): #TODO name
+    def hasRemainingTasks(self, participant_id, total_tasks): #TODO name
         finished_tasks = self.getCurrentSystemFinishedTasks(participant_id)
         if len(total_tasks) > len(finished_tasks):
             return True

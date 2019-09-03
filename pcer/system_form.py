@@ -50,7 +50,7 @@ class SystemForm(PcerWindow):
         participant_id = self.experiment.participant_id
         system_id = self.experiment.session.getCurrentSystemId(participant_id)
         total_tasks = self.experiment.resource.getTasks(self.experiment.participant_group, system_id)
-        if self.experiment.session.isTaskRemaining(self.experiment.participant_id,total_tasks):
+        if self.experiment.session.hasRemainingTasks(self.experiment.participant_id,total_tasks):
             self.show_task.emit()
         else:
             self.experiment.session.finishCurrentSystem(participant_id)

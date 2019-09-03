@@ -18,8 +18,8 @@ class ET:
         print("------------------ Make UDP connection ---------------------------\n")
         self.iViewXAPI.iV_Connect(ctypes.c_char_p('192.168.74.1'), ctypes.c_int(4444), ctypes.c_char_p('192.168.74.2'), ctypes.c_int(5555))
 
-    def getDeviseInfo(self):
-        print("------------------- Devise Information         -------------------\n")
+    def getdeviceInfo(self):
+        print("------------------- device Information         -------------------\n")
 
         tracking_mode = ctypes.c_int
         tracking_mode = 0
@@ -34,7 +34,7 @@ class ET:
         name = CName()
 
         res = self.iViewXAPI.iV_GetDeviceName(ctypes.byref(name))
-        print("Devise Name  : ", name.name, " result: ", RET_VALUE[res])
+        print("device Name  : ", name.name, " result: ", RET_VALUE[res])
 
 
         # name = ctypes.c_char * 64
@@ -43,7 +43,7 @@ class ET:
 
         # name = "123456789012345678901234567890"
         # print(self.iViewXAPI.iV_GetDeviceName(name))
-        # print("Devise Name: ", name)
+        # print("device Name: ", name)
 
         systemData = CSystem(0, 0, 0, 0, 0, 0, 0, 0)
 
@@ -146,6 +146,6 @@ class ET:
         self.iViewXAPI.iV_Disconnect()
 
 # et = ET()
-# et.getDeviseInfo()
+# et.getdeviceInfo()
 # et.getGeometryInfo()
 # et.getGeometryProfiles()

@@ -39,13 +39,13 @@ For the code viewer during the eye tracking you can set the following document p
 
 Note: The code viewer is a window that shows a sidebar and a document area. At the left is the sidebar with a list of files from the current experimental system, and at the wight is the document area with the source code for the participant to read.
 
-For the tracking devise use the following properties:
+For the tracking device use the following properties:
 
     tracker:
-      devise: "eye tracker"
+      device: "eye tracker"
       tracking_data_path: "tracking_data"
 
-Note: The `devise` option accepts "eye tracker" or "mouse". The system supports only the SMI RED-250 eye tracking devise.
+Note: The `device` option accepts "eye tracker" or "mouse". The system supports only the SMI RED-250 eye tracking device.
 
 
 ### Resource directory

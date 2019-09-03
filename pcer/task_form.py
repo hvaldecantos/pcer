@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QMessageBox)
+    QHBoxLayout, QVBoxLayout, QApplication, QMessageBox, QLabel)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 from functools import partial
@@ -31,6 +31,7 @@ class TaskForm(PcerWindow):
         self.setExistingData()
 
         self.vbox.addWidget(self.group_box_system)
+        self.vbox.addWidget(QLabel(""))
         self.vbox.addWidget(self.group_box)
 
         for ccq_dict in self.choice_combo_question_list:

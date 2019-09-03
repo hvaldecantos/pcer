@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (QWidget, QPushButton,
     QHBoxLayout, QVBoxLayout, QApplication, QLabel, QComboBox, QGroupBox)
 from PyQt5 import QtCore
-
+from PyQt5.QtGui import QFont
 
 class FormBuilder:
 
@@ -44,7 +44,9 @@ class FormBuilder:
         description = system['description']
         system_id = system['id']
         description_label = QLabel(description)
+        description_label.setFont(QFont('Verdana', 12))
         group_box = QGroupBox(name)
+        group_box.setFont(QFont('Arial', 16))
         inner_vbox = QVBoxLayout()
         inner_vbox.addWidget(description_label)
         group_box.setLayout(inner_vbox)
@@ -58,13 +60,21 @@ class FormBuilder:
         questions = task['questions']
         options = task['options']
         description_label = QLabel(description)
+        description_label.setFont(QFont('Verdana', 12))
+        description_label.setWordWrap(True)
         group_box = QGroupBox(name)
+        group_box.setFont(QFont('Arial', 16))
         inner_vbox = QVBoxLayout()
         inner_vbox.addWidget(description_label)
+        inner_vbox.addStretch(1)
+        inner_vbox.setSpacing(10);
+
         for i in range(0,len(questions)):
             question_label = QLabel(questions[i])
+            question_label.setFont(QFont('Arial', 16))
             inner_vbox.addWidget(question_label)
             choiceCombo = QComboBox()
+            choiceCombo.setFont(QFont('Verdana', 12))
             for option in options:
                 choiceCombo.addItem(option)
             choice_combo_question_dict = {}

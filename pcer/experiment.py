@@ -117,6 +117,14 @@ class Experiment():
         remaining_systems = [s for s in all_systems if s['id'] not in finished_systems]
         return remaining_systems
 
+    def hasRemainingExperimentalSystems(self):
+        return len(self.getRemainingExperimentalSystems()) > 0
+
+    def finishCurrentSystem(self):
+        self.session.finishCurrentSystem(self.participant_id)
+        if(not self.hasRemainingExperimentalSystems()):
+            self.setExperimentFinishedTrue()
+
     def getExperimentalSystem(self):
         system = None
         current_system_id = self.session.getCurrentSystemId(self.participant_id)

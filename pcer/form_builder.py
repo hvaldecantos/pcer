@@ -76,6 +76,19 @@ class FormBuilder:
         group_box.setLayout(inner_vbox)
         return group_box
 
+    def build_end_message(self):
+        name = "The experiment is finished"
+        description = "There is no more experimental systems.\nThank you for your time."
+        description_label = QLabel(description)
+        description_label.setWordWrap(True)
+        description_label.setFont(self.getDescriptionFont())
+        group_box = QGroupBox(name)
+        group_box.setFont(self.getTitleFont())
+        inner_vbox = QVBoxLayout()
+        inner_vbox.addWidget(description_label)
+        group_box.setLayout(inner_vbox)
+        return group_box
+
     def build_task_form(self, task):
         choice_combo_question_list = []
         task_id = task['id']

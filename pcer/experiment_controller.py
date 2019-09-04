@@ -46,7 +46,6 @@ class ExperimentController:
 
     def show_system_form(self):
         self.timer.stop()
-        self.task_counter = 0
         self.window.close()
         self.window = SystemForm(self.experiment)
         self.window.back.connect(self.show_participant_form)
@@ -56,7 +55,6 @@ class ExperimentController:
 
     def show_task_form(self):
         self.timer.stop()
-        self.task_counter += 1
         self.window.close()
         self.window = TaskForm(self.experiment, self.timer)
         self.window.submit_answer.connect(self.task_form_submit_answer)

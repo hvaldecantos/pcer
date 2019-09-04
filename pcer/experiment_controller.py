@@ -58,7 +58,7 @@ class ExperimentController:
         self.timer.stop()
         self.task_counter += 1
         self.window.close()
-        self.window = TaskForm(self.experiment)
+        self.window = TaskForm(self.experiment, self.timer)
         self.window.submit_answer.connect(self.task_form_submit_answer)
         self.window.read_code.connect(self.show_src_navigator)
         self.window.addTimer(self.timer)
@@ -104,7 +104,7 @@ class ExperimentController:
     def show_src_navigator(self):
         print("show_src_navigator")
         self.window.close()
-        self.window = CodeViewer(self.experiment, self.et)
+        self.window = CodeViewer(self.experiment, self.et, self.timer)
         self.window.back.connect(self.show_task_form)
         self.window.addTimer(self.timer)
         self.timer.start()

@@ -48,12 +48,13 @@ class TestSession(unittest.TestCase):
         initial_status = {u'trials': [],
                           u'group': u'oo',
                           u'id': u'1001',
-                          u'warmup_finished': False,
+                          u'pretest_finished': False,
                           u'experiment_finished': False,
                           u'pretest_data': {},
                           u'current_opened_filename': None,
                           u'scroll_displacements': {},
-                          u'filenames_order': []}
+                          u'filenames_order': [],
+                          u'calibrations': []}
 
         self.assertEqual(status, initial_status)
 

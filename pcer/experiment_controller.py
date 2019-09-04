@@ -3,6 +3,7 @@ from system_form import SystemForm
 from task_form import TaskForm
 from code_viewer import CodeViewer
 from pretest_form import PretestForm
+from end_form import EndForm
 from experiment import Experiment
 from pcer_timer import PcerTimer
 from eye_tracker import ET
@@ -28,7 +29,7 @@ class ExperimentController:
         if self.window is not None:
     		self.window.close()
         self.window = ParticipantForm(self.experiment)
-        self.window.continue_with_the_experiment.connect(self.show_system_or_pretest)
+        self.window.continue_with_the_experiment.connect(self.show_system_or_pretest_or_end)
         self.window.calibrate_eye_tracker.connect(self.start_calibration)
 
         # the timer has to be added, although there is here a reference the
@@ -63,11 +64,23 @@ class ExperimentController:
         self.window.addTimer(self.timer)
         self.window.show()
 
-    def show_system_or_pretest(self):
+    def show_system_or_pretest_or_end(self):
         if(self.experiment.isWarmupSystemsFinished() and not self.experiment.isPretestFinished()):
             self.show_pretest_form()
+        elif(self.experiment.isExperimentFinished()):
+            self.show_end_message()
         else:
             self.show_system_form()
+
+    def show_end_message(self):
+        self.timer.stop()
+        self.window.close()
+        self.window = EndForm(self.experiment)
+        self.window.back.connect(self.show_participant_form)
+        self.window.addTimer(self.timer)
+        self.timer.hide()
+        self.window.show()
+        print("The exoeriment is finished")
 
     def task_form_submit_answer(self):
         participant_id = self.experiment.participant_id
@@ -76,8 +89,8 @@ class ExperimentController:
         if self.experiment.session.hasRemainingTasks(participant_id, total_tasks):
             self.show_task_form()
         else:
-            self.experiment.session.finishCurrentSystem(participant_id)
-            self.show_system_or_pretest()
+            self.experiment.finishCurrentSystem()
+            self.show_system_or_pretest_or_end()
 
     def show_pretest_form(self):
         self.timer.stop()

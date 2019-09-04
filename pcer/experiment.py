@@ -99,11 +99,31 @@ class Experiment():
                 return False
         return True
 
+    def isExperimentFinished(self):
+        return self.session.isExperimentFinished(self.participant_id)
+
+    def setExperimentFinishedTrue(self):
+        self.session.setExperimentFinishedTrue(self.participant_id)
+
     def isPretestFinished(self):
         return self.session.isPretestFinished(self.participant_id)
 
     def setPretestFinishedTrue(self):
         self.session.setPretestFinishedTrue(self.participant_id)
+
+    def getRemainingExperimentalSystems(self):
+        finished_systems = self.session.getFinishedSystemIds(self.participant_id)
+        all_systems = self.resource.getExperimentalSystems()
+        remaining_systems = [s for s in all_systems if s['id'] not in finished_systems]
+        return remaining_systems
+
+    def hasRemainingExperimentalSystems(self):
+        return len(self.getRemainingExperimentalSystems()) > 0
+
+    def finishCurrentSystem(self):
+        self.session.finishCurrentSystem(self.participant_id)
+        if(not self.hasRemainingExperimentalSystems()):
+            self.setExperimentFinishedTrue()
 
     def getExperimentalSystem(self):
         system = None
@@ -120,11 +140,7 @@ class Experiment():
                 random.shuffle(remaining_warmup_systems)
                 system = remaining_warmup_systems[0]
             else:
-                finished_systems = self.session.getFinishedSystems(self.participant_id)
-                all_systems = self.resource.getExperimentalSystems()
-                
-                fs = [f['system_id'] for f in finished_systems]
-                remaining_systems = [s for s in all_systems if s['id'] not in fs]
+                remaining_systems = self.getRemainingExperimentalSystems()
 
                 random.shuffle(remaining_systems)
                 system = remaining_systems[0]

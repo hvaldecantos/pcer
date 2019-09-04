@@ -55,6 +55,10 @@ For the form windows use the following properties:
         title_size: 25
         title_bold: true
         description_size: 22
+      end:
+        title: "The experiment has finished."
+        message: "There are no more experimental systems. \nThank you for your time."
+
 
 ### Resource directory
 

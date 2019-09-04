@@ -12,6 +12,8 @@ class FormBuilder:
         self.title_size = config['form']['font']['title_size']
         self.title_bold = config['form']['font']['title_bold']
         self.description_size = config['form']['font']['description_size']
+        self.end_title = config['form']['end']['title']
+        self.end_msg = config['form']['end']['message']
 
     def getTitleFont(self, bold = True):
         font = QFont(self.font_type)
@@ -77,8 +79,8 @@ class FormBuilder:
         return group_box
 
     def build_end_message(self):
-        name = "The experiment is finished"
-        description = "There is no more experimental systems.\nThank you for your time."
+        name = self.end_title
+        description = self.end_msg
         description_label = QLabel(description)
         description_label.setWordWrap(True)
         description_label.setFont(self.getDescriptionFont())

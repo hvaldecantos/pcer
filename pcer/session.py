@@ -44,6 +44,12 @@ class Session():
             }
         )
 
+    def isExperimentFinished(self, participant_id):
+        return self.getParticipantStatus(participant_id)['experiment_finished']
+
+    def setExperimentFinishedTrue(self, participant_id):
+        self.db.update({'experiment_finished': True}, self.participant.id == participant_id)
+
     def getParticipantStatus(self, id):
         status = self.db.search(self.participant.id == id)
         if len(status) <= 0: raise ParticipantDoesNotExistError(id)
@@ -91,12 +97,12 @@ class Session():
 
         return current_system_id, trial_index
 
-    def getFinishedSystems(self, participant_id):
+    def getFinishedSystemIds(self, participant_id):
         trials = self.getTrials(participant_id)
         systems = []
         for t in trials:
             if t['finished']:
-                systems.append(t)
+                systems.append(t['system_id'])
         return systems
 
     def existExperimentalSystem(self, participant_id, system_id):

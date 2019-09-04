@@ -47,6 +47,14 @@ For the tracking device use the following properties:
 
 Note: The `device` option accepts "eye tracker" or "mouse". The system supports only the SMI RED-250 eye tracking device.
 
+For the form windows use the following properties:
+
+    form:
+      font:
+        type: "Arial"
+        title_size: 25
+        title_bold: true
+        description_size: 22
 
 ### Resource directory
 

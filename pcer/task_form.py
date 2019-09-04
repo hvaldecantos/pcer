@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QMessageBox)
+    QHBoxLayout, QVBoxLayout, QApplication, QMessageBox, QLabel)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 from functools import partial
@@ -22,9 +22,16 @@ class TaskForm(PcerWindow):
         submitButton.clicked.connect(self.onSubmitButtonClick)
         readButton.clicked.connect(self.onReadButtonClick)
 
+        system = self.experiment.getExperimentalSystem()
+        self.group_box_system = self.experiment.form_builder.build_system_form(system)
+
         task = self.experiment.getExperimentalTask()
         self.group_box, self.choice_combo_question_list = self.experiment.form_builder.build_task_form(task)
+
         self.setExistingData()
+
+        self.vbox.addWidget(self.group_box_system)
+        self.vbox.addWidget(QLabel(""))
         self.vbox.addWidget(self.group_box)
 
         for ccq_dict in self.choice_combo_question_list:

@@ -18,7 +18,7 @@ class ExperimentController:
     def __init__(self):
         self.window = None
         self.experiment = Experiment()
-        self.timer = PcerTimer(15)
+        self.timer = PcerTimer()
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
         self.tracking_device = config['tracker']['device']
         if self.tracking_device == "eye tracker":
@@ -50,7 +50,9 @@ class ExperimentController:
         self.window = SystemForm(self.experiment)
         self.window.back.connect(self.show_participant_form)
         self.window.show_task.connect(self.show_task_form)
+        self.timer.setTime(minutes = 0, seconds = 15)
         self.window.addTimer(self.timer)
+        self.timer.hide()
         self.window.show()
 
     def show_task_form(self):

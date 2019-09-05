@@ -9,38 +9,40 @@ class PcerTimer(QLabel):
 	minute = None
 	second = None
 
-	def __init__(self, minutes):
+	def __init__(self):
 		super(PcerTimer, self).__init__()
 
 		self.timer = QTimer(self)
 		self.timer.timeout.connect(self.timerEvent)
 
-		self.minute = 0
-		self.second = minutes
-
+	def setTime(self, minutes, seconds):
+		self.minute = minutes
+		self.second = seconds
 		self.setText("%02d:%02d" % (self.minute, self.second))
 
-	def countDownBySecond(self):
+	def decreaseOneSecond(self):
 		self.second = self.second - 1
+		if(self.timeIsOver()): self.timout_event()
 		if(self.second < 0):
-			self.minute = self.minute - 1
-			self.second = 59
-		if(self.minute < 0):
-			self.timout_event()
+			if(self.minute <= 0):
+				self.second = 0
+			else:
+				self.minute = self.minute - 1
+				self.second = 59
 
 	def timerEvent(self):
+		self.decreaseOneSecond()
 		self.setText("%02d:%02d" % (self.minute, self.second))
-		self.countDownBySecond()
 
 	def timout_event(self):
+		self.setText("%02d:%02d" % (self.minute, self.second))
 		self.timeout_signal.emit()
 
 	def timeIsOver(self):
-		return (self.minute < 0)
+		return (self.minute == 0 and self.second == 0)
 
 	def start(self):
 		self.timer.start(1000)
-		self.timerEvent()
 
 	def stop(self):
 		self.timer.stop()

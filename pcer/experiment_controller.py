@@ -21,6 +21,8 @@ class ExperimentController:
         self.timer = PcerTimer()
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
         self.tracking_device = config['tracker']['device']
+        self.time_limit_minutes = config['time_limit']['minutes']
+        self.time_limit_seconds = config['time_limit']['seconds']
         if self.tracking_device == "eye tracker":
             self.et = ET()
 
@@ -50,7 +52,7 @@ class ExperimentController:
         self.window = SystemForm(self.experiment)
         self.window.back.connect(self.show_participant_form)
         self.window.show_task.connect(self.show_task_form)
-        self.timer.setTime(minutes = 0, seconds = 15)
+        self.timer.setTime(self.time_limit_minutes, self.time_limit_seconds)
         self.window.addTimer(self.timer)
         self.timer.hide()
         self.window.show()

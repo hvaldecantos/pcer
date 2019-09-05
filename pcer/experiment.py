@@ -50,6 +50,12 @@ class Experiment():
     def getGroups(self):
         return self.resource.getGroups()
 
+    def setTimerTime(self, timer):
+        self.session.setTimer(self.participant_id, timer)
+
+    def getTimerTime(self):
+        return self.session.getTimer(self.participant_id)
+
     def setPretestData(self,question_id, question, choice):
         pretest_data = self.session.getCurrentPretestState(self.participant_id)
         if choice != '--':

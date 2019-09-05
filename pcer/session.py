@@ -40,9 +40,16 @@ class Session():
                 'current_opened_filename': None,
                 'scroll_displacements': {},
                 'filenames_order': [],
-                'calibrations': []
+                'calibrations': [],
+                'timer': None
             }
         )
+
+    def setTimer(self, participant_id, timer):
+        self.db.update({'timer': timer}, self.participant.id == participant_id)
+
+    def getTimer(self, participant_id):
+        return self.getParticipantStatus(participant_id)['timer']
 
     def isExperimentFinished(self, participant_id):
         return self.getParticipantStatus(participant_id)['experiment_finished']

@@ -18,7 +18,7 @@ class ExperimentController:
     def __init__(self):
         self.window = None
         self.experiment = Experiment()
-        self.timer = PcerTimer()
+        self.timer = PcerTimer(self.experiment)
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
         self.tracking_device = config['tracker']['device']
         self.time_limit_minutes = config['time_limit']['minutes']
@@ -46,13 +46,21 @@ class ExperimentController:
         result = self.et.getAccuracyData()
         self.experiment.session.addETCalibrationAccuracy(self.experiment.participant_id, result)
 
+    def getTimerTime(self):
+        timer_time = self.experiment.getTimerTime()
+        if(not timer_time):
+            timer_time = {}
+            timer_time['minute'] = self.time_limit_minutes
+            timer_time['second'] = self.time_limit_seconds
+        return timer_time
+
     def show_system_form(self):
         self.timer.stop()
         self.window.close()
         self.window = SystemForm(self.experiment)
         self.window.back.connect(self.show_participant_form)
         self.window.show_task.connect(self.show_task_form)
-        self.timer.setTime(self.time_limit_minutes, self.time_limit_seconds)
+        self.timer.setTime(self.getTimerTime())
         self.window.addTimer(self.timer)
         self.timer.hide()
         self.window.show()
@@ -92,6 +100,7 @@ class ExperimentController:
             self.show_task_form()
         else:
             self.experiment.finishCurrentSystem()
+            self.experiment.setTimerTime(None)
             self.show_system_or_pretest_or_end()
 
     def show_pretest_form(self):

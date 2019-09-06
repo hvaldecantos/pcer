@@ -1,7 +1,7 @@
 import sys
 import os
 import yaml
-from PyQt5.QtWidgets import (QWidget, QPushButton,
+from PyQt5.QtWidgets import (QWidget, QPushButton, QMessageBox,
      QApplication, QDesktopWidget, QListWidget, QTextEdit)
 from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics, QFontInfo, QPainter, QPen, QPixmap, QMouseEvent #, QCursor
 from PyQt5 import QtCore
@@ -111,7 +111,7 @@ class CodeViewer(PcerWindow):
 
     back = QtCore.pyqtSignal()
 
-    def __init__(self, experiment, et):
+    def __init__(self, experiment, et, timer):
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
         self.height_in_characters = config['code_viewer']['document']['height_in_characters']
         self.font_pixel_size = config['code_viewer']['document']['font_pixel_size']
@@ -129,6 +129,8 @@ class CodeViewer(PcerWindow):
         self.sidebar_font_pixel_size = config['code_viewer']['sidebar']['font_pixel_size']
 
         self.et = et
+        self.timer = timer
+        self.timer.timeout_signal.connect(self.popupTimeoutMessage)
         super(CodeViewer, self).__init__(experiment)
 
     def initUI(self):
@@ -153,6 +155,16 @@ class CodeViewer(PcerWindow):
             found[0].setSelected(True)
             self.show()
             self.openFile(os.path.join(self.code_path, self.current_file))
+
+    def popupTimeoutMessage(self):
+        self.editor.document().clear()
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setWindowTitle("Reading time is over")
+        msg.setText("For the current system and the remaining question, you should answer them without reading the code again.")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.buttonClicked.connect(self.onBackButtonClick)
+        msg.exec_()
 
     def setupFileList(self):
         self.listWidget = QListWidget(self)

@@ -18,9 +18,11 @@ class ExperimentController:
     def __init__(self):
         self.window = None
         self.experiment = Experiment()
-        self.timer = PcerTimer(15)
+        self.timer = PcerTimer()
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
         self.tracking_device = config['tracker']['device']
+        self.time_limit_minutes = config['time_limit']['minutes']
+        self.time_limit_seconds = config['time_limit']['seconds']
         if self.tracking_device == "eye tracker":
             self.et = ET()
 
@@ -46,19 +48,19 @@ class ExperimentController:
 
     def show_system_form(self):
         self.timer.stop()
-        self.task_counter = 0
         self.window.close()
         self.window = SystemForm(self.experiment)
         self.window.back.connect(self.show_participant_form)
         self.window.show_task.connect(self.show_task_form)
+        self.timer.setTime(self.time_limit_minutes, self.time_limit_seconds)
         self.window.addTimer(self.timer)
+        self.timer.hide()
         self.window.show()
 
     def show_task_form(self):
         self.timer.stop()
-        self.task_counter += 1
         self.window.close()
-        self.window = TaskForm(self.experiment)
+        self.window = TaskForm(self.experiment, self.timer)
         self.window.submit_answer.connect(self.task_form_submit_answer)
         self.window.read_code.connect(self.show_src_navigator)
         self.window.addTimer(self.timer)
@@ -104,7 +106,7 @@ class ExperimentController:
     def show_src_navigator(self):
         print("show_src_navigator")
         self.window.close()
-        self.window = CodeViewer(self.experiment, self.et)
+        self.window = CodeViewer(self.experiment, self.et, self.timer)
         self.window.back.connect(self.show_task_form)
         self.window.addTimer(self.timer)
         self.timer.start()

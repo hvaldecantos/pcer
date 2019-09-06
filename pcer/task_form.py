@@ -12,7 +12,8 @@ class TaskForm(PcerWindow):
     choice_combo_question_list = []
     group_box = None
 
-    def __init__(self, experiment):
+    def __init__(self, experiment, timer):
+        self.timer = timer
         super(TaskForm, self).__init__(experiment)
 
     def initUI(self):
@@ -21,6 +22,8 @@ class TaskForm(PcerWindow):
 
         submitButton.clicked.connect(self.onSubmitButtonClick)
         readButton.clicked.connect(self.onReadButtonClick)
+
+        if(self.timer.timeIsOver()): readButton.setEnabled(False)
 
         system = self.experiment.getExperimentalSystem()
         self.group_box_system = self.experiment.form_builder.build_system_form(system)

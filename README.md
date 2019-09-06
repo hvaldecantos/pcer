@@ -59,6 +59,11 @@ For the form windows use the following properties:
         title: "The experiment has finished."
         message: "There are no more experimental systems. \nThank you for your time."
 
+For the time limit for each experimental system:
+
+    time_limit:
+      minutes: 15
+      seconds: 0
 
 ### Resource directory
 

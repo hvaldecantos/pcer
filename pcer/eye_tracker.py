@@ -16,7 +16,9 @@ class ET:
             self.iViewXAPI = ctypes.windll.LoadLibrary("iViewXAPI.dll")
 
         print("------------------ Make UDP connection ---------------------------\n")
-        self.iViewXAPI.iV_Connect(ctypes.c_char_p('192.168.74.1'), ctypes.c_int(4444), ctypes.c_char_p('192.168.74.2'), ctypes.c_int(5555))
+        retval = self.iViewXAPI.iV_Connect(ctypes.c_char_p('192.168.74.1'), ctypes.c_int(4444), ctypes.c_char_p('192.168.74.2'), ctypes.c_int(5555))
+        if(RET_VALUE[retval] != 'RET_SUCCESS'):
+            raise Exception(RET_VALUE[retval] + ": failed to establish connection with the eye tracker.")
 
     def getdeviceInfo(self):
         print("------------------- device Information         -------------------\n")

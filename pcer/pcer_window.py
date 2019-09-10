@@ -46,7 +46,7 @@ class PcerWindow(QWidget):
         self.statusBar.showMessage("[ID: " + str(id) + " - Group: " + str(group) + "]")
 
     def addTimer(self, timer):
-        self.statusBar.insertPermanentWidget(2, timer)
+        self.statusBar.insertPermanentWidget(0, timer)
         timer.show()
 
     def centerOnScreen (self):

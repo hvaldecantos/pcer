@@ -34,16 +34,6 @@ class Experiment():
     def getParticipantStatus(self, p_id):
         return self.session.getParticipantStatus(p_id)
 
-    def openParticipanSession(self, p_id):
-        print("Experiment.openParticipanSession")
-        pass
-
-    def saveParticipanSession(self):
-        pass
-
-    def getNextSystemDescription(self):
-        pass
-
     def finishCurrentTask(self):
         self.session.finishCurrentTask(self.participant_id)
 

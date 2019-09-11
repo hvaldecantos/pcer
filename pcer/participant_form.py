@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit, QMessageBox)
+    QHBoxLayout, QVBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 from participant_already_exist_error import ParticipantAlreadyExistError
@@ -130,11 +130,3 @@ class ParticipantForm(PcerWindow):
     def onCalibrateButtonClick(self):
         print("onCalibrateButtonClick")
         self.calibrate_eye_tracker.emit()
-
-    def popUpWarning(self, msg):
-        warning = QMessageBox()
-        warning.setIcon(QMessageBox.Warning)
-        warning.setText(msg)
-        warning.setWindowTitle('Warning')
-        warning.setStandardButtons(QMessageBox.Ok)
-        warning.exec_()

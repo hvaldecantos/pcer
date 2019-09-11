@@ -1,5 +1,5 @@
 import yaml
-from PyQt5.QtWidgets import QWidget, QDesktopWidget, QVBoxLayout, QStatusBar, QLabel
+from PyQt5.QtWidgets import QWidget, QDesktopWidget, QVBoxLayout, QStatusBar, QLabel, QMessageBox
 from PyQt5 import QtCore
 from pcer_timer import PcerTimer
 import time
@@ -54,3 +54,11 @@ class PcerWindow(QWidget):
         self.move((resolution.width() / 2) - (self.frameSize().width() / 2),
                   (resolution.height() / 2) - (self.frameSize().height() / 2))
         print(resolution.height())
+
+    def popUpWarning(self, msg):
+        warning = QMessageBox()
+        warning.setIcon(QMessageBox.Warning)
+        warning.setText(msg)
+        warning.setWindowTitle('Warning')
+        warning.setStandardButtons(QMessageBox.Ok)
+        warning.exec_()

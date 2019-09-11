@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QLabel, QComboBox, QGroupBox, QMessageBox)
+    QHBoxLayout, QVBoxLayout, QApplication, QLabel, QComboBox, QGroupBox)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 from functools import partial
@@ -64,11 +64,3 @@ class PretestForm(PcerWindow):
         question = ccq_dict['question']
         choice = ccq_dict['combobox'].currentText()
         self.experiment.setPretestData(ccq_dict['id'], question, choice)
-
-    def popUpWarning(self, msg):
-        warning = QMessageBox()
-        warning.setIcon(QMessageBox.Warning)
-        warning.setText(msg)
-        warning.setWindowTitle('Warning')
-        warning.setStandardButtons(QMessageBox.Ok)
-        warning.exec_()

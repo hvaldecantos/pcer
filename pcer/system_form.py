@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QLabel, QMessageBox)
+    QHBoxLayout, QVBoxLayout, QApplication, QLabel)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 
@@ -59,11 +59,3 @@ class SystemForm(PcerWindow):
     def onBackButtonClick(self):
         print("SystemForm.onBackButtonClick")
         self.back.emit()
-
-    def popUpWarning(self, msg):
-        warning = QMessageBox()
-        warning.setIcon(QMessageBox.Warning)
-        warning.setText(msg)
-        warning.setWindowTitle('Warning')
-        warning.setStandardButtons(QMessageBox.Ok)
-        warning.exec_()

@@ -28,17 +28,10 @@ class SystemForm(PcerWindow):
 
         # Get the system info to fill the system form
         system = self.experiment.getExperimentalSystem()
+
+        # Get a group box with the form to show
         self.group_box = self.experiment.form_builder.build_system_form(system)
-
-        #system_name = QLabel()
-        #system_name.setText(system['name'])
-        #self.vbox.addWidget(system_name)
         self.vbox.addWidget(self.group_box)
-
-        #system_description = QLabel()
-        #system_description.setText(system['description'])
-        #self.vbox.addWidget(system_description)
-        # --------------------------------------
 
         self.vbox.addStretch(1)
         self.vbox.addLayout(hbox)

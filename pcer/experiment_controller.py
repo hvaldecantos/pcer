@@ -109,5 +109,4 @@ class ExperimentController:
         self.window = CodeViewer(self.experiment, self.et, self.timer)
         self.window.back.connect(self.show_task_form)
         self.window.addTimer(self.timer)
-        self.timer.start()
         self.window.show()

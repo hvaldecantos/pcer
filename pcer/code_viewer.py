@@ -155,6 +155,7 @@ class CodeViewer(PcerWindow):
             found[0].setSelected(True)
             self.show()
             self.openFile(os.path.join(self.code_path, self.current_file))
+            self.timer.start()
 
     def popupTimeoutMessage(self):
         self.editor.document().clear()
@@ -287,6 +288,9 @@ class CodeViewer(PcerWindow):
         print("----------------------------------------")
 
     def onCurrentItemChanged(self, current_item, previous_item):
+        if(not self.current_file):
+            self.timer.start()
+
         # current_file is the past clicked file
         if self.current_file:
             self.experiment.setScrollDisplacement(self.current_file, self.editor.scrollbar_displacement)

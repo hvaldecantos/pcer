@@ -129,7 +129,8 @@ class CodeViewer(PcerWindow):
         self.sidebar_font_pixel_size = config['code_viewer']['sidebar']['font_pixel_size']
 
         self.keywords = config['keywords']['common']
-        self.keywords_paradigm = config['keywords'][experiment.participant_group]
+        self.keywords_paradigm_bold = config['keywords'][experiment.participant_group + "_bold"]
+        self.keywords_paradigm_italic = config['keywords'][experiment.participant_group + "_italic"]
 
         self.et = et
         self.timer = timer
@@ -225,7 +226,7 @@ class CodeViewer(PcerWindow):
         if self.hide_scroll_bar:
             self.editor.verticalScrollBar().setStyleSheet("QScrollBar:vertical {width: 0px;}")
 
-        self.highlighter = Highlighter(self.keywords, self.keywords_paradigm, self.editor.document())
+        self.highlighter = Highlighter(self.keywords, self.keywords_paradigm_bold, self.keywords_paradigm_italic, self.editor.document())
 
         self.reportCodeViewerProperties(font)
 
@@ -339,7 +340,7 @@ class CodeViewer(PcerWindow):
 
 
 class Highlighter(QSyntaxHighlighter):
-    def __init__(self, keywords, keywords_paradigm, parent=None):
+    def __init__(self, keywords, keywords_paradigm_bold, keywords_paradigm_italic, parent=None):
         super(Highlighter, self).__init__(parent)
 
         keywordFormat = QTextCharFormat()
@@ -347,18 +348,23 @@ class Highlighter(QSyntaxHighlighter):
         keywordFormat.setFontWeight(QFont.Bold)
         a = [(QRegExp(pattern), keywordFormat) for pattern in keywords]
 
-        keywordParadigmFormat = QTextCharFormat()
-        keywordParadigmFormat.setForeground(Qt.darkRed)
-        keywordParadigmFormat.setFontWeight(QFont.Bold)
-        b = [(QRegExp(pattern), keywordParadigmFormat) for pattern in keywords_paradigm]
+        keywordParadigmFormatBold = QTextCharFormat()
+        keywordParadigmFormatBold.setForeground(Qt.darkRed)
+        keywordParadigmFormatBold.setFontWeight(QFont.Bold)
+        b = [(QRegExp(pattern), keywordParadigmFormatBold) for pattern in keywords_paradigm_bold]
 
-        self.highlightingRules = a + b
+        keywordParadigmFormatItalic = QTextCharFormat()
+        keywordParadigmFormatItalic.setForeground(Qt.darkRed)
+        keywordParadigmFormatItalic.setFontItalic(True)
+        keywordParadigmFormatItalic.setFontWeight(QFont.Normal)
+        c = [(QRegExp(pattern), keywordParadigmFormatItalic) for pattern in keywords_paradigm_italic]
+
+        self.highlightingRules = a + b + c
 
         classFormat = QTextCharFormat()
         classFormat.setFontWeight(QFont.Bold)
         classFormat.setForeground(Qt.darkMagenta)
-        self.highlightingRules.append((QRegExp("\\bQ[A-Za-z]+\\b"),
-                classFormat))
+        self.highlightingRules.append((QRegExp("\\bQ[A-Za-z]+\\b"), classFormat))
 
         singleLineCommentFormat = QTextCharFormat()
         singleLineCommentFormat.setForeground(Qt.red)
@@ -375,8 +381,7 @@ class Highlighter(QSyntaxHighlighter):
         functionFormat = QTextCharFormat()
         functionFormat.setFontItalic(True)
         functionFormat.setForeground(Qt.blue)
-        self.highlightingRules.append((QRegExp("\\b[A-Za-z0-9_]+(?=\\()"),
-                functionFormat))
+        self.highlightingRules.append((QRegExp("\\b[A-Za-z0-9_]+(?=\\()"), functionFormat))
 
         self.commentStartExpression = QRegExp("/\\*")
         self.commentEndExpression = QRegExp("\\*/")

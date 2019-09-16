@@ -74,8 +74,10 @@ For highlighting the keyword in different language used
                "intanceof", "return", "transient", "catch", "extends", "int", "short", "try", "char",
                "final", "interface", "static", "void", "class", "finally", "long", "strictfp", "volatile",
                "const", "float", "native", "super", "while", "true", "false", "null"]
-      oo: ["abstract", "class", "interface"]
-      dci: ["class", "interface", "context", "role", "stageprop", "requires"]
+      oo_bold: ["class", "interface"]
+      oo_italic: ["abstract"]
+      dci_bold: ["class", "interface", "context", "role", "stageprop", "requires"]
+      dci_italic: ["requires"]
 
 
 ### Resource directory

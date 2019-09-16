@@ -65,6 +65,19 @@ For the time limit for each experimental system:
       minutes: 15
       seconds: 0
 
+For highlighting the keyword in different language used
+
+    keywords:
+      common: ["abstract", "continue", "for", "new", "switch", "assert", "default", "goto", "package",
+               "synchronized", "boolean", "do", "if", "private", "this", "break", "double", "implements",
+               "protected", "throw", "byte", "else", "import", "public", "throws", "case", "enum",
+               "intanceof", "return", "transient", "catch", "extends", "int", "short", "try", "char",
+               "final", "interface", "static", "void", "class", "finally", "long", "strictfp", "volatile",
+               "const", "float", "native", "super", "while", "true", "false", "null"]
+      oo: ["abstract", "class", "interface"]
+      dci: ["class", "interface", "context", "role", "stageprop", "requires"]
+
+
 ### Resource directory
 
 In the resource directory there is all the experimental material related to the experimental units, that is, the code in the versions needed to execute the experiment, the comprehension tasks and the general descriptions of the systems that will be presented to the subjects.

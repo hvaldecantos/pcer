@@ -128,6 +128,9 @@ class CodeViewer(PcerWindow):
         self.sidebar_font_type = config['code_viewer']['sidebar']['font_type']
         self.sidebar_font_pixel_size = config['code_viewer']['sidebar']['font_pixel_size']
 
+        self.keywords = config['keywords']['common']
+        self.keywords_paradigm = config['keywords'][experiment.participant_group]
+
         self.et = et
         self.timer = timer
         self.timer.timeout_signal.connect(self.popupTimeoutMessage)
@@ -222,7 +225,7 @@ class CodeViewer(PcerWindow):
         if self.hide_scroll_bar:
             self.editor.verticalScrollBar().setStyleSheet("QScrollBar:vertical {width: 0px;}")
 
-        self.highlighter = Highlighter(self.editor.document())
+        self.highlighter = Highlighter(self.keywords, self.keywords_paradigm, self.editor.document())
 
         self.reportCodeViewerProperties(font)
 
@@ -336,30 +339,18 @@ class CodeViewer(PcerWindow):
 
 
 class Highlighter(QSyntaxHighlighter):
-    def __init__(self, parent=None):
+    def __init__(self, keywords, keywords_paradigm, parent=None):
         super(Highlighter, self).__init__(parent)
 
         keywordFormat = QTextCharFormat()
         keywordFormat.setForeground(Qt.darkBlue)
         keywordFormat.setFontWeight(QFont.Bold)
+        self.highlightingRules = [(QRegExp(pattern), keywordFormat) for pattern in keywords]
 
-        keywordPatterns = ["\\babstract\\b", "\\bcontinue\\b", "\\bfor\\b",
-                "\\bnew\\b", "\\bswitch\\b", "\\bassert\\b", "\\bdefault\\b",
-                "\\bgoto\\b", "\\bpackage\\b", "\\bsynchronized\\b", "\\bboolean\\b",
-                "\\bdo\\b", "\\bif\\b", "\\bprivate\\b", "\\bthis\\b",
-                "\\bbreak\\b", "\\bdouble\\b", "\\bimplements\\b", "\\bprotected\\b",
-                "\\bthrow\\b", "\\bbyte\\b", "\\belse\\b", "\\bimport\\b",
-                "\\bpublic\\b", "\\bthrows\\b", "\\bcase\\b", "\\benum\\b",
-                "\\bintanceof\\b", "\\breturn\\b", "\\btransient\\b", "\\bcatch\\b",
-                "\\bextends\\b", "\\bint\\b", "\\bshort\\b", "\\btry\\b",
-                "\\bchar\\b", "\\bfinal\\b", "\\binterface\\b", "\\bstatic\\b",
-                "\\bvoid\\b", "\\bclass\\b", "\\bfinally\\b", "\\blong\\b",
-                "\\bstrictfp\\b", "\\bvolatile\\b", "\\bconst\\b", "\\bfloat\\b",
-                "\\bnative\\b", "\\bsuper\\b", "\\bwhile\\b", "\\btrue\\b"
-                "\\bfalse\\b", "\\bnull\\b"]
-
-        self.highlightingRules = [(QRegExp(pattern), keywordFormat)
-                for pattern in keywordPatterns]
+        keywordParadigmFormat = QTextCharFormat()
+        keywordParadigmFormat.setForeground(Qt.darkRed)
+        keywordParadigmFormat.setFontWeight(QFont.Bold)
+        self.highlightingRules = [(QRegExp(pattern), keywordParadigmFormat) for pattern in keywords_paradigm]
 
         classFormat = QTextCharFormat()
         classFormat.setFontWeight(QFont.Bold)

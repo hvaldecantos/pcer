@@ -345,12 +345,14 @@ class Highlighter(QSyntaxHighlighter):
         keywordFormat = QTextCharFormat()
         keywordFormat.setForeground(Qt.darkBlue)
         keywordFormat.setFontWeight(QFont.Bold)
-        self.highlightingRules = [(QRegExp(pattern), keywordFormat) for pattern in keywords]
+        a = [(QRegExp(pattern), keywordFormat) for pattern in keywords]
 
         keywordParadigmFormat = QTextCharFormat()
         keywordParadigmFormat.setForeground(Qt.darkRed)
         keywordParadigmFormat.setFontWeight(QFont.Bold)
-        self.highlightingRules = [(QRegExp(pattern), keywordParadigmFormat) for pattern in keywords_paradigm]
+        b = [(QRegExp(pattern), keywordParadigmFormat) for pattern in keywords_paradigm]
+
+        self.highlightingRules = a + b
 
         classFormat = QTextCharFormat()
         classFormat.setFontWeight(QFont.Bold)

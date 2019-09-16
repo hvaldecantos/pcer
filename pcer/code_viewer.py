@@ -377,7 +377,7 @@ class Highlighter(QSyntaxHighlighter):
 
         quotationFormat = QTextCharFormat()
         quotationFormat.setForeground(Qt.darkGreen)
-        self.highlightingRules.append((QRegExp("\".*\""), quotationFormat))
+        self.highlightingRules.append((QRegExp("\"([^\"]*)\""), quotationFormat))
 
         functionFormat = QTextCharFormat()
         functionFormat.setFontItalic(True)

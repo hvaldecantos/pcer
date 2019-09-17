@@ -131,7 +131,8 @@ class ET:
             try:
                 editor.gazeMoveEvent((sample.leftEye.gazeX + sample.rightEye.gazeX)/2,
                                      (sample.leftEye.gazeY + sample.rightEye.gazeY)/2,
-                                     (sample.leftEye.diam + sample.rightEye.diam)/2)
+                                     (sample.leftEye.diam + sample.rightEye.diam)/2,
+                                     sample.timestamp)
             except Exception as e:
                 print("========>", e)
                 pass

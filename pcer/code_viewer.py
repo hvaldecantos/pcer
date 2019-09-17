@@ -59,13 +59,25 @@ class EyeTrackerTextEdit(TrackerTextEdit):
         self.scrollbar_displacement += dy
         print(self.scrollbar_displacement)
 
-    def gazeMoveEvent(self, x, y, diam):
-        print("x: %d, y: %d, diam: %f" % (x,y, diam))
+    def gazeMoveEvent(self, x, y, diam, timestamp):
+        # print("x: %d, y: %d, diam: %f" % (x,y, diam))
+
+        secs = (timestamp / 1000000)
+        mins = secs / 60
+
+        micro = (timestamp % 1000000)
+        seco = secs % 60
+        minu = mins % 60
+        hora = mins / 60
+
+        # t = datetime.time(microseconds = timestamp)
+
         self.x = x - self.x_offset
         self.y = y - self.y_offset
 
         if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
-            str_dat = "'%s',%d,%d,%f,'%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, diam, self.filename)
+            # str_dat = "'%s',%ld,%d,%d,%f,'%s'\n" % (datetime.now(),timestamp, self.x, self.y - self.scrollbar_displacement, diam, self.filename)
+            str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%f,'%s'\n" % (datetime.now(),hora,minu,seco,micro,timestamp, self.x, self.y - self.scrollbar_displacement, diam, self.filename)
             self.csv_file.write(str_dat)
             self.update()
 

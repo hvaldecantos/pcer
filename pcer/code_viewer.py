@@ -295,6 +295,8 @@ class CodeViewer(PcerWindow):
         print("Top-Right position in screen: (%d, %d)" % (x2, y1))
         print("Bottom-Left position in screen: (%d, %d)" % (x1, y2))
         print("Bottom-Right position in screen: (%d, %d)" % (x2, y2))
+        print("x_offset = %d" % x1)
+        print("y_offset = %d" % y1)
         print("---------- Status Bar  Report ----------")
         print("Size: width: %d, height: %d" % (self.width, self.status_bar_height))
         print("Top-Left position in screen: (%d, %d)" % (wposition.x(), wposition.y() + self.editorHeight))

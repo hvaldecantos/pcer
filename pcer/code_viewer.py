@@ -1,8 +1,7 @@
 import sys
 import os
 import yaml
-from PyQt5.QtWidgets import (QWidget, QPushButton, QMessageBox,
-     QApplication, QDesktopWidget, QListWidget, QTextEdit)
+from PyQt5.QtWidgets import (QPushButton, QMessageBox, QApplication, QListWidget, QTextEdit)
 from PyQt5.QtGui import QFont, QSyntaxHighlighter, QTextCharFormat, QFontMetrics, QFontInfo, QPainter, QPen, QPixmap, QMouseEvent #, QCursor
 from PyQt5 import QtCore
 from PyQt5.QtCore import QFile, QRegExp, Qt, QRectF,  QPoint, QEvent

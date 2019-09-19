@@ -1,6 +1,4 @@
-from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QLabel, QComboBox, QGroupBox)
-from PyQt5 import QtCore
+from PyQt5.QtWidgets import (QVBoxLayout, QLabel, QComboBox, QGroupBox)
 from PyQt5.QtGui import QFont
 import yaml
 

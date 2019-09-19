@@ -1,5 +1,5 @@
 import yaml
-from PyQt5.QtWidgets import QWidget, QDesktopWidget, QVBoxLayout, QStatusBar, QLabel, QMessageBox
+from PyQt5.QtWidgets import QWidget, QDesktopWidget, QVBoxLayout, QStatusBar, QMessageBox
 from PyQt5 import QtCore
 from pcer_timer import PcerTimer
 import time

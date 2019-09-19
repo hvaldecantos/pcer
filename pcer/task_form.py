@@ -1,6 +1,5 @@
 import sys
-from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QLabel)
+from PyQt5.QtWidgets import (QPushButton, QHBoxLayout, QLabel)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 from functools import partial

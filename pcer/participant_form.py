@@ -1,6 +1,5 @@
 import sys
-from PyQt5.QtWidgets import (QWidget, QPushButton,
-    QHBoxLayout, QVBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit)
+from PyQt5.QtWidgets import (QPushButton, QHBoxLayout, QApplication, QLineEdit, QLabel, QComboBox, QPlainTextEdit)
 from PyQt5 import QtCore
 from pcer_window import PcerWindow
 from participant_already_exist_error import ParticipantAlreadyExistError

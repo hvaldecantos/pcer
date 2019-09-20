@@ -29,7 +29,6 @@ class FormBuilder:
 
     def build_pretest_form(self, experiment):
         pretests = experiment.resource.getPretests(experiment.participant_group)
-        print('pretests')
         name = pretests['name']
         description = pretests['description']
         questions = pretests['questions']
@@ -124,5 +123,3 @@ class FormBuilder:
             inner_vbox.addWidget(choiceCombo)
         group_box.setLayout(inner_vbox)
         return group_box, choice_combo_question_list
-
-

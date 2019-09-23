@@ -1,6 +1,7 @@
 from iViewXAPI import CCalibration, CSample, CSystem, CAccuracy, CRedGeometry, CGazeChannelQuality, RET_VALUE
 import ctypes
 import platform
+import yaml
 
 
 class ET:
@@ -14,6 +15,9 @@ class ET:
             self.iViewXAPI = ctypes.windll.LoadLibrary("iViewXAPI64.dll")
         else:
             self.iViewXAPI = ctypes.windll.LoadLibrary("iViewXAPI.dll")
+
+        config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
+        self.calibration_points = config['tracker']['eye_tracker']['calibration_points']
 
         print("------------------ Make UDP connection ---------------------------\n")
         retval = self.iViewXAPI.iV_Connect(ctypes.c_char_p('192.168.74.1'), ctypes.c_int(4444), ctypes.c_char_p('192.168.74.2'), ctypes.c_int(5555))
@@ -90,7 +94,7 @@ class ET:
 
     def calibrate(self):
         print("------------------- Setting up the calibration -------------------\n")
-        calibrationData = CCalibration(5,   # ("method", c_int),  select calibration method (default: 5) a bit mask is used to specify a new calibration workflow. 0, 1, 2, 5, 9 or 13 calibration points are possible
+        calibrationData = CCalibration(self.calibration_points,   # ("method", c_int),  select calibration method (default: 5) a bit mask is used to specify a new calibration workflow. 0, 1, 2, 5, 9 or 13 calibration points are possible
                                        1,   # ("visualization", c_int), draw calibration/validation by API (default: 1)
                                        0,   # ("displayDevice", c_int), set display device [0: primary device (default), 1: secondary device]
                                        0,   # ("speed", c_int), set calibration/validation speed [0: slow (default), 1: fast]

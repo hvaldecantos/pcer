@@ -47,6 +47,12 @@ For the tracking device use the following properties:
 
 Note: The `device` option accepts "eye tracker" or "mouse". The system supports only the SMI RED-250 eye tracking device.
 
+For specific eye tracker configuration:
+
+    tracker:
+      eye_tracker:
+        calibration_points: 5
+
 For the form windows use the following properties:
 
     form:

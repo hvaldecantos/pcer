@@ -50,7 +50,7 @@ class EyeTrackerTextEdit(TrackerTextEdit):
     y2 = 0
 
     def __init__(self, csv_filename, parent=None):
-        self.header = "timestamp,x,y,pupildiam,filename\n"
+        self.header = "timestamp1,timestamp2,microseconds,x,y,pupildiam,filename\n"
         super(EyeTrackerTextEdit, self).__init__(csv_filename, parent)
 
     def scrollContentsBy(self, dx, dy):
@@ -76,7 +76,7 @@ class EyeTrackerTextEdit(TrackerTextEdit):
 
         if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
             # str_dat = "'%s',%ld,%d,%d,%f,'%s'\n" % (datetime.now(),timestamp, self.x, self.y - self.scrollbar_displacement, diam, self.filename)
-            str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%f,'%s'\n" % (datetime.now(),hora,minu,seco,micro,timestamp, self.x, self.y - self.scrollbar_displacement, diam, self.filename)
+            str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%f,'%s'\n" % (datetime.now(), hora, minu, seco, micro, timestamp, self.x, self.y - self.scrollbar_displacement, diam, self.filename)
             self.csv_file.write(str_dat)
             self.update()
 

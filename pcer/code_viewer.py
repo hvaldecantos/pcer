@@ -97,8 +97,7 @@ class MouseTrackerTextEdit(TrackerTextEdit):
 
     def keyPressEvent(self, event):
         if (event.modifiers() & QtCore.Qt.ShiftModifier):
-            self.shift = True
-            print 'Shift!'
+            print 'Saving document as png picture...'
             self.save()
 
     def mouseMoveEvent(self, event):

@@ -110,10 +110,10 @@ class MouseTrackerTextEdit(TrackerTextEdit):
 
     def save(self):
         doc = self.document()
-        pixmap = QPixmap(doc.idealWidth(), doc.size().height())
+        pixmap = QPixmap(doc.size().width(), doc.size().height())
         pixmap.fill(Qt.white)
         painter = QPainter(pixmap)
-        doc.drawContents(painter, QRectF(0, 0, doc.idealWidth(),  doc.size().height()))
+        doc.drawContents(painter, QRectF(0, 0, doc.size().width(),  doc.size().height()))
         painter.end()
         pixmap.save("%s.png" % self.filename, "PNG")
 

@@ -18,9 +18,13 @@ class ET:
 
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
         self.calibration_points = config['tracker']['eye_tracker']['calibration_points']
+        self.send_ip = config['tracker']['eye_tracker']['network']['send_ip']
+        self.send_port = config['tracker']['eye_tracker']['network']['send_port']
+        self.receive_ip = config['tracker']['eye_tracker']['network']['receive_ip']
+        self.receive_port = config['tracker']['eye_tracker']['network']['receive_port']
 
         print("------------------ Make UDP connection ---------------------------\n")
-        retval = self.iViewXAPI.iV_Connect(ctypes.c_char_p('192.168.74.1'), ctypes.c_int(4444), ctypes.c_char_p('192.168.74.2'), ctypes.c_int(5555))
+        retval = self.iViewXAPI.iV_Connect(ctypes.c_char_p(self.send_ip), ctypes.c_int(self.send_port), ctypes.c_char_p(self.receive_ip), ctypes.c_int(self.receive_port))
         if(RET_VALUE[retval] != 'RET_SUCCESS'):
             raise Exception(RET_VALUE[retval] + ": failed to establish connection with the eye tracker.")
 

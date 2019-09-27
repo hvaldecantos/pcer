@@ -52,6 +52,11 @@ For specific eye tracker configuration:
     tracker:
       eye_tracker:
         calibration_points: 5
+        network:
+          send_ip: '192.168.74.1'
+          send_port: 4444
+          receive_ip: '192.168.74.2'
+          receive_port: 5555
 
 For the form windows use the following properties:
 

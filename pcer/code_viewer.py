@@ -15,8 +15,6 @@ class TrackerTextEdit(QTextEdit):
     filename = None
     csv_file = None
     header = None
-    x = 0
-    y = 0
 
     def __init__(self, csv_filename, parent=None):
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
@@ -32,16 +30,6 @@ class TrackerTextEdit(QTextEdit):
 
     def setFilename(self, filename):
         self.filename = filename
-
-    def paintEvent(self, event):
-        painter = QPainter(self.viewport())
-        pen = QPen(Qt.SolidLine)
-        pen.setColor(Qt.black)
-        pen.setWidth(1)
-        painter.setPen(pen)
-        painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
-        super(TrackerTextEdit, self).paintEvent(event)
-
 
 class EyeTrackerTextEdit(TrackerTextEdit):
     x_offset = 0
@@ -70,13 +58,61 @@ class EyeTrackerTextEdit(TrackerTextEdit):
         self.x = x - self.x_offset
         self.y = y - self.y_offset
 
+        str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%f,'%s'\n" % (datetime.now(), hora, minu, seco, micro, timestamp, self.x, self.y - self.scrollbar_displacement, diam, self.filename)
+        self.csv_file.write(str_dat)
+
+
+class TrackerDrawPositionTextEdit(TrackerTextEdit):
+    x = 0
+    y = 0
+
+    def __init__(self, csv_filename, parent=None):
+        super(TrackerDrawPositionTextEdit, self).__init__(csv_filename, parent)
+
+    def paintEvent(self, event):
+        painter = QPainter(self.viewport())
+        pen = QPen(Qt.SolidLine)
+        pen.setColor(Qt.black)
+        pen.setWidth(1)
+        painter.setPen(pen)
+        painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
+        super(TrackerTextEdit, self).paintEvent(event)
+
+
+class EyeTrackerDrawGazeTextEdit(TrackerDrawPositionTextEdit):
+    x_offset = 0
+    y_offset = 0
+    x2 = 0
+    y2 = 0
+
+    def __init__(self, csv_filename, parent=None):
+        self.header = "timestamp1,timestamp2,microseconds,x,y,pupildiam,filename\n"
+        super(EyeTrackerDrawGazeTextEdit, self).__init__(csv_filename, parent)
+
+    def scrollContentsBy(self, dx, dy):
+        super(EyeTrackerDrawGazeTextEdit, self).scrollContentsBy(dx, dy)
+        self.scrollbar_displacement += dy
+        print(self.scrollbar_displacement)
+
+    def gazeMoveEvent(self, x, y, diam, timestamp):
+        secs = (timestamp / 1000000)
+        mins = secs / 60
+
+        micro = (timestamp % 1000000)
+        seco = secs % 60
+        minu = mins % 60
+        hora = mins / 60
+
+        self.x = x - self.x_offset
+        self.y = y - self.y_offset
+
         if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
             str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%f,'%s'\n" % (datetime.now(), hora, minu, seco, micro, timestamp, self.x, self.y - self.scrollbar_displacement, diam, self.filename)
             self.csv_file.write(str_dat)
             self.update()
 
 
-class MouseTrackerTextEdit(TrackerTextEdit):
+class MouseTrackerTextEdit(TrackerDrawPositionTextEdit):
 
     def __init__(self, csv_filename, parent=None):
         self.header = "timestamp,x,y,filename\n"
@@ -129,6 +165,7 @@ class CodeViewer(PcerWindow):
         self.padding_right = config['code_viewer']['document']['padding_right']
         self.use_leading_space = config['code_viewer']['document']['use_leading_space']
         self.tracking_device = config['tracker']['device']
+        self.draw_gaze = config['tracker']['eye_tracker']['draw_gaze']
         self.sidebar_percentage_width = config['code_viewer']['sidebar']['percentage_width']
         self.sidebar_font_type = config['code_viewer']['sidebar']['font_type']
         self.sidebar_font_pixel_size = config['code_viewer']['sidebar']['font_pixel_size']
@@ -214,7 +251,10 @@ class CodeViewer(PcerWindow):
         self.editor = None
         csv_filename = self.experiment.participant_id + "_" + self.experiment.current_system_id
         if self.tracking_device == "eye tracker":
-            self.editor = EyeTrackerTextEdit(csv_filename, self)
+            if self.draw_gaze:
+                self.editor = EyeTrackerDrawGazeTextEdit(csv_filename, self)
+            else:
+                self.editor = EyeTrackerTextEdit(csv_filename, self)
             self.et.plugg(self.editor)
         elif self.tracking_device == "mouse":
             self.editor = MouseTrackerTextEdit(csv_filename, self)

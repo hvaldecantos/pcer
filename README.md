@@ -57,6 +57,7 @@ For specific eye tracker configuration:
           send_port: 4444
           receive_ip: '192.168.74.2'
           receive_port: 5555
+        draw_gaze: true
 
 For the form windows use the following properties:
 

@@ -102,10 +102,10 @@ class ET:
                                        1,   # ("visualization", c_int), draw calibration/validation by API (default: 1)
                                        0,   # ("displayDevice", c_int), set display device [0: primary device (default), 1: secondary device]
                                        0,   # ("speed", c_int), set calibration/validation speed [0: slow (default), 1: fast]
-                                       0,   # ("autoAccept", c_int), set calibration/validation point acceptance [2: full-automatic, 1: semi-automatic (default), 0: manual]
+                                       2,   # ("autoAccept", c_int), set calibration/validation point acceptance [2: full-automatic, 1: semi-automatic (default), 0: manual]
                                        20,  # ("foregroundBrightness", c_int), set calibration/validation target brightness [0..255] (default: 250)
                                        239, # ("backgroundBrightness", c_int), set calibration/validation background brightness [0..255] (default: 220)
-                                       1,   # ("targetShape", c_int), set calibration/validation target shape [IMAGE = 0, CIRCLE1 = 1, CIRCLE2 = 2 (default), CROSS = 3]
+                                       2,   # ("targetShape", c_int), set calibration/validation target shape [IMAGE = 0, CIRCLE1 = 1, CIRCLE2 = 2 (default), CROSS = 3]
                                        10,   # ("targetSize", c_int), set calibration/validation target size in pixel (minimum: 10 pixels, default: 20 pixels
                                        b"") # ("targetFilename", c_char * 256), selectcustomcalibration/validationtarget(onlyiftargetShape=0)
 

@@ -94,7 +94,7 @@ class EyeTrackerDrawGazeTextEdit(TrackerDrawPositionTextEdit):
     y2 = 0 # is the most bottom point of the editor
 
     def __init__(self, csv_filename, parent=None):
-        self.header = "timestamp1,timestamp2,microseconds,x,y,pupildiam,filename\n"
+        self.header = "timestamp1,timestamp2,microseconds,vdisplacement,lx,ly,ldiam,rx,ry,rdiam,filename\n"
         super(EyeTrackerDrawGazeTextEdit, self).__init__(csv_filename, parent)
 
     def scrollContentsBy(self, dx, dy):

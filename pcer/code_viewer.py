@@ -90,8 +90,8 @@ class TrackerDrawPositionTextEdit(TrackerTextEdit):
 class EyeTrackerDrawGazeTextEdit(TrackerDrawPositionTextEdit):
     x_offset = 0
     y_offset = 0
-    x2 = 0
-    y2 = 0
+    x2 = 0 # is the most right point of the editor
+    y2 = 0 # is the most bottom point of the editor
 
     def __init__(self, csv_filename, parent=None):
         self.header = "timestamp1,timestamp2,microseconds,x,y,pupildiam,filename\n"
@@ -102,20 +102,34 @@ class EyeTrackerDrawGazeTextEdit(TrackerDrawPositionTextEdit):
         self.scrollbar_displacement += dy
         print(self.scrollbar_displacement)
 
-    def gazeMoveEvent(self, x, y, diam, timestamp):
+    def gazeMoveEvent(self, lx, ly, ldiam, rx, ry, rdiam, timestamp):
         secs = (timestamp / 1000000)
         mins = secs / 60
 
-        micro = (timestamp % 1000000)
-        seco = secs % 60
-        minu = mins % 60
-        hora = mins / 60
+        ms = (timestamp % 1000000)
+        s = secs % 60
+        m = mins % 60
+        h = mins / 60
 
+        f_lx = lx - self.x_offset
+        f_ly = ly - self.y_offset
+        f_rx = rx - self.x_offset
+        f_ry = ry - self.y_offset
+
+        x = (lx + rx)/2 # binocular averaged gaze x
+        y = (ly + ry)/2 # binocular averaged gaze y
         self.x = x - self.x_offset
         self.y = y - self.y_offset
 
         if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
-            str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%f,'%s'\n" % (datetime.now(), hora, minu, seco, micro, timestamp, self.x, self.y - self.scrollbar_displacement, diam, self.filename)
+            str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%d,%f,%d,%d,%f,'%s'\n" % \
+                      (datetime.now(),
+                       h, m, s, ms,
+                       timestamp,
+                       self.scrollbar_displacement,
+                       f_lx, f_ly, ldiam,
+                       f_rx, f_ry, rdiam,
+                       self.filename)
             self.csv_file.write(str_dat)
             self.update()
 

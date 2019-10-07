@@ -137,12 +137,11 @@ class ET:
         @WINFUNCTYPE(None, CSample)
         def sample_callback(sample):
             try:
-                editor.gazeMoveEvent((sample.leftEye.gazeX + sample.rightEye.gazeX)/2,
-                                     (sample.leftEye.gazeY + sample.rightEye.gazeY)/2,
-                                     (sample.leftEye.diam + sample.rightEye.diam)/2,
+                editor.gazeMoveEvent(sample.leftEye.gazeX, sample.leftEye.gazeY, sample.leftEye.diam,
+                                     sample.rightEye.gazeX, sample.rightEye.gazeY, sample.rightEye.diam,
                                      sample.timestamp)
             except Exception as e:
-                print("========>", e)
+                print("Callback error: ", e)
                 pass
 
         self.call_back_function =  sample_callback

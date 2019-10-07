@@ -15,6 +15,7 @@ class TrackerTextEdit(QTextEdit):
     filename = None
     csv_file = None
     header = None
+    current_task_id = None
 
     def __init__(self, csv_filename, parent=None):
         config = yaml.load(open("config.yml"), Loader = yaml.SafeLoader)
@@ -37,7 +38,7 @@ class EyeTrackerTextEdit(TrackerTextEdit):
     y_offset = 0
 
     def __init__(self, csv_filename, parent=None):
-        self.header = "timestamp1,timestamp2,microseconds,vdisplacement,lx,ly,ldiam,rx,ry,rdiam,filename\n"
+        self.header = "timestamp1,timestamp2,microseconds,vdisplacement,lx,ly,ldiam,rx,ry,rdiam,filename,task\n"
         super(EyeTrackerTextEdit, self).__init__(csv_filename, parent)
 
     def scrollContentsBy(self, dx, dy):
@@ -59,14 +60,15 @@ class EyeTrackerTextEdit(TrackerTextEdit):
         f_rx = rx - self.x_offset
         f_ry = ry - self.y_offset
 
-        str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%d,%f,%d,%d,%f,'%s'\n" % \
+        str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%d,%f,%d,%d,%f,'%s','%s'\n" % \
                   (datetime.now(),
                    h, m, s, ms,
                    timestamp,
                    self.scrollbar_displacement,
                    f_lx, f_ly, ldiam,
                    f_rx, f_ry, rdiam,
-                   self.filename)
+                   self.filename,
+                   self.current_task_id)
         self.csv_file.write(str_dat)
 
 
@@ -94,7 +96,7 @@ class EyeTrackerDrawGazeTextEdit(TrackerDrawPositionTextEdit):
     y2 = 0 # is the most bottom point of the editor
 
     def __init__(self, csv_filename, parent=None):
-        self.header = "timestamp1,timestamp2,microseconds,vdisplacement,lx,ly,ldiam,rx,ry,rdiam,filename\n"
+        self.header = "timestamp1,timestamp2,microseconds,vdisplacement,lx,ly,ldiam,rx,ry,rdiam,filename,task\n"
         super(EyeTrackerDrawGazeTextEdit, self).__init__(csv_filename, parent)
 
     def scrollContentsBy(self, dx, dy):
@@ -122,14 +124,15 @@ class EyeTrackerDrawGazeTextEdit(TrackerDrawPositionTextEdit):
         self.y = y - self.y_offset
 
         if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
-            str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%d,%f,%d,%d,%f,'%s'\n" % \
+            str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%d,%f,%d,%d,%f,'%s','%s'\n" % \
                       (datetime.now(),
                        h, m, s, ms,
                        timestamp,
                        self.scrollbar_displacement,
                        f_lx, f_ly, ldiam,
                        f_rx, f_ry, rdiam,
-                       self.filename)
+                       self.filename,
+                       self.current_task_id)
             self.csv_file.write(str_dat)
             self.update()
 
@@ -137,7 +140,7 @@ class EyeTrackerDrawGazeTextEdit(TrackerDrawPositionTextEdit):
 class MouseTrackerTextEdit(TrackerDrawPositionTextEdit):
 
     def __init__(self, csv_filename, parent=None):
-        self.header = "timestamp,x,y,filename\n"
+        self.header = "timestamp,x,y,vdisplacement,filename,task\n"
         super(MouseTrackerTextEdit, self).__init__(csv_filename, parent)
         self.setMouseTracking(True)
 
@@ -156,7 +159,12 @@ class MouseTrackerTextEdit(TrackerDrawPositionTextEdit):
     def mouseMoveEvent(self, event):
         self.x = event.x()
         self.y = event.y()
-        str_dat = "'%s',%d,%d,'%s'\n" % (datetime.now(), self.x, self.y - self.scrollbar_displacement, self.filename)
+        str_dat = "'%s',%d,%d,%d,'%s','%s'\n" % \
+                  (datetime.now(),
+                   self.x, self.y,
+                   self.scrollbar_displacement,
+                   self.filename,
+                   self.current_task_id)
         self.csv_file.write(str_dat)
         self.update()
 
@@ -283,6 +291,7 @@ class CodeViewer(PcerWindow):
         else:
             raise Exception("You should especify your tracker device: 'eye tracker' or 'mouse'.")
 
+        self.editor.current_task_id = self.experiment.current_task_id
         self.editor.setFont(font)
         self.editor.move(self.listWidth, 0)
         self.editor.resize(self.editorWidth, self.editorHeight)

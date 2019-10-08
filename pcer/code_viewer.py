@@ -60,7 +60,7 @@ class EyeTrackerTextEdit(TrackerTextEdit):
         f_rx = rx - self.x_offset
         f_ry = ry - self.y_offset
 
-        str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%d,%f,%d,%d,%f,'%s','%s'\n" % \
+        str_dat = "\"%s\",\"%02d:%02d:%02d.%06d\",%ld,%d,%d,%d,%f,%d,%d,%f,\"%s\",\"%s\"\n" % \
                   (datetime.now(),
                    h, m, s, ms,
                    timestamp,
@@ -124,7 +124,7 @@ class EyeTrackerDrawGazeTextEdit(TrackerDrawPositionTextEdit):
         self.y = y - self.y_offset
 
         if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
-            str_dat = "'%s','%02d:%02d:%02d.%06d',%ld,%d,%d,%d,%f,%d,%d,%f,'%s','%s'\n" % \
+            str_dat = "\"%s\",\"%02d:%02d:%02d.%06d\",%ld,%d,%d,%d,%f,%d,%d,%f,\"%s\",\"%s\"\n" % \
                       (datetime.now(),
                        h, m, s, ms,
                        timestamp,
@@ -159,7 +159,7 @@ class MouseTrackerTextEdit(TrackerDrawPositionTextEdit):
     def mouseMoveEvent(self, event):
         self.x = event.x()
         self.y = event.y()
-        str_dat = "'%s',%d,%d,%d,'%s','%s'\n" % \
+        str_dat = "\"%s\",%d,%d,%d,\"%s\",\"%s\"\n" % \
                   (datetime.now(),
                    self.x, self.y,
                    self.scrollbar_displacement,

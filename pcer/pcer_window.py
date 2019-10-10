@@ -53,7 +53,7 @@ class PcerWindow(QWidget):
         resolution = QDesktopWidget().screenGeometry()
         self.move((resolution.width() / 2) - (self.frameSize().width() / 2),
                   (resolution.height() / 2) - (self.frameSize().height() / 2))
-        print(resolution.height())
+        print("Monitor resolution: %d (w) x %d (h)" % (resolution.width(), resolution.height()))
 
     def popUpWarning(self, msg):
         warning = QMessageBox()

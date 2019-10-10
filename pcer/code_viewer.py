@@ -85,15 +85,15 @@ class TrackerDrawPositionTextEdit(TrackerTextEdit):
         pen.setColor(Qt.black)
         pen.setWidth(1)
         painter.setPen(pen)
-        painter.drawEllipse(self.x - 15, self.y - 15, 30, 30)
+        painter.drawEllipse(self.x - 5, self.y - 5, 10, 10)
         super(TrackerTextEdit, self).paintEvent(event)
 
 
 class EyeTrackerDrawGazeTextEdit(TrackerDrawPositionTextEdit):
     x_offset = 0
     y_offset = 0
-    x2 = 0 # is the most right point of the editor
-    y2 = 0 # is the most bottom point of the editor
+    most_right_x = 0
+    most_bottom_y = 0
 
     def __init__(self, csv_filename, parent=None):
         self.header = "timestamp1,timestamp2,microseconds,vdisplacement,lx,ly,ldiam,rx,ry,rdiam,filename,task\n"
@@ -123,7 +123,7 @@ class EyeTrackerDrawGazeTextEdit(TrackerDrawPositionTextEdit):
         self.x = x - self.x_offset
         self.y = y - self.y_offset
 
-        if((self.x_offset <= x and x <= self.x2) and (self.y_offset <= y and y <= self.y2)):
+        if((self.x_offset <= x and x <= self.most_right_x) and (self.y_offset <= y and y <= self.most_bottom_y)):
             str_dat = "\"%s\",\"%02d:%02d:%02d.%06d\",%ld,%d,%d,%d,%f,%d,%d,%f,\"%s\",\"%s\"\n" % \
                       (datetime.now(),
                        h, m, s, ms,
@@ -352,8 +352,8 @@ class CodeViewer(PcerWindow):
         y2 = wposition.y() + self.editorHeight - self.padding_bottom
         self.editor.x_offset = x1 # For the eye tracker, as it uses the entire screen
         self.editor.y_offset = y1 # For the eye tracker, as it uses the entire screen
-        self.editor.x2 = x2
-        self.editor.y2 = y2
+        self.editor.most_right_x = x2
+        self.editor.most_bottom_y = y2
         print("Size: width: %d, height: %d" % (x2 - x1, y2 - y1))
         print("Top-Left position in screen: (%d, %d)" % (x1, y1))
         print("Top-Right position in screen: (%d, %d)" % (x2, y1))

@@ -12,7 +12,7 @@ config.txt
 *.json
 
 # ignore resource directory
-resource/
+resource*/
 
 # ignore tracking data directory
 tracking_data/

@@ -149,6 +149,7 @@ class ET:
         self.iViewXAPI.iV_SetSampleCallback(self.call_back_function)
 
     def unplugg(self):
+        print('Unset callback function\n')
         self.iViewXAPI.iV_SetSampleCallback(None)
 
     def __del__(self):

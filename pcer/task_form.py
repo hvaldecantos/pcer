@@ -20,7 +20,9 @@ class TaskForm(PcerWindow):
         readButton = QPushButton("Read code")
 
         submitButton.clicked.connect(self.onSubmitButtonClick)
+        submitButton.setStyleSheet('QPushButton {background-color: #fca395}')
         readButton.clicked.connect(self.onReadButtonClick)
+        readButton.setStyleSheet('QPushButton {background-color: #c5fac0}')
 
         if(self.timer.timeIsOver()): readButton.setEnabled(False)
 

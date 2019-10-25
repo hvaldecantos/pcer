@@ -257,6 +257,7 @@ class CodeViewer(PcerWindow):
 
     def setupBackButton(self):
         backButton = QPushButton("Back", self)
+        backButton.setStyleSheet('QPushButton {background-color: #c5fac0}')
         backButton.clicked.connect(self.onBackButtonClick)
         backButton.move(50, self.editorHeight - 50)
         backButton.resize(self.listWidth - 100, 25)

@@ -19,6 +19,7 @@ class ParticipantForm(PcerWindow):
 
     def initUI(self):
         continueButton = QPushButton("Continue")
+        continueButton.setStyleSheet('QPushButton {background-color: #c5fac0}')
         loadButton = QPushButton("Load")
         exitButton = QPushButton("Exit experiment")
         self.calibrateButton = QPushButton("Calibrate ET")

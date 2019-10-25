@@ -17,6 +17,7 @@ class PretestForm(PcerWindow):
 
     def initUI(self):
         submitButton = QPushButton("Submit answer")
+        submitButton.setStyleSheet('QPushButton {background-color: #fca395}')
         submitButton.clicked.connect(self.onSubmitButtonClick)
 
         self.group_box, self.choice_combo_question_list = self.experiment.form_builder.build_pretest_form(self.experiment)

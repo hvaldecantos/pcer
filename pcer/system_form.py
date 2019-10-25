@@ -14,6 +14,7 @@ class SystemForm(PcerWindow):
 
     def initUI(self):
         showTaskButton = QPushButton("Show task")
+        showTaskButton.setStyleSheet('QPushButton {background-color: #c5fac0}')
         backButton = QPushButton("Back")
 
         showTaskButton.clicked.connect(self.onShowTaskButtonClick)

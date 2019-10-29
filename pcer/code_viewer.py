@@ -273,7 +273,7 @@ class CodeViewer(PcerWindow):
             line_height = QFontMetrics(font).lineSpacing()
         else:
             line_height = QFontMetrics(font).height()
-        self.editorHeight = (self.height_in_characters * line_height) + \
+        self.editorHeight = (self.height_in_characters * line_height) + 2 + \
                              self.margin_pixel_size + \
                              self.padding_top + \
                              self.padding_bottom
@@ -332,20 +332,20 @@ class CodeViewer(PcerWindow):
         print("Padding: left: %d, top: %d, bottom: %d, right: %d" % (self.padding_left, self.padding_top, self.padding_bottom, self.padding_right))
         print("---------- Font report (font) ----------")
         print("font family: %s" % font.family())
-        print("font pixelSize: %d" % font.pixelSize())
-        print("font pointSize: %d" % font.pointSize())
-        print("font pointSizeF: %d" % font.pointSizeF())
-        print("QFont.pixelSize(): %d" % font.pixelSize())
+        print("font pixelSize: %f" % font.pixelSize())
+        print("font pointSize: %f" % font.pointSize())
+        print("font pointSizeF: %f" % font.pointSizeF())
+        print("QFont.pixelSize(): %f" % font.pixelSize())
         print("---------- QFontInfo   (font) ----------")
         print("family(): %s" % font_info.family())
-        print("pixelSize(): %d" % font_info.pixelSize())
-        print("pointSize(): %d" % font_info.pointSize())
-        print("pointSizeF(): %d" % font_info.pointSizeF())
+        print("pixelSize(): %f" % font_info.pixelSize())
+        print("pointSize(): %f" % font_info.pointSize())
+        print("pointSizeF(): %f" % font_info.pointSizeF())
         print("QFontInfo.pixelSize(): %d" % font_info.pixelSize())
         print("---------- QFontMetrics (font) ---------")
-        print("QFontMetrics.lineSpacing(): %d" % QFontMetrics(font).lineSpacing())
-        print("QFontMetrics.leading(): %d" % QFontMetrics(font).leading())
-        print("QFontMetrics.height(): %d" % QFontMetrics(font).height())
+        print("QFontMetrics.lineSpacing(): %f" % QFontMetrics(font).lineSpacing())
+        print("QFontMetrics.leading(): %f" % QFontMetrics(font).leading())
+        print("QFontMetrics.height(): %f" % QFontMetrics(font).height())
         print("---------- Eye tracking area  ----------")
         x1 = wposition.x() + self.listWidth + self.padding_left
         y1 = wposition.y() + self.padding_top

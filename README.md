@@ -52,6 +52,7 @@ For specific eye tracker configuration:
     tracker:
       eye_tracker:
         calibration_points: 5
+        calibration_accuracy_limit: 1.0
         network:
           send_ip: '192.168.74.1'
           send_port: 4444

@@ -130,3 +130,9 @@ class ParticipantForm(PcerWindow):
     def onCalibrateButtonClick(self):
         print("onCalibrateButtonClick")
         self.calibrate_eye_tracker.emit()
+        last_calibration = self.experiment.session.getETCalibrationAccuracyResults(self.experiment.participant_id)[-1]
+        accuracy_limit = self.config['tracker']['eye_tracker']['calibration_accuracy_limit']
+        print(last_calibration)
+        if ((last_calibration['RX'] > accuracy_limit or last_calibration['RY'] > accuracy_limit) and
+            (last_calibration['LX'] > accuracy_limit and last_calibration['LY'] > accuracy_limit)):
+            self.popUpWarning("Eye tracker unsuccessfully calibrated. Please, repeat the calibration.")

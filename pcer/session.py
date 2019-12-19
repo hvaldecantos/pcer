@@ -283,12 +283,12 @@ class Session():
         status = self.getParticipantStatus(participant_id)
         return status['filenames_order']
 
-    def getETCalibrationAccuracyResults(self, participant_id, calibration_result):
+    def getETCalibrationAccuracyResults(self, participant_id):
         status = self.getParticipantStatus(participant_id)
         return status['calibrations']
 
     def addETCalibrationAccuracy(self, participant_id, calibration_result):
-        calibrations = self.getETCalibrationAccuracyResults(participant_id, calibration_result)
+        calibrations = self.getETCalibrationAccuracyResults(participant_id)
         calibration_result['timestamp'] = str(datetime.now())
         calibrations.append(calibration_result)
         self.db.update({'calibrations': calibrations}, self.participant.id == participant_id)

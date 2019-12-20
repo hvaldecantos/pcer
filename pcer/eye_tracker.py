@@ -2,6 +2,128 @@ from iViewXAPI import CCalibration, CSample, CSystem, CAccuracy, CRedGeometry, C
 import ctypes
 import platform
 import yaml
+import threading
+import socket
+import time
+import re
+
+
+def printit(obj):
+    print(obj)
+
+class GP3(threading.Thread):
+
+    go = True
+
+    def __init__(self, group=None, target=None, name=None, args=(), kwargs={}):
+        super(GP3, self).__init__(group, target, name, args, kwargs)
+
+        HOST = '192.168.202.1'
+        # Gazepoint Port
+        PORT = 4242
+        ADDRESS = (HOST, PORT)
+
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.connect(ADDRESS)
+
+        self._enable_data()
+
+        self.setDaemon(True)
+        self.can_run = threading.Event()
+        self.thing_done = threading.Event()
+
+    def _enable_data(self):
+        self.s.send(str.encode('<SET ID="ENABLE_SEND_CURSOR" STATE="1" />\r\n'))
+        self.s.send(str.encode('<SET ID="ENABLE_SEND_TIME" STATE="1" />\r\n'))
+        self.s.send(str.encode('<SET ID="ENABLE_SEND_POG_LEFT" STATE="1" />\r\n'))
+        self.s.send(str.encode('<SET ID="ENABLE_SEND_POG_RIGHT" STATE="1" />\r\n'))
+        self.s.send(str.encode('<SET ID="ENABLE_SEND_PUPILMM" STATE="1" />\r\n'))
+        # self.s.send(str.encode('<SET ID="ENABLE_SEND_PUPIL_LEFT" STATE="1" />\r\n'))
+        # self.s.send(str.encode('<SET ID="ENABLE_SEND_PUPIL_RIGHT" STATE="1" />\r\n'))
+        
+        # self.s.send(str.encode('<SET ID="ENABLE_SEND_DATA" STATE="1" />\r\n'))
+
+    def calibrate(self):
+        self.s.send(str.encode('<SET ID="CALIBRATE_SHOW" STATE="1" />\r\n'))
+        self.s.send(str.encode('<SET ID="CALIBRATE_START" STATE="1" />\r\n'))
+
+
+    # def calibrate(self):
+    #     # # # # #
+    #     # CALIBRATION
+    #     # Reset the calibration to its default points.
+    #     tracker.calibrate_reset()
+
+    #     # Show the calibration screen.
+    #     tracker.calibrate_show(True)
+
+    #     # Start the calibration.
+    #     tracker.calibrate_start(True)
+
+    #     # Wait for the calibration result.
+    #     result = None
+    #     while result == None:
+    #         result = tracker.get_calibration_result()
+    #         time.sleep(0.1)
+
+    #     # Hide the calibration window.
+    #     tracker.calibrate_show(False)
+
+    #     # CLIENT SEND: <GET ID="CALIBRATE_SHOW" /> SERVER SEND: <ACK ID="CALIBRATE_SHOW" STATE="0" /> 
+    #     # CLIENT SEND: <SET ID="CALIBRATE_SHOW" STATE="1" /> SERVER SEND: <ACK ID="CALIBRATE_SHOW" STATE="1" />
+
+
+    def toDictionary(self, s, tag):
+        s1 = s[5:-5].replace('"','')
+        sp = re.split("=| ", s1)
+        result = {sp[i] : sp[i + 1] for i in range(0, len(sp), 2)}
+        result["type"] = tag
+        return result
+
+    def run(self):
+        while self.go:
+            self.can_run.wait()
+            try:
+                self.thing_done.clear()
+
+                rxdat = self.s.recv(1024)
+                str_queue_msgs = bytes.decode(rxdat)
+                lst_queue_msgs = str_queue_msgs.splitlines()
+
+                # utf8string = txt1.encode("utf-8")
+                # asciistring = txt1.encode("ascii")
+                # isostring = txt1.encode("ISO-8859-1")
+                # utf16string = txt1.encode("utf-16")
+
+                for txt in lst_queue_msgs:
+                    tag = txt[1:4]
+                    if(tag == "REC"):
+                        dic = self.toDictionary(txt, tag)
+                        self.editor(dic)
+                        print("_____________________________________")
+
+            finally:
+                self.thing_done.set()
+
+    def plugg(self, editor):
+        self.plugged = True
+        self.editor = editor
+        self.s.send(str.encode('<SET ID="ENABLE_SEND_DATA" STATE="1" />\r\n'))
+        self.can_run.set()
+
+    def unplugg(self):
+        self.plugged = False
+        self.s.send(str.encode('<SET ID="ENABLE_SEND_DATA" STATE="0" />\r\n'))
+        self.can_run.clear()
+        self.thing_done.wait()
+
+    def end(self):
+        self.go = False
+        self.s.close()
+
+    def __del__(self):
+        print('Disconnect eye tracker\n')
+        self.end()
 
 
 class ET:
@@ -160,3 +282,31 @@ class ET:
 # et.getdeviceInfo()
 # et.getGeometryInfo()
 # et.getGeometryProfiles()
+
+# test gp3 basic functions
+et = GP3()
+et.start()
+print("et started")
+
+# et.calibrate()
+# print("callibrating")
+time.sleep(1)
+
+et.plugg(printit)
+print("resumed")
+time.sleep(1)
+
+et.unplugg()
+print("paused")
+time.sleep(1)
+
+et.plugg(printit)
+print("resumed")
+time.sleep(1)
+
+print("END1")
+
+# et.end()
+
+time.sleep(1)
+print("END2")
